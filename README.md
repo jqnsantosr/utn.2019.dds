@@ -1,5 +1,4 @@
-# TP Integrador Anual - Diseño de Sistemas
-¿Qué me pongo?
+# TP Integrador Anual - Diseño de Sistemas: ¿Qué me pongo?
 
 ## Requerimientos Funcionales
  
@@ -41,4 +40,4 @@
 
 - Creado de Users.
 - Creado de Guardarropas para esos Users.
-- Creado de Prendas para los guardarropas de esos users.
+- Creado de Prendas para los Guardarropas de esos Users.
