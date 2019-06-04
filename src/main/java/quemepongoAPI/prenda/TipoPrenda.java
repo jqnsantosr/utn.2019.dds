@@ -6,7 +6,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -20,4 +20,30 @@ public class TipoPrenda {
     private List<PartesCuerpo> partesCuerpo;
     private Boolean esAbrigo;
 
+    public TipoPrenda(String nombre)
+    {
+        this.nombre = nombre;
+        telasPosibles = new ArrayList<>();
+        partesCuerpo = new ArrayList<>();
+    }
+
+    public void agregarTelaPosible(Tela unaTela)
+    {
+        telasPosibles.add(unaTela);
+    }
+
+    public void agregarParteCuerpo(PartesCuerpo unaParte)
+    {
+        partesCuerpo.add(unaParte);
+    }
+
+    public List<PartesCuerpo> damePartesDelCuerpo()
+    {
+        return partesCuerpo;
+    }
+
+    public int cantidadPartes()
+    {
+        return partesCuerpo.size();
+    }
 }
