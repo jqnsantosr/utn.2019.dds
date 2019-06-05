@@ -50,13 +50,39 @@ public class Guardarropa {
         return atuendoBuilder.dameAtuendo();
     }
 
+    public Atuendo crearAtuendoAleatorio(List<PartesCuerpo> partes)
+    {
+        atuendoBuilder = new AtuendoRandomBuilder();
+        constriurAtuendo(partes);
+
+        return atuendoBuilder.dameAtuendo();
+    }
+
+    //CASO por defecto construye un atuendo con lo basico
     public void constriurAtuendo()
     {
+        List<PartesCuerpo> listaPartesDefault = new ArrayList<>();
+        listaPartesDefault.add(PartesCuerpo.TORSO);
+        listaPartesDefault.add(PartesCuerpo.PIERNAS);
+        listaPartesDefault.add(PartesCuerpo.CABEZA);
+        listaPartesDefault.add(PartesCuerpo.CALZADO);
+
         atuendoBuilder.crearNuevoAtuendo();
-        atuendoBuilder.buildTorso(this);
-        atuendoBuilder.buildPiernas(this);
-        atuendoBuilder.buildCabeza(this);
-        atuendoBuilder.buildCalzado(this);
+        for (PartesCuerpo unaParte : listaPartesDefault)
+        {
+            atuendoBuilder.buildPorParte(this, unaParte);
+        }
+    }
+
+    //CASO usuario pide una combinacion de partes
+    public void constriurAtuendo(List<PartesCuerpo> partes)
+    {
+        atuendoBuilder.crearNuevoAtuendo();
+        atuendoBuilder.setListaDePartes(partes);
+        for (PartesCuerpo parte: partes)
+        {
+           atuendoBuilder.buildPorParte(this, parte);
+        }
     }
 
     public Prenda darUnaPrendaAleatoria(PartesCuerpo unaParte)

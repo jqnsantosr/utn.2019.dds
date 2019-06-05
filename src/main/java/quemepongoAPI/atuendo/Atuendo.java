@@ -1,54 +1,46 @@
 package quemepongoAPI.atuendo;
 
+import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Atuendo
 {
-    private Prenda prendaTorso;
-    private Prenda prendaPiernas;
-    private Prenda prendaCabeza;
-    private Prenda prendaCalzado;
+    private Set<Prenda> prendasElegidas = new HashSet<>();
+    private List<PartesCuerpo> partesCuerpoACubrir = new ArrayList<>();
 
     public void mostrarAtuendo()
     {
         //TODO
     }
 
-    public Prenda get_prendaTorso()
+    public void add_prenda(Prenda unaPrenda)
     {
-        return prendaTorso;
+        prendasElegidas.add(unaPrenda);
     }
 
-    public void set_prendaTorso(Prenda unaPrenda)
+    public void add_parte_del_cuerpo(PartesCuerpo unaParte)
     {
-        this.prendaTorso = unaPrenda;
+        partesCuerpoACubrir.add(unaParte);
     }
 
-    public Prenda get_prendaPiernas()
+    //-- Metodos para Tests --
+    public boolean tiene_prenda(Prenda unaPrenda)
     {
-        return prendaPiernas;
+        return prendasElegidas.contains(unaPrenda);
     }
 
-    public void set_prendaPiernas(Prenda prendaPiernas)
+    public String partes_del_cuerpo_ocupadas()
     {
-        this.prendaPiernas = prendaPiernas;
-    }
-
-    public Prenda get_prendaCabeza()
-    {
-        return prendaCabeza;
-    }
-
-    public void set_prendaCabeza(Prenda prendaCabeza)
-    {
-        this.prendaCabeza = prendaCabeza;
-    }
-
-    public Prenda get_prendaCalzado() {
-        return prendaCalzado;
-    }
-
-    public void set_prendaCalzado(Prenda prendaCalzado) {
-        this.prendaCalzado = prendaCalzado;
+        String partesOcupadas = "";
+        for (PartesCuerpo parte : partesCuerpoACubrir)
+        {
+            partesOcupadas += parte.toString() + " ";
+        }
+        return partesOcupadas;
     }
 }
