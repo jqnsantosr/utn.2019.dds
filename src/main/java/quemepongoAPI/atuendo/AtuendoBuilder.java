@@ -1,6 +1,9 @@
 package quemepongoAPI.atuendo;
 
 import quemepongoAPI.guardarropa.Guardarropa;
+import quemepongoAPI.prenda.PartesCuerpo;
+
+import java.util.List;
 
 public abstract class AtuendoBuilder
 {
@@ -15,8 +18,7 @@ public abstract class AtuendoBuilder
         atuendo = new Atuendo();
     }
 
-    public abstract void buildTorso(Guardarropa unGuardarropa);
-    public abstract void buildPiernas(Guardarropa unGuardarropa);
-    public abstract void buildCabeza(Guardarropa unGuardarropa);
-    public abstract void buildCalzado(Guardarropa unGuardarropa);
+    public abstract void buildPorParte(Guardarropa unGuardarropa, PartesCuerpo unaParte);
+    public abstract void setListaDePartes(List<PartesCuerpo> partes);
+
 }
