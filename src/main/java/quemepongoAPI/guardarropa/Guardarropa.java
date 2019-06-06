@@ -103,16 +103,9 @@ public class Guardarropa {
                 prendasResultado.add(unaPrenda);
         }
 
-        if(prendasResultado.isEmpty())
-            //TODO: error no hay prenda para esa parte del cuerpo
-            return null;
-
-        //retornar una prenda aleatoria
-        Random rand = new Random();
-
-        Prenda laPrenda = prendasResultado.remove(rand.nextInt(prendasResultado.size()));
         ultimasPrendasPedidas = prendasResultado;
-        return laPrenda;
+
+        return darOtraPrendaAleatoria();
     }
 
     public Prenda darOtraPrendaAleatoria()
@@ -121,6 +114,7 @@ public class Guardarropa {
         try {
             return ultimasPrendasPedidas.remove(rand.nextInt(ultimasPrendasPedidas.size()));
         } catch(Exception listaVacia) {
+            //TODO: error no hay prenda para esa parte del cuerpo
             return null;
         }
     }
