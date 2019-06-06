@@ -132,6 +132,7 @@ class AtuendoBuilderTest {
         TipoPrenda pantalon = new TipoPrenda("Pantalon");
         pantalon.agregarParteCuerpo(PartesCuerpo.PIERNAS);
         Prenda pantalon_thor = new Prenda("Pantalon de Thor", pantalon, "Negro");
+        Prenda pantalon_flash = new Prenda("Pantalon de Flash", pantalon, "Rojo");
 
         TipoPrenda sombrero = new TipoPrenda("Sombrero");
         sombrero.agregarParteCuerpo(PartesCuerpo.CABEZA);
@@ -143,6 +144,7 @@ class AtuendoBuilderTest {
 
         unGuardarropa.addPrenda(trajeDeBatman);
         unGuardarropa.addPrenda(pantalon_thor);
+        unGuardarropa.addPrenda(pantalon_flash);
         unGuardarropa.addPrenda(casco_ironman);
         unGuardarropa.addPrenda(botas_cpt_america);
 
@@ -150,6 +152,7 @@ class AtuendoBuilderTest {
 
         assertTrue(unAtuendo.tiene_prenda(trajeDeBatman));
         assertFalse(unAtuendo.tiene_prenda(pantalon_thor));
+        assertFalse(unAtuendo.tiene_prenda(pantalon_flash));
         assertFalse(unAtuendo.tiene_prenda(casco_ironman));
         assertFalse(unAtuendo.tiene_prenda(botas_cpt_america));
     }
