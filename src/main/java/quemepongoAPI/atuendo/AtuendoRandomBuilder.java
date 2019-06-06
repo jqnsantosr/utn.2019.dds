@@ -21,11 +21,14 @@ public class AtuendoRandomBuilder extends AtuendoBuilder
         //pedir una prenda al guardarropa
         Prenda unaPrenda = unGuardarropa.darUnaPrendaAleatoria(unaParte);
 
+        //verificar que las partes que la prenda ocupa no esten ocupados o que no sea requerida por usuario
+        while((unaPrenda != null) && (!verificarEspacios(unaPrenda)))
+        {
+            unaPrenda = unGuardarropa.darOtraPrendaAleatoria();
+        }
+
         //TODO: que hacer si no hay prendas disponibles
         if(unaPrenda == null) return;
-
-        //verificar que las partes que la prenda ocupa no esten ocupados o que no sea requerida por usuario
-        if(!verificarEspacios(unaPrenda)); //TODO pedir otra prenda
 
         //agregar la prenda al SET, la parte del cuerpo a Pedida y Ocupada
         atuendo.add_prenda(unaPrenda);

@@ -117,4 +117,40 @@ class AtuendoBuilderTest {
         assertFalse(unAtuendo.tiene_prenda(zapatosConTacosYPlataforma));
         assertTrue(unAtuendo.tiene_prenda(anteojosSol));
     }
+
+    @org.junit.jupiter.api.Test
+    void crearNuevoAtuendoConPartesQueNoEntranPorEstarOcupadas() {
+        Guardarropa unGuardarropa = new Guardarropa("TEST");
+
+        TipoPrenda traje_entero = new TipoPrenda("Traje Entero");
+        traje_entero.agregarParteCuerpo(PartesCuerpo.TORSO);
+        traje_entero.agregarParteCuerpo(PartesCuerpo.PIERNAS);
+        traje_entero.agregarParteCuerpo(PartesCuerpo.CALZADO);
+        traje_entero.agregarParteCuerpo(PartesCuerpo.CABEZA);
+        Prenda trajeDeBatman = new Prenda("Traje De Batman", traje_entero, "Negro");
+
+        TipoPrenda pantalon = new TipoPrenda("Pantalon");
+        pantalon.agregarParteCuerpo(PartesCuerpo.PIERNAS);
+        Prenda pantalon_thor = new Prenda("Pantalon de Thor", pantalon, "Negro");
+
+        TipoPrenda sombrero = new TipoPrenda("Sombrero");
+        sombrero.agregarParteCuerpo(PartesCuerpo.CABEZA);
+        Prenda casco_ironman = new Prenda("Casco Iron Man", sombrero, "Rojo");
+
+        TipoPrenda zapato = new TipoPrenda("Zapato");
+        zapato.agregarParteCuerpo(PartesCuerpo.CALZADO);
+        Prenda botas_cpt_america = new Prenda("Botas de Capitan America", zapato, "Blanco?");
+
+        unGuardarropa.addPrenda(trajeDeBatman);
+        unGuardarropa.addPrenda(pantalon_thor);
+        unGuardarropa.addPrenda(casco_ironman);
+        unGuardarropa.addPrenda(botas_cpt_america);
+
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
+
+        assertTrue(unAtuendo.tiene_prenda(trajeDeBatman));
+        assertFalse(unAtuendo.tiene_prenda(pantalon_thor));
+        assertFalse(unAtuendo.tiene_prenda(casco_ironman));
+        assertFalse(unAtuendo.tiene_prenda(botas_cpt_america));
+    }
 }
