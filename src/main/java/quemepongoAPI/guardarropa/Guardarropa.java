@@ -22,6 +22,9 @@ public class Guardarropa {
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Prenda> prendas;
     private AtuendoBuilder atuendoBuilder;
+    @ElementCollection
+    @OneToMany(cascade = {CascadeType.ALL})
+    private List<Prenda> ultimasPrendasPedidas;
 
     public Guardarropa() {}
 
@@ -68,6 +71,7 @@ public class Guardarropa {
         listaPartesDefault.add(PartesCuerpo.CALZADO);
 
         atuendoBuilder.crearNuevoAtuendo();
+        atuendoBuilder.setListaDePartes(listaPartesDefault);
         for (PartesCuerpo unaParte : listaPartesDefault)
         {
             atuendoBuilder.buildPorParte(this, unaParte);
@@ -105,6 +109,19 @@ public class Guardarropa {
 
         //retornar una prenda aleatoria
         Random rand = new Random();
-        return prendasResultado.get(rand.nextInt(prendasResultado.size()));
+
+        Prenda laPrenda = prendasResultado.remove(rand.nextInt(prendasResultado.size()));
+        ultimasPrendasPedidas = prendasResultado;
+        return laPrenda;
+    }
+
+    public Prenda darOtraPrendaAleatoria()
+    {
+        Random rand = new Random();
+        try {
+            return ultimasPrendasPedidas.remove(rand.nextInt(ultimasPrendasPedidas.size()));
+        } catch(Exception listaVacia) {
+            return null;
+        }
     }
 }
