@@ -21,6 +21,7 @@ public class Guardarropa {
     @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Prenda> prendas;
+    @Transient
     private AtuendoBuilder atuendoBuilder;
     @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
