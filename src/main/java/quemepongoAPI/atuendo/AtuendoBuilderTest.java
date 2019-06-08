@@ -1,5 +1,7 @@
 package quemepongoAPI.atuendo;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
@@ -12,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AtuendoBuilderTest {
 
-    @org.junit.jupiter.api.BeforeEach
+    @BeforeEach
     void setUp() {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void crearNuevoAtuendo() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
@@ -50,7 +52,7 @@ class AtuendoBuilderTest {
         assertTrue(unAtuendo.tiene_prenda(nikesAmarillas));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void crearNuevoAtuendoConPrendasDeMultiplesPartes() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
@@ -78,7 +80,7 @@ class AtuendoBuilderTest {
         assertTrue(unAtuendo.tiene_prenda(zapatosConTacosYPlataforma));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void crearNuevoAtuendoEspecifico() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
@@ -118,7 +120,7 @@ class AtuendoBuilderTest {
         assertTrue(unAtuendo.tiene_prenda(anteojosSol));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void crearNuevoAtuendoConPartesQueNoEntranPorEstarOcupadas() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
