@@ -6,7 +6,6 @@ import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 import quemepongoAPI.prenda.TipoPrenda;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,7 @@ class AtuendoBuilderTest {
     }
 
     @Test
-    void crearNuevoAtuendo() {
+    void crearNuevoAtuendoBasico() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
         TipoPrenda remera = new TipoPrenda("Remera");
@@ -65,18 +64,24 @@ class AtuendoBuilderTest {
         pollera.agregarParteCuerpo(PartesCuerpo.PIERNAS);
         Prenda polleraVioleta = new Prenda("Pollera Violeta", pollera, "Violeta");
 
+        TipoPrenda sombrero = new TipoPrenda("Sombrero");
+        sombrero.agregarParteCuerpo(PartesCuerpo.CABEZA);
+        Prenda sombreroGrande = new Prenda("Sombrero Grande", sombrero, "Blanca");
+
         TipoPrenda zapato = new TipoPrenda("Zapato");
         zapato.agregarParteCuerpo(PartesCuerpo.CALZADO);
         Prenda zapatosConTacosYPlataforma = new Prenda("Tacos con Plataforma", zapato, "Negro");
 
         unGuardarropa.addPrenda(vestidoRosa);
         unGuardarropa.addPrenda(polleraVioleta);
+        unGuardarropa.addPrenda(sombreroGrande);
         unGuardarropa.addPrenda(zapatosConTacosYPlataforma);
 
         Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
 
         assertTrue(unAtuendo.tiene_prenda(vestidoRosa));
         assertFalse(unAtuendo.tiene_prenda(polleraVioleta));
+        assertTrue(unAtuendo.tiene_prenda(sombreroGrande));
         assertTrue(unAtuendo.tiene_prenda(zapatosConTacosYPlataforma));
     }
 
@@ -157,5 +162,13 @@ class AtuendoBuilderTest {
         assertFalse(unAtuendo.tiene_prenda(pantalon_flash));
         assertFalse(unAtuendo.tiene_prenda(casco_ironman));
         assertFalse(unAtuendo.tiene_prenda(botas_cpt_america));
+    }
+
+    @Test
+    void crearNuevoAtuendoTiraExceptionPorEstarIncompleto()
+    {
+        Guardarropa unGuardarropa = new Guardarropa("TEST");
+
+        assertThrows(AtuendoIncompletoException.class, () -> unGuardarropa.crearAtuendoAleatorio());
     }
 }

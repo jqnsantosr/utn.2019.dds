@@ -3,10 +3,12 @@ package quemepongoAPI.user;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
+import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.Prenda;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -42,6 +44,26 @@ class UserController {
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         return assembler.toResource(user);
+    }
+
+    /* Get de un atuendo aleatorio */
+    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
+    Atuendo oneRandom(@PathVariable Long idUser, @PathVariable Long idGuard) {
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+        Optional<Guardarropa> guardarropaOptional = user.getGuardarropasById(idGuard);
+        Guardarropa guardarropa;
+
+        if (guardarropaOptional.isPresent())
+        {
+            guardarropa = guardarropaOptional.get();
+
+            return guardarropa.crearAtuendoAleatorio();
+        }
+        else
+        {
+            throw new GuardarropasNotFoundException(idGuard);
+        }
     }
 
     /* Post de un usuario: creación de cuenta.*/
