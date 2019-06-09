@@ -27,8 +27,11 @@ public class AtuendoRandomBuilder extends AtuendoBuilder
             unaPrenda = unGuardarropa.darOtraPrendaAleatoria();
         }
 
-        //TODO: que hacer si no hay prendas disponibles
-        if(unaPrenda == null) return;
+        //si no hay prendas disponibles
+        if(unaPrenda == null)
+        {
+            throw new AtuendoIncompletoException();
+        }
 
         //agregar la prenda al SET, la parte del cuerpo a Pedida y Ocupada
         atuendo.add_prenda(unaPrenda);

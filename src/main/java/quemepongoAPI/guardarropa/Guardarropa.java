@@ -32,6 +32,7 @@ public class Guardarropa {
     public Guardarropa(String nombre) {
         this.nombre = nombre;
         prendas = new ArrayList<>();
+        ultimasPrendasPedidas = new ArrayList<>();
     }
 
     public void addPrenda(Prenda prenda){
@@ -104,7 +105,7 @@ public class Guardarropa {
                 prendasResultado.add(unaPrenda);
         }
 
-        ultimasPrendasPedidas = prendasResultado;
+        actualizarCacheDePrendasPedidas(prendasResultado);
 
         return darOtraPrendaAleatoria();
     }
@@ -115,8 +116,27 @@ public class Guardarropa {
         try {
             return ultimasPrendasPedidas.remove(rand.nextInt(ultimasPrendasPedidas.size()));
         } catch(Exception listaVacia) {
-            //TODO: error no hay prenda para esa parte del cuerpo
             return null;
         }
+    }
+
+    private void actualizarCacheDePrendasPedidas(List<Prenda> nuevaLista)
+    {
+        ultimasPrendasPedidas.clear();
+        ultimasPrendasPedidas.addAll(nuevaLista);
+    }
+
+    /* GETTER de todas las prendas */
+    public List<Prenda> getPrendas()
+    {
+        //TODO
+        return null;
+    }
+
+    /* GETTER de una prenda */
+    public Prenda getPrenda(long id)
+    {
+        //TODO
+        return null;
     }
 }
