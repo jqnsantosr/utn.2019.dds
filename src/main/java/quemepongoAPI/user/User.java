@@ -50,11 +50,4 @@ public class User {
     public void addPrendaToGuardarropas(Prenda prenda, Long idGuardarropa) {
       getGuardarropasById(idGuardarropa).ifPresent(guardarropa -> guardarropa.addPrenda(prenda));
     }
-
-    /* GETTER de todos los guardarropas*/
-    public List<Guardarropa> getGuardarropas()
-    {
-        //TODO
-        return null;
-    }
 }
