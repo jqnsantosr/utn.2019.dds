@@ -48,7 +48,7 @@ class UserController {
 
     /* Get de un atuendo aleatorio */
     @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
-    Atuendo oneRandom(@PathVariable Long idUser, @PathVariable Long idGuard) {
+    Atuendo one(@PathVariable Long idUser, @PathVariable Long idGuard) {
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
         Optional<Guardarropa> guardarropaOptional = user.getGuardarropasById(idGuard);

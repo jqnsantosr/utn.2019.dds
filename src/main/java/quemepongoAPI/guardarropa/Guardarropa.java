@@ -125,18 +125,4 @@ public class Guardarropa {
         ultimasPrendasPedidas.clear();
         ultimasPrendasPedidas.addAll(nuevaLista);
     }
-
-    /* GETTER de todas las prendas */
-    public List<Prenda> getPrendas()
-    {
-        //TODO
-        return null;
-    }
-
-    /* GETTER de una prenda */
-    public Prenda getPrenda(long id)
-    {
-        //TODO
-        return null;
-    }
 }
