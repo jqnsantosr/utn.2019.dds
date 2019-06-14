@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Atuendo
-{
+{//test
     private Set<Prenda> prendasElegidas = new HashSet<>();
     private List<PartesCuerpo> partesCuerpoACubrir = new ArrayList<>();
 
