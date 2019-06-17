@@ -41,3 +41,4 @@
 - Creado de Users.
 - Creado de Guardarropas para esos Users.
 - Creado de Prendas para los Guardarropas de esos Users.
+- Creado de Atuendos de forma aleatoria.
