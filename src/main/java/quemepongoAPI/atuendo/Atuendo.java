@@ -18,6 +18,11 @@ public class Atuendo
         //TODO
     }
 
+    public int calor()
+    {
+        return prendasElegidas.size() * 10; //TODO: calor es individual de cada prenda
+    }
+
     public void add_prenda(Prenda unaPrenda)
     {
         prendasElegidas.add(unaPrenda);
