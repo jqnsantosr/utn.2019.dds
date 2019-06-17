@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import java.sql.*;
+import java.util.Calendar;
+
 @RestController
 class UserController {
 
@@ -69,8 +72,36 @@ class UserController {
     /* Post de un usuario: creación de cuenta.*/
     @PostMapping("/user")
     User newUser(@RequestBody User newUser) {
+
+        try {
+            String host = "jdbc:mysql://localhost:3306/quemepongo";
+            String uName = "root";
+            String uPass = "procopio";
+            Connection con = DriverManager.getConnection(host, uName, uPass);
+            Calendar calendar = Calendar.getInstance();
+            java.sql.Date startDate = new java.sql.Date(calendar.getTime().getTime());
+
+            String strusername = "username";
+            String query = " insert into usuarios (usuarios_id, nombre, fecha_alta, fecha_modificacion)"
+                    + " values (?, ?, ?, ?)";
+
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt (1, 3);
+            preparedStmt.setString (2, strusername);
+            preparedStmt.setDate   (3, startDate);
+            preparedStmt.setDate(4, startDate);
+
+            preparedStmt.execute();
+
+            con.close();
+
+
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
         return repository.save(newUser);
     }
+
 
     /* Post de un guardarropas: creación de guardarropas para ese usuario.*/
     @PostMapping("/user/{id}/guardarropa")
