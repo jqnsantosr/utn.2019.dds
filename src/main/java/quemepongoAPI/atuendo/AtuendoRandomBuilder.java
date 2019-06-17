@@ -9,11 +9,8 @@ import java.util.List;
 
 public class AtuendoRandomBuilder extends AtuendoBuilder
 {
-    private List<PartesCuerpo> partesOcupadas = new ArrayList<>();
-    private List<PartesCuerpo> partesAOcupar = new ArrayList<>();
-
     @Override
-    public void buildPorParte(Guardarropa unGuardarropa, PartesCuerpo unaParte)
+    public void buildPorParte(Guardarropa unGuardarropa, PartesCuerpo unaParte, String clima)
     {
         //la parte requerida ya esta ocupada
         if(partesOcupadas.contains(unaParte)) return;
@@ -44,26 +41,9 @@ public class AtuendoRandomBuilder extends AtuendoBuilder
         partesAOcupar = partes;
     }
 
-    private boolean verificarEspacios(Prenda unaPrenda)
+    @Override
+    public void agregar_nueva_capa()
     {
-        List<PartesCuerpo> listaPartes = unaPrenda.damePartesCuerpo();
 
-        for (PartesCuerpo parte: listaPartes)
-        {
-            if(partesOcupadas.contains(parte) || !partesAOcupar.contains(parte)) return false;
-        }
-
-        return true;
-    }
-
-    private void ocuparEspacios(Prenda unaPrenda)
-    {
-        List<PartesCuerpo> listaPartes = unaPrenda.damePartesCuerpo();
-
-        for (PartesCuerpo parte: listaPartes)
-        {
-            atuendo.add_parte_del_cuerpo(parte);
-            partesOcupadas.add(parte);
-        }
     }
 }

@@ -3,6 +3,7 @@ package quemepongoAPI.guardarropa;
 import lombok.Data;
 import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.atuendo.AtuendoBuilder;
+import quemepongoAPI.atuendo.AtuendoClimaBuilder;
 import quemepongoAPI.atuendo.AtuendoRandomBuilder;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
@@ -58,7 +59,27 @@ public class Guardarropa {
     public Atuendo crearAtuendoAleatorio(List<PartesCuerpo> partes)
     {
         atuendoBuilder = new AtuendoRandomBuilder();
-        constriurAtuendo(partes);
+        constriurAtuendo(partes, null);
+
+        return atuendoBuilder.dameAtuendo();
+    }
+
+    public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes) //TODO: recibe un evento del usuario
+    {
+        //TODO: Decidir que clima usar preguntando al adapter cual es la temperatura
+        String clima = "Frio";
+        int target = 100; // = adapter.dameTemperatura(unEvento);
+
+        atuendoBuilder = new AtuendoClimaBuilder();
+
+        while(atuendoBuilder.calorAtuendo() < target)
+        {
+            constriurAtuendo(listaPartes, clima);
+            if(hayPrendasParaEntregar())
+                atuendoBuilder.agregar_nueva_capa();
+            else
+                break;
+        }
 
         return atuendoBuilder.dameAtuendo();
     }
@@ -76,18 +97,18 @@ public class Guardarropa {
         atuendoBuilder.setListaDePartes(listaPartesDefault);
         for (PartesCuerpo unaParte : listaPartesDefault)
         {
-            atuendoBuilder.buildPorParte(this, unaParte);
+            atuendoBuilder.buildPorParte(this, unaParte, null);
         }
     }
 
     //CASO usuario pide una combinacion de partes
-    public void constriurAtuendo(List<PartesCuerpo> partes)
+    public void constriurAtuendo(List<PartesCuerpo> partes, String clima)
     {
         atuendoBuilder.crearNuevoAtuendo();
         atuendoBuilder.setListaDePartes(partes);
         for (PartesCuerpo parte: partes)
         {
-           atuendoBuilder.buildPorParte(this, parte);
+           atuendoBuilder.buildPorParte(this, parte, clima);
         }
     }
 
@@ -96,14 +117,7 @@ public class Guardarropa {
         //lista con las prendas que son de la parte del cuerpo pedida
         List<Prenda> prendasResultado = new ArrayList<>();
 
-        //filtra de todas las prendas en el guardarropas y las agrega en la lista nueva
-        for (Prenda unaPrenda: prendas)
-        {
-            List<PartesCuerpo> partesCuerpoDeLaPrenda = unaPrenda.damePartesCuerpo();
-
-            if(partesCuerpoDeLaPrenda.contains(unaParte))
-                prendasResultado.add(unaPrenda);
-        }
+        filtrarLista(prendasResultado, unaParte);
 
         actualizarCacheDePrendasPedidas(prendasResultado);
 
@@ -120,9 +134,55 @@ public class Guardarropa {
         }
     }
 
+    public Prenda darUnaPrendaParaClima(PartesCuerpo unaParte, String clima)
+    {
+        //lista con las prendas que son de la parte del cuerpo pedida
+        List<Prenda> prendasResultado = new ArrayList<>();
+
+        filtrarLista(prendasResultado, unaParte);
+
+        ordenarLista(prendasResultado, clima);
+
+        actualizarCacheDePrendasPedidas(prendasResultado);
+
+        return darOtraPrendaParaClima();
+    }
+
+    public Prenda darOtraPrendaParaClima()
+    {
+        try {
+            return ultimasPrendasPedidas.remove(0);
+        } catch(Exception listaVacia){
+            return null;
+        }
+    }
+
     private void actualizarCacheDePrendasPedidas(List<Prenda> nuevaLista)
     {
         ultimasPrendasPedidas.clear();
         ultimasPrendasPedidas.addAll(nuevaLista);
+    }
+
+    private void filtrarLista(List<Prenda> unaLista, PartesCuerpo unaParte)
+    {
+        //filtra de todas las prendas en el guardarropas y las agrega en la lista nueva
+        for (Prenda unaPrenda: prendas)
+        {
+            List<PartesCuerpo> partesCuerpoDeLaPrenda = unaPrenda.damePartesCuerpo();
+
+            if(partesCuerpoDeLaPrenda.contains(unaParte))
+                unaLista.add(unaPrenda);
+        }
+    }
+
+    private void ordenarLista(List<Prenda> unaLista, String clima)
+    {
+        //TODO
+    }
+
+    private boolean hayPrendasParaEntregar()
+    {
+        //TODO
+        return false;
     }
 }
