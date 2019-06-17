@@ -3,14 +3,19 @@ package quemepongoAPI.user;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
+import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.Prenda;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+import java.sql.*;
+import java.util.Calendar;
 
 @RestController
 class UserController {
@@ -44,11 +49,59 @@ class UserController {
         return assembler.toResource(user);
     }
 
+    /* Get de un atuendo aleatorio */
+    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
+    Atuendo one(@PathVariable Long idUser, @PathVariable Long idGuard) {
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+        Optional<Guardarropa> guardarropaOptional = user.getGuardarropasById(idGuard);
+        Guardarropa guardarropa;
+
+        if (guardarropaOptional.isPresent())
+        {
+            guardarropa = guardarropaOptional.get();
+
+            return guardarropa.crearAtuendoAleatorio();
+        }
+        else
+        {
+            throw new GuardarropasNotFoundException(idGuard);
+        }
+    }
+
     /* Post de un usuario: creación de cuenta.*/
     @PostMapping("/user")
     User newUser(@RequestBody User newUser) {
+
+        try {
+            String host = "jdbc:mysql://localhost:3306/quemepongo";
+            String uName = "root";
+            String uPass = "procopio";
+            Connection con = DriverManager.getConnection(host, uName, uPass);
+            Calendar calendar = Calendar.getInstance();
+            java.sql.Date startDate = new java.sql.Date(calendar.getTime().getTime());
+
+            String strusername = "username";
+            String query = " insert into usuarios (usuarios_id, nombre, fecha_alta, fecha_modificacion)"
+                    + " values (?, ?, ?, ?)";
+
+            PreparedStatement preparedStmt = con.prepareStatement(query);
+            preparedStmt.setInt (1, 3);
+            preparedStmt.setString (2, strusername);
+            preparedStmt.setDate   (3, startDate);
+            preparedStmt.setDate(4, startDate);
+
+            preparedStmt.execute();
+
+            con.close();
+
+
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
         return repository.save(newUser);
     }
+
 
     /* Post de un guardarropas: creación de guardarropas para ese usuario.*/
     @PostMapping("/user/{id}/guardarropa")

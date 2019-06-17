@@ -5,7 +5,6 @@ public enum PartesCuerpo {
     CABEZA,
     TORSO,
     PIERNAS,
-    TORSO_Y_PIERNAS,
     CALZADO,
     ACCESORIO_MUNECA_DER,
     ACCESORIO_MUNECA_IZQ,
@@ -15,3 +14,4 @@ public enum PartesCuerpo {
     OJOS,
     CUELLO
 }
+//NO AGREGAR COMBINACIONES//

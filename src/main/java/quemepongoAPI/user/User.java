@@ -25,7 +25,8 @@ public class User {
         this.googleId = googleId;
     }
 
-    private Optional<Guardarropa> getGuardarropasById(Long id){
+    /* GETTER de un Guardarropas */
+    public Optional<Guardarropa> getGuardarropasById(Long id){
         return guardarropas.stream().filter(g -> g.getId().equals(id)).findFirst();
     }
 
