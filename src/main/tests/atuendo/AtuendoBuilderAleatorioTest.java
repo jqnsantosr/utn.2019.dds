@@ -44,6 +44,7 @@ class AtuendoBuilderAleatorioTest {
         unGuardarropa.addPrenda(nikesAmarillas);
 
         Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
+        unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(gorraBlanca));
         assertTrue(unAtuendo.tiene_prenda(remeraAzul));
@@ -78,6 +79,7 @@ class AtuendoBuilderAleatorioTest {
         unGuardarropa.addPrenda(zapatosConTacosYPlataforma);
 
         Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
+        unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(vestidoRosa));
         assertFalse(unAtuendo.tiene_prenda(polleraVioleta));
@@ -118,6 +120,7 @@ class AtuendoBuilderAleatorioTest {
         partesPedidas.add(PartesCuerpo.OJOS);
 
         Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio(partesPedidas);
+        unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(bikiniRoja));
         assertTrue(unAtuendo.tiene_prenda(sombreroVaquero));
@@ -156,6 +159,7 @@ class AtuendoBuilderAleatorioTest {
         unGuardarropa.addPrenda(botas_cpt_america);
 
         Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
+        unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(trajeDeBatman));
         assertFalse(unAtuendo.tiene_prenda(pantalon_thor));

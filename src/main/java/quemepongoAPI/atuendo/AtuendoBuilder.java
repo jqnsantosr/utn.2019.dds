@@ -23,21 +23,10 @@ public abstract class AtuendoBuilder
         atuendo = new Atuendo();
     }
 
-    public abstract void buildPorParte(Guardarropa unGuardarropa, PartesCuerpo unaParte, String clima);
+    public abstract void buildPorParte(Guardarropa unGuardarropa, PartesCuerpo unaParte);
     public abstract void setListaDePartes(List<PartesCuerpo> partes);
+    public abstract boolean verificarEspacios(Prenda unaPrenda);
     public abstract void agregar_nueva_capa();
-
-    public boolean verificarEspacios(Prenda unaPrenda)
-    {
-        List<PartesCuerpo> listaPartes = unaPrenda.damePartesCuerpo();
-
-        for (PartesCuerpo parte: listaPartes)
-        {
-            if(partesOcupadas.contains(parte) || !partesAOcupar.contains(parte)) return false;
-        }
-
-        return true;
-    }
 
     public void ocuparEspacios(Prenda unaPrenda)
     {
@@ -53,5 +42,9 @@ public abstract class AtuendoBuilder
     public int calorAtuendo()
     {
         return atuendo.calor();
+    }
+
+    public int cant_prendas(){
+        return atuendo.cant_prendas();
     }
 }
