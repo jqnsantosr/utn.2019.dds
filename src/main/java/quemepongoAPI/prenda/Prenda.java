@@ -3,6 +3,7 @@ package quemepongoAPI.prenda;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -43,5 +44,17 @@ public class Prenda {
     public boolean tieneMasDeUnaParte()
     {
         return this.tipo.cantidadPartes() > 1;
+    }
+
+    public boolean perteneceA(List<PartesCuerpo> listaPartes)
+    {
+        boolean pertenece = true;
+        List<PartesCuerpo> partesDeLaPrenda = tipo.damePartesDelCuerpo();
+
+        for (PartesCuerpo parte : partesDeLaPrenda) {
+            if(!listaPartes.contains(parte)) pertenece = false;
+        }
+
+        return pertenece;
     }
 }
