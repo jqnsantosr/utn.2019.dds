@@ -202,7 +202,7 @@ class AtuendoBuilderClimaTest {
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(camperaGris));
-        assertTrue(unAtuendo.tiene_prenda(jeanNegro));
+        assertTrue(unAtuendo.tiene_prenda(buzoNegro));
         assertTrue(unAtuendo.tiene_prenda(jeanNegro));
         assertTrue(unAtuendo.tiene_prenda(adidasNegra));
     }
@@ -210,13 +210,85 @@ class AtuendoBuilderClimaTest {
     @Test
     void crearNuevoAtuendoParaClimaFrioNoAlcanzanPrendas()
     {
+        Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio No Alcanzan Prendas");
 
+        unGuardarropa.setClimaController(climaController);
+        when(climaController.getClima()).thenReturn(clima);
+        when(clima.getClimateNow()).thenReturn(currentClima);
+        when(currentClima.getTemperature()).thenReturn(17.0);
+
+        TipoPrenda remera = new TipoPrenda("Remera");
+        remera.setCalor(15);
+        remera.agregarParteCuerpo(PartesCuerpo.TORSO);
+        Prenda remeraTermicaBlanca = new Prenda("Remera Termica Blanca", remera, "Blanca");
+
+        TipoPrenda pantalon = new TipoPrenda("Pantalon");
+        pantalon.setCalor(15);
+        pantalon.agregarParteCuerpo(PartesCuerpo.PIERNAS);
+        Prenda jeanNegro = new Prenda("Jean Negro", pantalon, "Negro");
+
+        TipoPrenda zapatilla = new TipoPrenda("Zapatilla");
+        zapatilla.setCalor(2);
+        zapatilla.agregarParteCuerpo(PartesCuerpo.CALZADO);
+        Prenda adidasNegra = new Prenda("Adidas Negras", zapatilla, "Negras");
+
+        unGuardarropa.addPrenda(remeraTermicaBlanca);
+        unGuardarropa.addPrenda(jeanNegro);
+        unGuardarropa.addPrenda(adidasNegra);
+
+        List<PartesCuerpo> partesPedidas = new ArrayList<>();
+        partesPedidas.add(PartesCuerpo.TORSO);
+        partesPedidas.add(PartesCuerpo.PIERNAS);
+        partesPedidas.add(PartesCuerpo.CALZADO);
+
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas);
+        unAtuendo.mostrarAtuendo();
+
+        assertTrue(unAtuendo.tiene_prenda(remeraTermicaBlanca));
+        assertTrue(unAtuendo.tiene_prenda(jeanNegro));
+        assertTrue(unAtuendo.tiene_prenda(adidasNegra));
     }
 
     @Test
     void crearNuevoAtuendoParaClimaCalienteTieneSoloUnaCapa()
     {
+        Guardarropa unGuardarropa = new Guardarropa("Test Clima Caliente Una Capa");
 
+        unGuardarropa.setClimaController(climaController);
+        when(climaController.getClima()).thenReturn(clima);
+        when(clima.getClimateNow()).thenReturn(currentClima);
+        when(currentClima.getTemperature()).thenReturn(32.0);
+
+        TipoPrenda remera = new TipoPrenda("Remera");
+        remera.setCalor(5);
+        remera.agregarParteCuerpo(PartesCuerpo.TORSO);
+        Prenda remeraVerde = new Prenda("Remera Verde", remera, "Verde");
+
+        TipoPrenda pantalon = new TipoPrenda("Pantalon");
+        pantalon.setCalor(10);
+        pantalon.agregarParteCuerpo(PartesCuerpo.PIERNAS);
+        Prenda jeanGris = new Prenda("Jean Gris", pantalon, "Gris");
+
+        TipoPrenda zapatilla = new TipoPrenda("Zapatilla");
+        zapatilla.setCalor(2);
+        zapatilla.agregarParteCuerpo(PartesCuerpo.CALZADO);
+        Prenda nikesVerdes = new Prenda("Nikes Verdes", zapatilla, "Verdes");
+
+        unGuardarropa.addPrenda(remeraVerde);
+        unGuardarropa.addPrenda(jeanGris);
+        unGuardarropa.addPrenda(nikesVerdes);
+
+        List<PartesCuerpo> partesPedidas = new ArrayList<>();
+        partesPedidas.add(PartesCuerpo.TORSO);
+        partesPedidas.add(PartesCuerpo.PIERNAS);
+        partesPedidas.add(PartesCuerpo.CALZADO);
+
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas);
+        unAtuendo.mostrarAtuendo();
+
+        assertTrue(unAtuendo.tiene_prenda(remeraVerde));
+        assertTrue(unAtuendo.tiene_prenda(jeanGris));
+        assertTrue(unAtuendo.tiene_prenda(nikesVerdes));
     }
 
     @Test
