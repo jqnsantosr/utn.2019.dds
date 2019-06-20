@@ -9,13 +9,18 @@ import java.util.List;
 import java.util.Set;
 
 public class Atuendo
-{//test holaaaaa
+{
     private Set<Prenda> prendasElegidas = new HashSet<>();
     private List<PartesCuerpo> partesCuerpoACubrir = new ArrayList<>();
 
     public void mostrarAtuendo()
     {
-        //TODO
+        String prendas = "";
+
+        for (Prenda prenda : prendasElegidas) {
+             prendas += prenda.getNombre() + ", ";
+        }
+        System.out.println("Prendas del Atuendo: " + prendas);
     }
 
     public int calor()
@@ -31,6 +36,11 @@ public class Atuendo
     public void add_parte_del_cuerpo(PartesCuerpo unaParte)
     {
         partesCuerpoACubrir.add(unaParte);
+    }
+
+    public int cant_prendas()
+    {
+        return prendasElegidas.size();
     }
 
     //-- Metodos para Tests --

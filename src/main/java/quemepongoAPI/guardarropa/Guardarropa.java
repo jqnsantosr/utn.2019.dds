@@ -27,6 +27,7 @@ public class Guardarropa {
     @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Prenda> ultimasPrendasPedidas;
+    private double ultimaTemperaturaPedida;
 
     public Guardarropa() {}
 
@@ -59,23 +60,22 @@ public class Guardarropa {
     public Atuendo crearAtuendoAleatorio(List<PartesCuerpo> partes)
     {
         atuendoBuilder = new AtuendoRandomBuilder();
-        constriurAtuendo(partes, null);
+        constriurAtuendo(partes);
 
         return atuendoBuilder.dameAtuendo();
     }
 
-    public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes) //TODO: recibe un evento del usuario
+    public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes/*, Evento unEvento*/) //TODO: recibe un evento del usuario
     {
-        //TODO: Decidir que clima usar preguntando al adapter cual es la temperatura
-        String clima = "Frio";
-        int target = 100; // = adapter.dameTemperatura(unEvento);
+        //temperatura = adapter.dame_temperatura(unEvento);
+        int target = 100; // = adapter.dame_temperatura(unEvento); //TODO: relacionar temperatura con calor de las prendas
 
         atuendoBuilder = new AtuendoClimaBuilder();
 
         while(atuendoBuilder.calorAtuendo() < target)
         {
-            constriurAtuendo(listaPartes, clima);
-            if(hayPrendasParaEntregar())
+            constriurAtuendo(listaPartes);
+            if(hayPrendasParaEntregar(listaPartes))
                 atuendoBuilder.agregar_nueva_capa();
             else
                 break;
@@ -97,18 +97,18 @@ public class Guardarropa {
         atuendoBuilder.setListaDePartes(listaPartesDefault);
         for (PartesCuerpo unaParte : listaPartesDefault)
         {
-            atuendoBuilder.buildPorParte(this, unaParte, null);
+            atuendoBuilder.buildPorParte(this, unaParte);
         }
     }
 
     //CASO usuario pide una combinacion de partes
-    public void constriurAtuendo(List<PartesCuerpo> partes, String clima)
+    public void constriurAtuendo(List<PartesCuerpo> partes)
     {
         atuendoBuilder.crearNuevoAtuendo();
         atuendoBuilder.setListaDePartes(partes);
         for (PartesCuerpo parte: partes)
         {
-           atuendoBuilder.buildPorParte(this, parte, clima);
+           atuendoBuilder.buildPorParte(this, parte);
         }
     }
 
@@ -134,14 +134,14 @@ public class Guardarropa {
         }
     }
 
-    public Prenda darUnaPrendaParaClima(PartesCuerpo unaParte, String clima)
+    public Prenda darUnaPrendaParaClima(PartesCuerpo unaParte)
     {
         //lista con las prendas que son de la parte del cuerpo pedida
         List<Prenda> prendasResultado = new ArrayList<>();
 
         filtrarLista(prendasResultado, unaParte);
 
-        ordenarLista(prendasResultado, clima);
+        ordenarListaPorTemperatura(prendasResultado);
 
         actualizarCacheDePrendasPedidas(prendasResultado);
 
@@ -175,14 +175,19 @@ public class Guardarropa {
         }
     }
 
-    private void ordenarLista(List<Prenda> unaLista, String clima)
+    private void ordenarListaPorTemperatura(List<Prenda> unaLista)
     {
         //TODO
     }
 
-    private boolean hayPrendasParaEntregar()
+    private boolean hayPrendasParaEntregar(List<PartesCuerpo> listaPartes)
     {
-        //TODO
-        return false;
+        int cantPrendasPosibles = 0;
+
+        for (Prenda unaPrenda : prendas) {
+            if(unaPrenda.perteneceA(listaPartes)) cantPrendasPosibles++;
+        }
+
+        return cantPrendasPosibles != atuendoBuilder.cant_prendas();
     }
 }
