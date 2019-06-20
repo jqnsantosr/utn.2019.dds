@@ -82,7 +82,7 @@ public class Guardarropa {
                 atuendoBuilder.agregar_nueva_capa();
             else
                 break;
-            constriurAtuendo(listaPartes);
+            constriurAtuendoClima(listaPartes);
         }
 
         return atuendoBuilder.dameAtuendo();
@@ -113,6 +113,14 @@ public class Guardarropa {
         for (PartesCuerpo parte: partes)
         {
            atuendoBuilder.buildPorParte(this, parte);
+        }
+    }
+
+    public void constriurAtuendoClima(List<PartesCuerpo> partes)
+    {
+        for (PartesCuerpo parte: partes)
+        {
+            atuendoBuilder.buildPorParte(this, parte);
         }
     }
 
@@ -199,7 +207,7 @@ public class Guardarropa {
             if(unaPrenda.perteneceA(listaPartes)) cantPrendasPosibles++;
         }
 
-        return cantPrendasPosibles != atuendoBuilder.cant_prendas();
+        return cantPrendasPosibles > atuendoBuilder.cant_prendas();
     }
 
     private int obtenerTarget()
