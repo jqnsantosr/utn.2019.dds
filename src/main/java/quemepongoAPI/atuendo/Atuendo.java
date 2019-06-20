@@ -25,7 +25,16 @@ public class Atuendo
 
     public int calor()
     {
-        return prendasElegidas.size() * 10; //TODO: calor es individual de cada prenda
+        if(prendasElegidas.size() == 0)
+            return 0;
+
+        int calorTotal = 0;
+
+        for (Prenda prenda : prendasElegidas) {
+            calorTotal += prenda.getTipo().factorCalor();
+        }
+
+        return calorTotal;
     }
 
     public void add_prenda(Prenda unaPrenda)
