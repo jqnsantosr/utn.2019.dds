@@ -1,2 +1,4 @@
 /.idea
 utn.2019.dds.iml
+# Project exclude paths
+/target/
