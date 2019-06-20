@@ -14,8 +14,8 @@ import java.util.List;
 
 public class ClimaController implements Callback<Clima> {
 
-    private static final GooglePlaces placesAPI = new GooglePlaces("AIzaSyD3zz7lydgPsa25EQlkA8f41pVQQl4oihU"); // key de GooglePlaces API
-    private static final String key = "cb486004816f422cfe6a4218f77b71c1"; // darksky key
+    private static final GooglePlaces placesAPI = new GooglePlaces("sarasa"); // key de GooglePlaces API
+    private static final String key = "sarasa2"; // darksky key
     private static final String BASE_URL = "https://api.darksky.net/";
     private Clima clima;
 
