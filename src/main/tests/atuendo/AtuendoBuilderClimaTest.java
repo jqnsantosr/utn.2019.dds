@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import quemepongoAPI.atuendo.Atuendo;
+import quemepongoAPI.atuendo.AtuendoIncompletoException;
 import quemepongoAPI.clima.Clima;
 import quemepongoAPI.clima.ClimaController;
 import quemepongoAPI.clima.Currently;
@@ -205,6 +206,7 @@ class AtuendoBuilderClimaTest {
         assertTrue(unAtuendo.tiene_prenda(buzoNegro));
         assertTrue(unAtuendo.tiene_prenda(jeanNegro));
         assertTrue(unAtuendo.tiene_prenda(adidasNegra));
+        assertTrue(unAtuendo.tiene_prenda(gorraLanaNegra));
     }
 
     @Test
@@ -264,10 +266,20 @@ class AtuendoBuilderClimaTest {
         remera.agregarParteCuerpo(PartesCuerpo.TORSO);
         Prenda remeraVerde = new Prenda("Remera Verde", remera, "Verde");
 
+        TipoPrenda campera = new TipoPrenda("Campera");
+        campera.setCalor(9);
+        campera.agregarParteCuerpo(PartesCuerpo.TORSO);
+        Prenda camperaRosa = new Prenda("Campera Rosa", campera, "Rosa");
+
         TipoPrenda pantalon = new TipoPrenda("Pantalon");
         pantalon.setCalor(10);
         pantalon.agregarParteCuerpo(PartesCuerpo.PIERNAS);
         Prenda jeanGris = new Prenda("Jean Gris", pantalon, "Gris");
+
+        TipoPrenda pantalonCorto = new TipoPrenda("Pantalon Corto");
+        pantalonCorto.setCalor(5);
+        pantalonCorto.agregarParteCuerpo(PartesCuerpo.PIERNAS);
+        Prenda vermudaVioleta = new Prenda("Vermuda Violeta", pantalonCorto, "Violeta");
 
         TipoPrenda zapatilla = new TipoPrenda("Zapatilla");
         zapatilla.setCalor(2);
@@ -277,6 +289,8 @@ class AtuendoBuilderClimaTest {
         unGuardarropa.addPrenda(remeraVerde);
         unGuardarropa.addPrenda(jeanGris);
         unGuardarropa.addPrenda(nikesVerdes);
+        unGuardarropa.addPrenda(vermudaVioleta);
+        unGuardarropa.addPrenda(camperaRosa);
 
         List<PartesCuerpo> partesPedidas = new ArrayList<>();
         partesPedidas.add(PartesCuerpo.TORSO);
@@ -287,13 +301,34 @@ class AtuendoBuilderClimaTest {
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(remeraVerde));
-        assertTrue(unAtuendo.tiene_prenda(jeanGris));
+        assertTrue(unAtuendo.tiene_prenda(vermudaVioleta));
         assertTrue(unAtuendo.tiene_prenda(nikesVerdes));
+        assertFalse(unAtuendo.tiene_prenda(camperaRosa));
+        assertFalse(unAtuendo.tiene_prenda(jeanGris));
     }
 
     @Test
     void crearNuevoAtuendoParaClimaTiraExceptionPorNoTenerPrendas()
     {
+        Guardarropa unGuardarropa = new Guardarropa("TEST");
 
+        unGuardarropa.setClimaController(climaController);
+        when(climaController.getClima()).thenReturn(clima);
+        when(clima.getClimateNow()).thenReturn(currentClima);
+        when(currentClima.getTemperature()).thenReturn(9001.0); //it's over 9000!!!
+
+        TipoPrenda vestido = new TipoPrenda("Vestido");
+        vestido.agregarParteCuerpo(PartesCuerpo.TORSO);
+        vestido.agregarParteCuerpo(PartesCuerpo.PIERNAS);
+        Prenda vestidoRosa = new Prenda("Vestido Rosa", vestido, "Rosa");
+
+        unGuardarropa.addPrenda(vestidoRosa);
+
+        List<PartesCuerpo> partesPedidas = new ArrayList<>();
+        partesPedidas.add(PartesCuerpo.TORSO);
+        partesPedidas.add(PartesCuerpo.PIERNAS);
+        partesPedidas.add(PartesCuerpo.CALZADO);
+
+        assertThrows(AtuendoIncompletoException.class, () -> unGuardarropa.crearAtuendoClima(partesPedidas));
     }
 }
