@@ -18,7 +18,7 @@ public class TipoPrenda {
     private List<Tela> telasPosibles;
     @ElementCollection
     private List<PartesCuerpo> partesCuerpo;
-    private Boolean esAbrigo;
+    private int calor;
 
     public TipoPrenda(String nombre)
     {
@@ -45,5 +45,15 @@ public class TipoPrenda {
     public int cantidadPartes()
     {
         return partesCuerpo.size();
+    }
+
+    public int factorCalor()
+    {
+        return calor;
+    }
+
+    public void setCalor(int unCalor)
+    {
+        calor = unCalor;
     }
 }
