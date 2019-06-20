@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class Prenda {
+public class Prenda implements Comparable<Prenda>{
 
     private @Id
     @GeneratedValue
@@ -56,5 +56,10 @@ public class Prenda {
         }
 
         return pertenece;
+    }
+
+    @Override
+    public int compareTo(Prenda otraPrenda) {
+        return this.tipo.factorCalor() - otraPrenda.tipo.factorCalor();
     }
 }

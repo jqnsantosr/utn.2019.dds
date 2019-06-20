@@ -5,13 +5,12 @@ import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.atuendo.AtuendoBuilder;
 import quemepongoAPI.atuendo.AtuendoClimaBuilder;
 import quemepongoAPI.atuendo.AtuendoRandomBuilder;
+import quemepongoAPI.clima.ClimaController;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Data
 @Entity
@@ -24,6 +23,7 @@ public class Guardarropa {
     private List<Prenda> prendas;
     @Transient
     private AtuendoBuilder atuendoBuilder;
+    private ClimaController climaController;
     @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Prenda> ultimasPrendasPedidas;
@@ -67,18 +67,22 @@ public class Guardarropa {
 
     public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes/*, Evento unEvento*/) //TODO: recibe un evento del usuario
     {
-        //temperatura = adapter.dame_temperatura(unEvento);
-        int target = 100; // = adapter.dame_temperatura(unEvento); //TODO: relacionar temperatura con calor de las prendas
+        //temperatura = adapter.dame_temperatura(unEvento); //TODO: deberia ser pronostico?
+        ultimaTemperaturaPedida = climaController.getClima().getClimateNow().getTemperature();
+
+        //relaciona temperatura con calor de las prendas
+        int target = obtenerTarget();
 
         atuendoBuilder = new AtuendoClimaBuilder();
+        constriurAtuendo(listaPartes);
 
         while(atuendoBuilder.calorAtuendo() < target)
         {
-            constriurAtuendo(listaPartes);
             if(hayPrendasParaEntregar(listaPartes))
                 atuendoBuilder.agregar_nueva_capa();
             else
                 break;
+            constriurAtuendoClima(listaPartes);
         }
 
         return atuendoBuilder.dameAtuendo();
@@ -109,6 +113,14 @@ public class Guardarropa {
         for (PartesCuerpo parte: partes)
         {
            atuendoBuilder.buildPorParte(this, parte);
+        }
+    }
+
+    public void constriurAtuendoClima(List<PartesCuerpo> partes)
+    {
+        for (PartesCuerpo parte: partes)
+        {
+            atuendoBuilder.buildPorParte(this, parte);
         }
     }
 
@@ -150,8 +162,15 @@ public class Guardarropa {
 
     public Prenda darOtraPrendaParaClima()
     {
+        int posicion;
+
+        if(ultimaTemperaturaPedida >= 27) //TODO: temperatura templada por configuracion
+            posicion = 0; //hace calor, por lo tanto saca la prenda mas fria
+        else
+            posicion = ultimasPrendasPedidas.size() - 1; //hace frio, por lo tanto saca la prenda mas calurosa
+
         try {
-            return ultimasPrendasPedidas.remove(0);
+            return ultimasPrendasPedidas.remove(posicion);
         } catch(Exception listaVacia){
             return null;
         }
@@ -177,7 +196,7 @@ public class Guardarropa {
 
     private void ordenarListaPorTemperatura(List<Prenda> unaLista)
     {
-        //TODO
+        Collections.sort(unaLista);
     }
 
     private boolean hayPrendasParaEntregar(List<PartesCuerpo> listaPartes)
@@ -188,6 +207,18 @@ public class Guardarropa {
             if(unaPrenda.perteneceA(listaPartes)) cantPrendasPosibles++;
         }
 
-        return cantPrendasPosibles != atuendoBuilder.cant_prendas();
+        return cantPrendasPosibles > atuendoBuilder.cant_prendas();
+    }
+
+    private int obtenerTarget()
+    {
+        //27 grados centigrados es templado, debe ser por configuracion
+        if(ultimaTemperaturaPedida >= 27){
+            //hace calor, el target debe ser lo mas bajo posible
+            return 1;
+        } else {
+            //hace frio, el target debe ser lo mas aproximado
+            return Math.abs(27-(int)ultimaTemperaturaPedida) * 10;
+        }
     }
 }

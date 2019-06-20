@@ -22,8 +22,6 @@ public class AtuendoClimaBuilder extends AtuendoBuilder {
         //pedir una prenda al guardarropa
         Prenda unaPrenda = unGuardarropa.darUnaPrendaParaClima(unaParte);
 
-        //TODO: la prenda obtenida ya fue agregada
-
         //verificar que las partes que la prenda ocupa no esten ocupados o que no sea requerida por usuario
         while((unaPrenda != null) && (!verificarEspacios(unaPrenda)))
         {
@@ -54,7 +52,8 @@ public class AtuendoClimaBuilder extends AtuendoBuilder {
 
         for (PartesCuerpo parte: listaPartes)
         {
-            if(!partesAOcupar.contains(parte)) return false;
+            if(!partesAOcupar.contains(parte) || atuendo.tiene_prenda(unaPrenda))
+                return false;
         }
 
         return true;
