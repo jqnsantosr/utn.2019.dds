@@ -25,29 +25,33 @@ public class User {
         this.googleId = googleId;
     }
 
-    /* GETTER de un Guardarropas */
-    public Optional<Guardarropa> getGuardarropasById(Long id){
+    User(String username, String googleId, List<Guardarropa> guard) {
+        this.username = username;
+        this.googleId = googleId;
+        this.guardarropas = guard;
+    }
+
+    Optional<Guardarropa> getGuardarropasById(Long id){
         return guardarropas.stream().filter(g -> g.getId().equals(id)).findFirst();
     }
 
-    public void addGuardarropas(Guardarropa guardarropa) {
+    void addGuardarropas(Guardarropa guardarropa) {
         this.guardarropas.add(guardarropa);
     }
 
-    public boolean deleteGuardarropas(Guardarropa guardarropa) {
+    void deleteGuardarropas(Guardarropa guardarropa) throws GuardarropasNotEmptyException {
         if(guardarropa.getPrendas().isEmpty()){
             this.guardarropas.remove(guardarropa);
-            return true;
         } else {
-            return false;
+            throw new GuardarropasNotEmptyException(guardarropa.getId());
         }
     }
 
-    public boolean isPrendaInAnyGuardarropas(Prenda prenda) {
+    boolean isPrendaInAnyGuardarropas(Prenda prenda) {
         return guardarropas.stream().anyMatch(guardarropa -> guardarropa.hasThisPrenda(prenda));
     }
 
-    public void addPrendaToGuardarropas(Prenda prenda, Long idGuardarropa) {
+    void addPrendaToGuardarropas(Prenda prenda, Long idGuardarropa) {
       getGuardarropasById(idGuardarropa).ifPresent(guardarropa -> guardarropa.addPrenda(prenda));
     }
 }

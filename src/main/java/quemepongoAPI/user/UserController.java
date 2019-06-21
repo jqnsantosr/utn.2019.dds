@@ -1,5 +1,7 @@
 package quemepongoAPI.user;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import quemepongoAPI.prenda.Prenda;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -16,6 +19,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.sql.*;
 import java.util.Calendar;
+import java.util.stream.Stream;
 
 @RestController
 class UserController {
@@ -51,7 +55,8 @@ class UserController {
 
     /* Get de un atuendo aleatorio */
     @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
-    Atuendo one(@PathVariable Long idUser, @PathVariable Long idGuard) {
+    String one(@PathVariable Long idUser, @PathVariable Long idGuard) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
         Optional<Guardarropa> guardarropaOptional = user.getGuardarropasById(idGuard);
@@ -60,8 +65,7 @@ class UserController {
         if (guardarropaOptional.isPresent())
         {
             guardarropa = guardarropaOptional.get();
-
-            return guardarropa.crearAtuendoAleatorio();
+            return gson.toJson(guardarropa.crearAtuendoAleatorio());
         }
         else
         {
@@ -69,39 +73,28 @@ class UserController {
         }
     }
 
+    /* Get de atuendos aleatorios de todos los guardarropas */
+    @GetMapping("/user/{idUser}/guardarropa/random")
+    List<String> all(@PathVariable Long idUser) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+        List<Guardarropa> guardarropas = user.getGuardarropas();
+
+        return guardarropas.stream()
+                .map(g-> {
+                    Atuendo a;
+                    a = g.crearAtuendoAleatorio();
+                    return gson.toJson(a);
+                })
+                .collect(Collectors.toList());
+    }
+
     /* Post de un usuario: creación de cuenta.*/
     @PostMapping("/user")
     User newUser(@RequestBody User newUser) {
-
-        try {
-            String host = "jdbc:mysql://localhost:3306/quemepongo";
-            String uName = "root";
-            String uPass = "procopio";
-            Connection con = DriverManager.getConnection(host, uName, uPass);
-            Calendar calendar = Calendar.getInstance();
-            java.sql.Date startDate = new java.sql.Date(calendar.getTime().getTime());
-
-            String strusername = "username";
-            String query = " insert into usuarios (usuarios_id, nombre, fecha_alta, fecha_modificacion)"
-                    + " values (?, ?, ?, ?)";
-
-            PreparedStatement preparedStmt = con.prepareStatement(query);
-            preparedStmt.setInt (1, 3);
-            preparedStmt.setString (2, strusername);
-            preparedStmt.setDate   (3, startDate);
-            preparedStmt.setDate(4, startDate);
-
-            preparedStmt.execute();
-
-            con.close();
-
-
-        } catch (SQLException err) {
-            System.out.println(err.getMessage());
-        }
         return repository.save(newUser);
     }
-
 
     /* Post de un guardarropas: creación de guardarropas para ese usuario.*/
     @PostMapping("/user/{id}/guardarropa")
@@ -116,6 +109,17 @@ class UserController {
         }
 
         return repository.save(user);
+    }
+
+    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}")
+    void deleteGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa) throws GuardarropasNotEmptyException {
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+
+        if(user.getGuardarropasById(idGuardarropa).isPresent())
+        {
+            user.deleteGuardarropas(user.getGuardarropasById(idGuardarropa).get());
+        };
     }
 
     @PostMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda")

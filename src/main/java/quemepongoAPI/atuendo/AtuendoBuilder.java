@@ -11,8 +11,8 @@ public abstract class AtuendoBuilder
 {
     protected Atuendo atuendo;
 
-    public List<PartesCuerpo> partesOcupadas = new ArrayList<>();
-    public List<PartesCuerpo> partesAOcupar = new ArrayList<>();
+    List<PartesCuerpo> partesOcupadas = new ArrayList<>();
+    List<PartesCuerpo> partesAOcupar = new ArrayList<>();
 
     public Atuendo dameAtuendo()
     {
@@ -28,7 +28,7 @@ public abstract class AtuendoBuilder
     public abstract boolean verificarEspacios(Prenda unaPrenda);
     public abstract void agregar_nueva_capa();
 
-    public void ocuparEspacios(Prenda unaPrenda)
+    void ocuparEspacios(Prenda unaPrenda)
     {
         List<PartesCuerpo> listaPartes = unaPrenda.damePartesCuerpo();
 

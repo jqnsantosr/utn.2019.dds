@@ -23,6 +23,7 @@ public class Guardarropa {
     private List<Prenda> prendas;
     @Transient
     private AtuendoBuilder atuendoBuilder;
+    @Transient
     private ClimaController climaController;
     @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
@@ -33,8 +34,14 @@ public class Guardarropa {
 
     public Guardarropa(String nombre) {
         this.nombre = nombre;
-        prendas = new ArrayList<>();
-        ultimasPrendasPedidas = new ArrayList<>();
+        this.prendas = new ArrayList<>();
+        this.ultimasPrendasPedidas = new ArrayList<>();
+    }
+
+    public Guardarropa(String nombre, List<Prenda> prendasList) {
+        this.nombre = nombre;
+        this.prendas = prendasList;
+        this.ultimasPrendasPedidas = new ArrayList<>();
     }
 
     public void addPrenda(Prenda prenda){
@@ -106,7 +113,7 @@ public class Guardarropa {
     }
 
     //CASO usuario pide una combinacion de partes
-    public void constriurAtuendo(List<PartesCuerpo> partes)
+    private void constriurAtuendo(List<PartesCuerpo> partes)
     {
         atuendoBuilder.crearNuevoAtuendo();
         atuendoBuilder.setListaDePartes(partes);
@@ -116,7 +123,7 @@ public class Guardarropa {
         }
     }
 
-    public void constriurAtuendoClima(List<PartesCuerpo> partes)
+    private void constriurAtuendoClima(List<PartesCuerpo> partes)
     {
         for (PartesCuerpo parte: partes)
         {
