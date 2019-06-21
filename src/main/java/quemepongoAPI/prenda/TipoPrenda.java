@@ -2,10 +2,7 @@ package quemepongoAPI.prenda;
 
 import lombok.Data;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.*;
 
 @Data
@@ -27,11 +24,13 @@ public class TipoPrenda {
         partesCuerpo = new ArrayList<>();
     }
 
+    @ElementCollection
     public void agregarTelaPosible(Tela unaTela)
     {
         telasPosibles.add(unaTela);
     }
 
+    @ElementCollection
     public void agregarParteCuerpo(PartesCuerpo unaParte)
     {
         partesCuerpo.add(unaParte);

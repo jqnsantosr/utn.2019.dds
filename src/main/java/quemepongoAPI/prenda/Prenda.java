@@ -14,7 +14,7 @@ public class Prenda implements Comparable<Prenda>{
     @GeneratedValue
     Long id;
     private String nombre;
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.DETACH})
     private TipoPrenda tipo;
     private String colorPrimario;
     private String colorSecundario;
