@@ -15,13 +15,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:8080/guardarropa",
+					"raw": "localhost:8080/user",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"guardarropa"
+						"user"
 					]
 				},
 				"description": "Trae todos los guardarropas existentes."
@@ -38,14 +38,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:8080/guardarropa/3",
+					"raw": "localhost:8080/user/13",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"guardarropa",
-						"3"
+						"user",
+						"13"
 					]
 				},
 				"description": "Trae todos los guardarropas existentes."
@@ -64,16 +64,16 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"nombre\": \"Ropa de jardinero\", \"duenio\": \"Samwise Gamgee\"}"
+					"raw": "{ \"username\": \"fran\", \"googleId\": \"6612351\"}"
 				},
 				"url": {
-					"raw": "localhost:8080/guardarropa",
+					"raw": "localhost:8080/user",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"guardarropa"
+						"user"
 					]
 				}
 			},
@@ -91,17 +91,17 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"nombre\": \"Ropa de Ricardo\" }"
+					"raw": "{ \"nombre\": \"Ropa de fafaf\" }"
 				},
 				"url": {
-					"raw": "localhost:8080/user/1/guardarropa",
+					"raw": "localhost:8080/user/2/guardarropa",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
 						"user",
-						"1",
+						"2",
 						"guardarropa"
 					]
 				}
@@ -120,16 +120,71 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"nombre\": \"Ropa de jardinero\", \"duenio\": \"Samwise Gamgee\"}"
+					"raw": "{\t\n\t\"nombre\": \"Remera Piola\", \n\t\"tipo\": {\n\t\t\"nombre\": \"Remera\",\n\t\t\"telasPosibles\": [\"ALGODON\"],\n\t\t\"partesCuerpo\": [\"TORSO\"],\n\t\t\"esAbrigo\": false\n\t},\n\t\"colorPrimario\": \"Azul\"\n}"
 				},
 				"url": {
-					"raw": "localhost:8080/guardarropa",
+					"raw": "localhost:8080/user/1/guardarropa/2/prenda",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"guardarropa"
+						"user",
+						"1",
+						"guardarropa",
+						"2",
+						"prenda"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Un Atuendo de Cada Guardarropa",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/user/1/guardarropa/random",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"guardarropa",
+						"random"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Un Atuendo de Un Guardarropa",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/user/1/guardarropa/2/random",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"guardarropa",
+						"2",
+						"random"
 					]
 				}
 			},

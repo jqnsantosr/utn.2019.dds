@@ -6,37 +6,64 @@ import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 import quemepongoAPI.prenda.TipoPrenda;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static quemepongoAPI.prenda.PartesCuerpo.*;
+import static quemepongoAPI.prenda.Tela.*;
+import static quemepongoAPI.prenda.Tela.SINTETICA;
 
 class AtuendoBuilderAleatorioTest {
 
+    private TipoPrenda remeraLiviana = new TipoPrenda("Remera", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 5);
+    private TipoPrenda remeraPesada = new TipoPrenda("Remera", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 15);
+    private TipoPrenda camisa = new TipoPrenda("Camisa", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 10);
+    private TipoPrenda pantalonLiviano = new TipoPrenda("Pantalon", Collections.singletonList(JEAN), Collections.singletonList(PIERNAS), 10);
+    private TipoPrenda pantalonPesado = new TipoPrenda("Pantalon", Collections.singletonList(JEAN), Collections.singletonList(PIERNAS), 15);
+    private TipoPrenda gorraLiviana = new TipoPrenda("Gorra", Arrays.asList(ALGODON, POLIESTER), Collections.singletonList(CABEZA), 3);
+    private TipoPrenda gorra = new TipoPrenda("Gorra", Arrays.asList(ALGODON, POLIESTER), Collections.singletonList(CABEZA), 7);
+    private TipoPrenda zapatilla = new TipoPrenda("Zapatilla", Arrays.asList(CUERO, LONA, CUERINA), Collections.singletonList(CALZADO), 2);
+    private TipoPrenda vestido = new TipoPrenda("Vestido", Arrays.asList(SEDA, LYCRA, ALGODON), Arrays.asList(TORSO, PIERNAS), 2);
+    private TipoPrenda pollera = new TipoPrenda("Pollera", Arrays.asList(SEDA, LYCRA, ALGODON), Collections.singletonList(PIERNAS), 2);
+    private TipoPrenda sombrero = new TipoPrenda("Sombrero", Arrays.asList(CUERO, PANA, LONA), Arrays.asList(CABEZA), 3);
+    private TipoPrenda zapato = new TipoPrenda("Zapato", Arrays.asList(CUERO, CUERINA), Collections.singletonList(CALZADO), 4);
+    private TipoPrenda anteojos = new TipoPrenda("Anteojos", Arrays.asList(SINTETICA), Collections.singletonList(OJOS), 0);
+    private TipoPrenda traje_de_banio = new TipoPrenda("Traje de Baño", Arrays.asList(SINTETICA), Arrays.asList(TORSO, PIERNAS), 0);
+    private TipoPrenda traje_entero = new TipoPrenda("Traje Entero", Arrays.asList(SINTETICA), Arrays.asList(TORSO, PIERNAS, CALZADO, CABEZA), 8);
+    private TipoPrenda buzo = new TipoPrenda("Buzo", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 10);
+    private TipoPrenda buzoFrisa = new TipoPrenda("Buzo", Arrays.asList(ALGODON, FRISELINA), Collections.singletonList(TORSO), 15);
+    private TipoPrenda pantalonInvierno = new TipoPrenda("Pantalon de Invierno", Collections.singletonList(ALGODON), Collections.singletonList(PIERNAS), 15);
+    private TipoPrenda campera = new TipoPrenda("Campera", Arrays.asList(ALGODON, SINTETICA), Collections.singletonList(TORSO), 20);
+    private TipoPrenda pantalonCorto = new TipoPrenda("Pantalon Corto", Arrays.asList(JEAN, ALGODON, SINTETICA), Collections.singletonList(PIERNAS), 5);
+
+    Prenda remeraAzul = new Prenda("Remera Azul", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Azul");
+    Prenda jeanNegro = new Prenda("Jean Negro", JEAN, Collections.singletonList(PIERNAS), pantalonPesado, "Negro");
+    Prenda gorraBlanca = new Prenda("Gorra Blanca", ALGODON, Collections.singletonList(CABEZA), gorra, "Blanca");
+    Prenda nikesAmarillas = new Prenda("Nikes Amarillas", LONA, Collections.singletonList(CALZADO), zapatilla, "Amarillas");
+    Prenda vestidoRosa = new Prenda("Vestido Rosa", LYCRA, Arrays.asList(TORSO, PIERNAS), vestido, "Rosa");
+    Prenda polleraVioleta = new Prenda("Pollera Violeta", SEDA, Collections.singletonList(PIERNAS), pollera, "Violeta");
+    Prenda sombreroGrande = new Prenda("Sombrero Grande", PANA, Collections.singletonList(CABEZA), sombrero, "Blanca");
+    Prenda zapatosConTacosYPlataforma = new Prenda("Tacos con Plataforma", CUERO, Collections.singletonList(CALZADO), zapato, "Negro");
+    Prenda pantalon_thor = new Prenda("Pantalon de Thor", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Negro");
+    Prenda pantalon_flash = new Prenda("Pantalon de Flash", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Rojo");
+    Prenda casco_ironman = new Prenda("Casco Iron Man", CUERO, Collections.singletonList(CABEZA), sombrero, "Rojo");
+    Prenda bikiniRoja = new Prenda("Bikini Roja", SINTETICA, Arrays.asList(TORSO, PIERNAS), traje_de_banio, "Roja");
+    Prenda sombreroVaquero = new Prenda("Sombrero de Vaquero", CUERO, Collections.singletonList(CABEZA), sombrero, "Marron");
+    Prenda anteojosSol = new Prenda("Anteojos de Sol", SINTETICA, Arrays.asList(OJOS), anteojos, "Negro");
+    Prenda trajeDeBatman = new Prenda("Traje De Batman", SINTETICA, Arrays.asList(CALZADO, TORSO, PIERNAS, CABEZA), traje_entero, "Negro");
+    Prenda botas_cpt_america = new Prenda("Botas de Capitan America", CUERO, Collections.singletonList(CALZADO), zapato, "Blanco?");
+
     @BeforeEach
     void setUp() {
-
     }
 
     @Test
     void crearNuevoAtuendoBasico() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
-
-        TipoPrenda remera = new TipoPrenda("Remera");
-        remera.agregarParteCuerpo(PartesCuerpo.TORSO);
-        Prenda remeraAzul = new Prenda("Remera Azul", remera, "Azul");
-
-        TipoPrenda pantalon = new TipoPrenda("Pantalon");
-        pantalon.agregarParteCuerpo(PartesCuerpo.PIERNAS);
-        Prenda jeanNegro = new Prenda("Jean Negro", pantalon, "Negro");
-
-        TipoPrenda gorra = new TipoPrenda("Gorra");
-        gorra.agregarParteCuerpo(PartesCuerpo.CABEZA);
-        Prenda gorraBlanca = new Prenda("Gorra Blanca", gorra, "Blanca");
-
-        TipoPrenda zapatilla = new TipoPrenda("Zapatilla");
-        zapatilla.agregarParteCuerpo(PartesCuerpo.CALZADO);
-        Prenda nikesAmarillas = new Prenda("Nikes Amarillas", zapatilla, "Amarillas");
 
         unGuardarropa.addPrenda(remeraAzul);
         unGuardarropa.addPrenda(jeanNegro);
@@ -56,23 +83,6 @@ class AtuendoBuilderAleatorioTest {
     void crearNuevoAtuendoConPrendasDeMultiplesPartes() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
-        TipoPrenda vestido = new TipoPrenda("Vestido");
-        vestido.agregarParteCuerpo(PartesCuerpo.TORSO);
-        vestido.agregarParteCuerpo(PartesCuerpo.PIERNAS);
-        Prenda vestidoRosa = new Prenda("Vestido Rosa", vestido, "Rosa");
-
-        TipoPrenda pollera = new TipoPrenda("Pollera");
-        pollera.agregarParteCuerpo(PartesCuerpo.PIERNAS);
-        Prenda polleraVioleta = new Prenda("Pollera Violeta", pollera, "Violeta");
-
-        TipoPrenda sombrero = new TipoPrenda("Sombrero");
-        sombrero.agregarParteCuerpo(PartesCuerpo.CABEZA);
-        Prenda sombreroGrande = new Prenda("Sombrero Grande", sombrero, "Blanca");
-
-        TipoPrenda zapato = new TipoPrenda("Zapato");
-        zapato.agregarParteCuerpo(PartesCuerpo.CALZADO);
-        Prenda zapatosConTacosYPlataforma = new Prenda("Tacos con Plataforma", zapato, "Negro");
-
         unGuardarropa.addPrenda(vestidoRosa);
         unGuardarropa.addPrenda(polleraVioleta);
         unGuardarropa.addPrenda(sombreroGrande);
@@ -90,23 +100,6 @@ class AtuendoBuilderAleatorioTest {
     @Test
     void crearNuevoAtuendoEspecifico() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
-
-        TipoPrenda traje_de_banio = new TipoPrenda("Traje de Baño");
-        traje_de_banio.agregarParteCuerpo(PartesCuerpo.TORSO);
-        traje_de_banio.agregarParteCuerpo(PartesCuerpo.PIERNAS);
-        Prenda bikiniRoja = new Prenda("Bikini Roja", traje_de_banio, "Roja");
-
-        TipoPrenda sombrero = new TipoPrenda("Sombrero");
-        sombrero.agregarParteCuerpo(PartesCuerpo.CABEZA);
-        Prenda sombreroVaquero = new Prenda("Sombrero de Vaquero", sombrero, "Marron");
-
-        TipoPrenda zapato = new TipoPrenda("Zapato");
-        zapato.agregarParteCuerpo(PartesCuerpo.CALZADO);
-        Prenda zapatosConTacosYPlataforma = new Prenda("Tacos con Plataforma", zapato, "Negro");
-
-        TipoPrenda anteojos = new TipoPrenda("Anteojos");
-        anteojos.agregarParteCuerpo(PartesCuerpo.OJOS);
-        Prenda anteojosSol = new Prenda("Anteojos de Sol", anteojos, "Negro");
 
         unGuardarropa.addPrenda(bikiniRoja);
         unGuardarropa.addPrenda(sombreroVaquero);
@@ -132,26 +125,6 @@ class AtuendoBuilderAleatorioTest {
     void crearNuevoAtuendoConPartesQueNoEntranPorEstarOcupadas() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
-        TipoPrenda traje_entero = new TipoPrenda("Traje Entero");
-        traje_entero.agregarParteCuerpo(PartesCuerpo.TORSO);
-        traje_entero.agregarParteCuerpo(PartesCuerpo.PIERNAS);
-        traje_entero.agregarParteCuerpo(PartesCuerpo.CALZADO);
-        traje_entero.agregarParteCuerpo(PartesCuerpo.CABEZA);
-        Prenda trajeDeBatman = new Prenda("Traje De Batman", traje_entero, "Negro");
-
-        TipoPrenda pantalon = new TipoPrenda("Pantalon");
-        pantalon.agregarParteCuerpo(PartesCuerpo.PIERNAS);
-        Prenda pantalon_thor = new Prenda("Pantalon de Thor", pantalon, "Negro");
-        Prenda pantalon_flash = new Prenda("Pantalon de Flash", pantalon, "Rojo");
-
-        TipoPrenda sombrero = new TipoPrenda("Sombrero");
-        sombrero.agregarParteCuerpo(PartesCuerpo.CABEZA);
-        Prenda casco_ironman = new Prenda("Casco Iron Man", sombrero, "Rojo");
-
-        TipoPrenda zapato = new TipoPrenda("Zapato");
-        zapato.agregarParteCuerpo(PartesCuerpo.CALZADO);
-        Prenda botas_cpt_america = new Prenda("Botas de Capitan America", zapato, "Blanco?");
-
         unGuardarropa.addPrenda(trajeDeBatman);
         unGuardarropa.addPrenda(pantalon_thor);
         unGuardarropa.addPrenda(pantalon_flash);
@@ -169,10 +142,9 @@ class AtuendoBuilderAleatorioTest {
     }
 
     @Test
-    void crearNuevoAtuendoTiraExceptionPorEstarIncompleto()
-    {
+    void crearNuevoAtuendoTiraExceptionPorEstarIncompleto() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
-        assertThrows(AtuendoIncompletoException.class, () -> unGuardarropa.crearAtuendoAleatorio());
+        assertThrows(AtuendoIncompletoException.class, unGuardarropa::crearAtuendoAleatorio);
     }
 }

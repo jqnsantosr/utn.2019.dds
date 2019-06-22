@@ -117,20 +117,6 @@ class UserController {
         repository.save(user);
     }
 
-    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}/{idPrenda}")
-    void deletePrendaFromGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa, @PathVariable Long idPrenda) throws GuardarropasNotEmptyException {
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
-
-        user.getGuardarropasById(idGuardarropa)
-                .flatMap(guardarropa -> guardarropa.getPrenda(idPrenda))
-                .ifPresent(prenda -> user.getGuardarropasById(idGuardarropa)
-                        .get()
-                        .removePrenda(prenda));
-
-        repository.save(user);
-    }
-
     @PostMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda")
     User newPrendaForGuardarropas(@RequestBody Prenda prenda, @PathVariable Long idUser, @PathVariable Long idGuardarropa) {
         User user = repository.findById(idUser)
@@ -146,6 +132,22 @@ class UserController {
 
         return repository.save(user);
     }
+
+    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}/{idPrenda}")
+    void deletePrendaFromGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa, @PathVariable Long idPrenda) throws GuardarropasNotEmptyException {
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+
+        user.getGuardarropasById(idGuardarropa)
+                .flatMap(guardarropa -> guardarropa.getPrenda(idPrenda))
+                .ifPresent(prenda -> user.getGuardarropasById(idGuardarropa)
+                        .get()
+                        .removePrenda(prenda));
+
+        repository.save(user);
+    }
+
+
 
     /*
     Innecesario. Se comenta para dejar el ejemplo cosa de usarlo en algun futuro si se necesita.

@@ -9,7 +9,7 @@ import java.util.*;
 @Entity
 public class TipoPrenda {
 
-    private @Id @GeneratedValue Long id;
+    private @Id @GeneratedValue Long idTipoPrenda;
     private String nombre;
     @ElementCollection
     private List<Tela> telasPosibles;
@@ -17,31 +17,21 @@ public class TipoPrenda {
     private List<PartesCuerpo> partesCuerpo;
     private int calor;
 
-    public TipoPrenda(String nombre)
+    public TipoPrenda(String nombre, List<Tela> telasPosibles, List<PartesCuerpo> partesCuerpo, int calor)
     {
         this.nombre = nombre;
-        telasPosibles = new ArrayList<>();
-        partesCuerpo = new ArrayList<>();
+        this.telasPosibles = telasPosibles;
+        this.partesCuerpo = partesCuerpo;
+        Collections.sort(this.partesCuerpo);
+        this.calor = calor;
     }
 
-    @ElementCollection
-    public void agregarTelaPosible(Tela unaTela)
-    {
-        telasPosibles.add(unaTela);
-    }
-
-    @ElementCollection
-    public void agregarParteCuerpo(PartesCuerpo unaParte)
-    {
-        partesCuerpo.add(unaParte);
-    }
-
-    public List<PartesCuerpo> damePartesDelCuerpo()
+    List<PartesCuerpo> damePartesDelCuerpo()
     {
         return partesCuerpo;
     }
 
-    public int cantidadPartes()
+    int cantidadPartes()
     {
         return partesCuerpo.size();
     }
@@ -51,8 +41,4 @@ public class TipoPrenda {
         return calor;
     }
 
-    public void setCalor(int unCalor)
-    {
-        calor = unCalor;
-    }
 }
