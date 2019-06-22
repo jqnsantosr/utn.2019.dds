@@ -2,6 +2,7 @@ package quemepongoAPI.user;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.json.JSONML;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
@@ -11,15 +12,10 @@ import quemepongoAPI.prenda.Prenda;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
-import java.sql.*;
-import java.util.Calendar;
-import java.util.stream.Stream;
 
 @RestController
 class UserController {
@@ -62,32 +58,29 @@ class UserController {
         Optional<Guardarropa> guardarropaOptional = user.getGuardarropasById(idGuard);
         Guardarropa guardarropa;
 
-        if (guardarropaOptional.isPresent())
-        {
+        if (guardarropaOptional.isPresent()) {
             guardarropa = guardarropaOptional.get();
             return gson.toJson(guardarropa.crearAtuendoAleatorio());
-        }
-        else
-        {
+        } else {
             throw new GuardarropasNotFoundException(idGuard);
         }
     }
 
     /* Get de atuendos aleatorios de todos los guardarropas */
     @GetMapping("/user/{idUser}/guardarropa/random")
-    List<String> all(@PathVariable Long idUser) {
+    String all(@PathVariable Long idUser) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
         List<Guardarropa> guardarropas = user.getGuardarropas();
 
         return guardarropas.stream()
-                .map(g-> {
+                .map(g -> {
                     Atuendo a;
                     a = g.crearAtuendoAleatorio();
                     return gson.toJson(a);
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()).toString();
     }
 
     /* Post de un usuario: creación de cuenta.*/
@@ -102,8 +95,8 @@ class UserController {
         User user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        if(user.getGuardarropas().contains(newGuardarropa)){
-            throw(new UserAlreadyHasGuardarropaException(newGuardarropa));
+        if (user.getGuardarropas().contains(newGuardarropa)) {
+            throw (new UserAlreadyHasGuardarropaException(newGuardarropa));
         } else {
             user.addGuardarropas(newGuardarropa);
         }
@@ -116,32 +109,43 @@ class UserController {
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
 
-        if(user.getGuardarropasById(idGuardarropa).isPresent())
-        {
+        if (user.getGuardarropasById(idGuardarropa).isPresent()) {
             user.deleteGuardarropas(user.getGuardarropasById(idGuardarropa).get());
-        };
+        }
+        ;
+
+        repository.save(user);
+    }
+
+    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}/{idPrenda}")
+    void deletePrendaFromGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa, @PathVariable Long idPrenda) throws GuardarropasNotEmptyException {
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+
+        user.getGuardarropasById(idGuardarropa)
+                .flatMap(guardarropa -> guardarropa.getPrenda(idPrenda))
+                .ifPresent(prenda -> user.getGuardarropasById(idGuardarropa)
+                        .get()
+                        .removePrenda(prenda));
+
+        repository.save(user);
     }
 
     @PostMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda")
     User newPrendaForGuardarropas(@RequestBody Prenda prenda, @PathVariable Long idUser, @PathVariable Long idGuardarropa) {
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
-        // TODO: validar que el guardarropas exista
-        if(user.isPrendaInAnyGuardarropas(prenda)){
-            throw(new PrendaRepetidaException(prenda));
-        } else {
-            user.addPrendaToGuardarropas(prenda, idGuardarropa);
+
+        if (user.getGuardarropasById(idGuardarropa).isPresent()) {
+            if (user.isPrendaInAnyGuardarropas(prenda)) {
+                throw (new PrendaRepetidaException(prenda));
+            } else {
+                user.addPrendaToGuardarropas(prenda, idGuardarropa);
+            }
         }
 
         return repository.save(user);
     }
-
-    /*
-    TODO:
-        - Delete de prendas para un guardarropa especifico.
-        - Delete de guardarropas, previa validada de que este vacío.
-        - Endpoint de atuendos, con la correspondiente lógica
-     */
 
     /*
     Innecesario. Se comenta para dejar el ejemplo cosa de usarlo en algun futuro si se necesita.

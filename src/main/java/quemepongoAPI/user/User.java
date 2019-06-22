@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Data
 @Entity
-public class User {
+class User {
     private @Id
     @GeneratedValue
     Long id;
@@ -19,6 +19,11 @@ public class User {
     @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Guardarropa> guardarropas;
+
+    /*
+    TODO:
+        - Lógica de premium / comunes (en guardarropas?).
+     */
 
     User(String username, String googleId) {
         this.username = username;
