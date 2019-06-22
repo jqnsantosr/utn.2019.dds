@@ -3,7 +3,8 @@ package quemepongoAPI.prenda;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -14,22 +15,29 @@ public class Prenda implements Comparable<Prenda>{
     @GeneratedValue
     Long id;
     private String nombre;
-    @ManyToOne(cascade = {CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn (name = "idTipoPrenda")
     private TipoPrenda tipo;
+    private Tela tela;
+    @ElementCollection
+    private List<PartesCuerpo> partes;
     private String colorPrimario;
     private String colorSecundario;
 
     Prenda(){}
 
-    // TODO: el constructor de prenda deberia validar el tipo. Los tipos deberían venir de una lista estática.
-
-    public Prenda(String nombre, TipoPrenda tipo, String colorPrimario){
+    public Prenda(String nombre, Tela tela, List<PartesCuerpo> partes, TipoPrenda tipo, String colorPrimario) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.colorPrimario = colorPrimario;
+        this.tela = tela;
+        this.partes = partes;
+
+        Collections.sort(this.partes);
+        if(!tipo.getTelasPosibles().contains(tela) || !(tipo.getPartesCuerpo().equals(partes))) throw (new PrendaIncoherenteException());
     }
 
-    public Prenda(String nombre, TipoPrenda tipo, String colorPrimario, String colorSecundario){
+    public Prenda(String nombre, Tela tela, TipoPrenda tipo, String colorPrimario, String colorSecundario){
         this.nombre = nombre;
         this.tipo = tipo;
         this.colorPrimario = colorPrimario;
