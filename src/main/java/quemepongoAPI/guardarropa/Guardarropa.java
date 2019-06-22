@@ -11,6 +11,7 @@ import quemepongoAPI.prenda.Prenda;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Data
 @Entity
@@ -51,6 +52,9 @@ public class Guardarropa {
     public void removePrenda(Prenda prenda){
         prendas.remove(prenda);
     }
+
+    public Optional<Prenda> getPrenda(Long idPrenda) {
+        return prendas.stream().filter(p -> p.getId().equals(idPrenda)).findFirst(); }
 
     public boolean hasThisPrenda(Prenda prenda){
         return prendas.contains(prenda);
