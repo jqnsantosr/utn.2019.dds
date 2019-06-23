@@ -76,12 +76,12 @@ class AtuendoBuilderClimaTest {
         Prenda gorraBlanca = new Prenda("Gorra Blanca", ALGODON,Collections.singletonList(CABEZA), gorra, "Blanca");
         Prenda nikesAmarillas = new Prenda("Nikes Amarillas", LONA,Collections.singletonList(CALZADO), zapatilla, "Amarillas");
 
-        unGuardarropa.addPrenda(remeraAzul);
-        unGuardarropa.addPrenda(buzoVerde);
-        unGuardarropa.addPrenda(jeanNegro);
-        unGuardarropa.addPrenda(pantalonSnow);
-        unGuardarropa.addPrenda(gorraBlanca);
-        unGuardarropa.addPrenda(nikesAmarillas);
+        unGuardarropa.agregarPrenda(remeraAzul);
+        unGuardarropa.agregarPrenda(buzoVerde);
+        unGuardarropa.agregarPrenda(jeanNegro);
+        unGuardarropa.agregarPrenda(pantalonSnow);
+        unGuardarropa.agregarPrenda(gorraBlanca);
+        unGuardarropa.agregarPrenda(nikesAmarillas);
 
         List<PartesCuerpo> partesPedidas = new ArrayList<>();
         partesPedidas.add(PartesCuerpo.TORSO);
@@ -112,10 +112,10 @@ class AtuendoBuilderClimaTest {
         Prenda gorraNegra = new Prenda("Gorra negra", ALGODON, Collections.singletonList(CABEZA),gorraLiviana, "Negra");
         Prenda nikesVerdes = new Prenda("Nikes Verdes", LONA,Collections.singletonList(CALZADO), zapatilla, "Verdes");
 
-        unGuardarropa.addPrenda(remeraVerde);
-        unGuardarropa.addPrenda(jeanGris);
-        unGuardarropa.addPrenda(gorraNegra);
-        unGuardarropa.addPrenda(nikesVerdes);
+        unGuardarropa.agregarPrenda(remeraVerde);
+        unGuardarropa.agregarPrenda(jeanGris);
+        unGuardarropa.agregarPrenda(gorraNegra);
+        unGuardarropa.agregarPrenda(nikesVerdes);
 
         List<PartesCuerpo> partesPedidas = new ArrayList<>();
         partesPedidas.add(PartesCuerpo.TORSO);
@@ -148,12 +148,12 @@ class AtuendoBuilderClimaTest {
         Prenda gorraLanaNegra = new Prenda("Gorra de lana negra", ALGODON,Collections.singletonList(CABEZA), gorra, "Negra");
         Prenda adidasNegra = new Prenda("Adidas Negras", LONA,Collections.singletonList(CALZADO), zapatilla, "Negras");
 
-        unGuardarropa.addPrenda(remeraTermicaBlanca);
-        unGuardarropa.addPrenda(buzoNegro);
-        unGuardarropa.addPrenda(camperaGris);
-        unGuardarropa.addPrenda(jeanNegro);
-        unGuardarropa.addPrenda(gorraLanaNegra);
-        unGuardarropa.addPrenda(adidasNegra);
+        unGuardarropa.agregarPrenda(remeraTermicaBlanca);
+        unGuardarropa.agregarPrenda(buzoNegro);
+        unGuardarropa.agregarPrenda(camperaGris);
+        unGuardarropa.agregarPrenda(jeanNegro);
+        unGuardarropa.agregarPrenda(gorraLanaNegra);
+        unGuardarropa.agregarPrenda(adidasNegra);
 
         List<PartesCuerpo> partesPedidas = new ArrayList<>();
         partesPedidas.add(PartesCuerpo.TORSO);
@@ -184,9 +184,9 @@ class AtuendoBuilderClimaTest {
         Prenda jeanNegro = new Prenda("Jean Negro", JEAN,Collections.singletonList(PIERNAS), pantalonPesado, "Negro");
         Prenda adidasNegra = new Prenda("Adidas Negras", LONA,Collections.singletonList(CALZADO), zapatilla, "Negras");
 
-        unGuardarropa.addPrenda(remeraTermicaBlanca);
-        unGuardarropa.addPrenda(jeanNegro);
-        unGuardarropa.addPrenda(adidasNegra);
+        unGuardarropa.agregarPrenda(remeraTermicaBlanca);
+        unGuardarropa.agregarPrenda(jeanNegro);
+        unGuardarropa.agregarPrenda(adidasNegra);
 
         List<PartesCuerpo> partesPedidas = new ArrayList<>();
         partesPedidas.add(PartesCuerpo.TORSO);
@@ -216,11 +216,11 @@ class AtuendoBuilderClimaTest {
         Prenda bermudaVioleta = new Prenda("Bermuda Violeta", JEAN, Collections.singletonList(PIERNAS), pantalonCorto, "Violeta");
         Prenda nikesVerdes = new Prenda("Nikes Verdes", LONA, Collections.singletonList(CALZADO), zapatilla, "Verdes");
 
-        unGuardarropa.addPrenda(remeraVerde);
-        unGuardarropa.addPrenda(jeanGris);
-        unGuardarropa.addPrenda(nikesVerdes);
-        unGuardarropa.addPrenda(bermudaVioleta);
-        unGuardarropa.addPrenda(camperaRosa);
+        unGuardarropa.agregarPrenda(remeraVerde);
+        unGuardarropa.agregarPrenda(jeanGris);
+        unGuardarropa.agregarPrenda(nikesVerdes);
+        unGuardarropa.agregarPrenda(bermudaVioleta);
+        unGuardarropa.agregarPrenda(camperaRosa);
 
         List<PartesCuerpo> partesPedidas = new ArrayList<>();
         partesPedidas.add(PartesCuerpo.TORSO);
@@ -248,7 +248,7 @@ class AtuendoBuilderClimaTest {
 
         Prenda vestidoRosa = new Prenda("Vestido Rosa", SEDA, Arrays.asList(TORSO, PIERNAS), vestido, "Rosa");
 
-        unGuardarropa.addPrenda(vestidoRosa);
+        unGuardarropa.agregarPrenda(vestidoRosa);
 
         List<PartesCuerpo> partesPedidas = new ArrayList<>();
         partesPedidas.add(PartesCuerpo.TORSO);

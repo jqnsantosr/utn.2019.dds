@@ -4,7 +4,6 @@ import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AtuendoRandomBuilder extends AtuendoBuilder
@@ -31,7 +30,7 @@ public class AtuendoRandomBuilder extends AtuendoBuilder
         }
 
         //agregar la prenda al SET, la parte del cuerpo a Pedida y Ocupada
-        atuendo.add_prenda(unaPrenda);
+        atuendo.agregar_prenda(unaPrenda);
         ocuparEspacios(unaPrenda);
     }
 

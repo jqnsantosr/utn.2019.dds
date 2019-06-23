@@ -34,7 +34,7 @@ public abstract class AtuendoBuilder
 
         for (PartesCuerpo parte: listaPartes)
         {
-            atuendo.add_parte_del_cuerpo(parte);
+            atuendo.agregar_parte_del_cuerpo(parte);
             partesOcupadas.add(parte);
         }
     }

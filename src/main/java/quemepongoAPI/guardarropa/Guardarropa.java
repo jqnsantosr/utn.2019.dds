@@ -45,18 +45,18 @@ public class Guardarropa {
         this.ultimasPrendasPedidas = new ArrayList<>();
     }
 
-    public void addPrenda(Prenda prenda){
+    public void agregarPrenda(Prenda prenda){
         prendas.add(prenda);
     }
 
-    public void removePrenda(Prenda prenda){
+    public void quitarPrenda(Prenda prenda){
         prendas.remove(prenda);
     }
 
     public Optional<Prenda> getPrenda(Long idPrenda) {
         return prendas.stream().filter(p -> p.getId().equals(idPrenda)).findFirst(); }
 
-    public boolean hasThisPrenda(Prenda prenda){
+    public boolean existePrenda(Prenda prenda){
         return prendas.contains(prenda);
     }
 

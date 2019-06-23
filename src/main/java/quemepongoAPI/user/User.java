@@ -14,7 +14,7 @@ class User {
     private @Id
     @GeneratedValue
     Long id;
-    private String username;
+    private String nombre;
     private String googleId;
     @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
@@ -26,25 +26,25 @@ class User {
      */
 
     User(String username, String googleId) {
-        this.username = username;
+        this.nombre = username;
         this.googleId = googleId;
     }
 
     User(String username, String googleId, List<Guardarropa> guard) {
-        this.username = username;
+        this.nombre = username;
         this.googleId = googleId;
         this.guardarropas = guard;
     }
 
-    Optional<Guardarropa> getGuardarropasById(Long id){
+    Optional<Guardarropa> traerGuardarropasPorId(Long id){
         return guardarropas.stream().filter(g -> g.getId().equals(id)).findFirst();
     }
 
-    void addGuardarropas(Guardarropa guardarropa) {
+    void crearGuardarropas(Guardarropa guardarropa) {
         this.guardarropas.add(guardarropa);
     }
 
-    void deleteGuardarropas(Guardarropa guardarropa) throws GuardarropasNotEmptyException {
+    void borrarGuardarropas(Guardarropa guardarropa) throws GuardarropasNotEmptyException {
         if(guardarropa.getPrendas().isEmpty()){
             this.guardarropas.remove(guardarropa);
         } else {
@@ -52,11 +52,11 @@ class User {
         }
     }
 
-    boolean isPrendaInAnyGuardarropas(Prenda prenda) {
-        return guardarropas.stream().anyMatch(guardarropa -> guardarropa.hasThisPrenda(prenda));
+    boolean existePrendaEnAlgunGuardarropas(Prenda prenda) {
+        return guardarropas.stream().anyMatch(guardarropa -> guardarropa.existePrenda(prenda));
     }
 
-    void addPrendaToGuardarropas(Prenda prenda, Long idGuardarropa) {
-      getGuardarropasById(idGuardarropa).ifPresent(guardarropa -> guardarropa.addPrenda(prenda));
+    void crearPrendaGuardarropas(Prenda prenda, Long idGuardarropa) {
+      traerGuardarropasPorId(idGuardarropa).ifPresent(guardarropa -> guardarropa.agregarPrenda(prenda));
     }
 }

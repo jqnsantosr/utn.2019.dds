@@ -65,10 +65,10 @@ class AtuendoBuilderAleatorioTest {
     void crearNuevoAtuendoBasico() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
-        unGuardarropa.addPrenda(remeraAzul);
-        unGuardarropa.addPrenda(jeanNegro);
-        unGuardarropa.addPrenda(gorraBlanca);
-        unGuardarropa.addPrenda(nikesAmarillas);
+        unGuardarropa.agregarPrenda(remeraAzul);
+        unGuardarropa.agregarPrenda(jeanNegro);
+        unGuardarropa.agregarPrenda(gorraBlanca);
+        unGuardarropa.agregarPrenda(nikesAmarillas);
 
         Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
         unAtuendo.mostrarAtuendo();
@@ -83,10 +83,10 @@ class AtuendoBuilderAleatorioTest {
     void crearNuevoAtuendoConPrendasDeMultiplesPartes() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
-        unGuardarropa.addPrenda(vestidoRosa);
-        unGuardarropa.addPrenda(polleraVioleta);
-        unGuardarropa.addPrenda(sombreroGrande);
-        unGuardarropa.addPrenda(zapatosConTacosYPlataforma);
+        unGuardarropa.agregarPrenda(vestidoRosa);
+        unGuardarropa.agregarPrenda(polleraVioleta);
+        unGuardarropa.agregarPrenda(sombreroGrande);
+        unGuardarropa.agregarPrenda(zapatosConTacosYPlataforma);
 
         Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
         unAtuendo.mostrarAtuendo();
@@ -101,10 +101,10 @@ class AtuendoBuilderAleatorioTest {
     void crearNuevoAtuendoEspecifico() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
-        unGuardarropa.addPrenda(bikiniRoja);
-        unGuardarropa.addPrenda(sombreroVaquero);
-        unGuardarropa.addPrenda(zapatosConTacosYPlataforma);
-        unGuardarropa.addPrenda(anteojosSol);
+        unGuardarropa.agregarPrenda(bikiniRoja);
+        unGuardarropa.agregarPrenda(sombreroVaquero);
+        unGuardarropa.agregarPrenda(zapatosConTacosYPlataforma);
+        unGuardarropa.agregarPrenda(anteojosSol);
 
         List<PartesCuerpo> partesPedidas = new ArrayList<>();
         partesPedidas.add(PartesCuerpo.TORSO);
@@ -125,11 +125,11 @@ class AtuendoBuilderAleatorioTest {
     void crearNuevoAtuendoConPartesQueNoEntranPorEstarOcupadas() {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
-        unGuardarropa.addPrenda(trajeDeBatman);
-        unGuardarropa.addPrenda(pantalon_thor);
-        unGuardarropa.addPrenda(pantalon_flash);
-        unGuardarropa.addPrenda(casco_ironman);
-        unGuardarropa.addPrenda(botas_cpt_america);
+        unGuardarropa.agregarPrenda(trajeDeBatman);
+        unGuardarropa.agregarPrenda(pantalon_thor);
+        unGuardarropa.agregarPrenda(pantalon_flash);
+        unGuardarropa.agregarPrenda(casco_ironman);
+        unGuardarropa.agregarPrenda(botas_cpt_america);
 
         Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
         unAtuendo.mostrarAtuendo();
