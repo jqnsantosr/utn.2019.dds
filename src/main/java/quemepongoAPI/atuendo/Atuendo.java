@@ -37,12 +37,12 @@ public class Atuendo
         return calorTotal;
     }
 
-    public void add_prenda(Prenda unaPrenda)
+    public void agregar_prenda(Prenda unaPrenda)
     {
         prendasElegidas.add(unaPrenda);
     }
 
-    public void add_parte_del_cuerpo(PartesCuerpo unaParte)
+    public void agregar_parte_del_cuerpo(PartesCuerpo unaParte)
     {
         partesCuerpoACubrir.add(unaParte);
     }

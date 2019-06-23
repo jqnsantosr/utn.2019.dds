@@ -2,7 +2,6 @@ package quemepongoAPI.user;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.json.JSONML;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +54,7 @@ class UserController {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
-        Optional<Guardarropa> guardarropaOptional = user.getGuardarropasById(idGuard);
+        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
         Guardarropa guardarropa;
 
         if (guardarropaOptional.isPresent()) {
@@ -98,7 +97,7 @@ class UserController {
         if (user.getGuardarropas().contains(newGuardarropa)) {
             throw (new UserAlreadyHasGuardarropaException(newGuardarropa));
         } else {
-            user.addGuardarropas(newGuardarropa);
+            user.crearGuardarropas(newGuardarropa);
         }
 
         return repository.save(user);
@@ -109,8 +108,8 @@ class UserController {
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
 
-        if (user.getGuardarropasById(idGuardarropa).isPresent()) {
-            user.deleteGuardarropas(user.getGuardarropasById(idGuardarropa).get());
+        if (user.traerGuardarropasPorId(idGuardarropa).isPresent()) {
+            user.borrarGuardarropas(user.traerGuardarropasPorId(idGuardarropa).get());
         }
         ;
 
@@ -122,11 +121,11 @@ class UserController {
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
 
-        if (user.getGuardarropasById(idGuardarropa).isPresent()) {
-            if (user.isPrendaInAnyGuardarropas(prenda)) {
+        if (user.traerGuardarropasPorId(idGuardarropa).isPresent()) {
+            if (user.existePrendaEnAlgunGuardarropas(prenda)) {
                 throw (new PrendaRepetidaException(prenda));
             } else {
-                user.addPrendaToGuardarropas(prenda, idGuardarropa);
+                user.crearPrendaGuardarropas(prenda, idGuardarropa);
             }
         }
 
@@ -138,11 +137,11 @@ class UserController {
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
 
-        user.getGuardarropasById(idGuardarropa)
+        user.traerGuardarropasPorId(idGuardarropa)
                 .flatMap(guardarropa -> guardarropa.getPrenda(idPrenda))
-                .ifPresent(prenda -> user.getGuardarropasById(idGuardarropa)
+                .ifPresent(prenda -> user.traerGuardarropasPorId(idGuardarropa)
                         .get()
-                        .removePrenda(prenda));
+                        .quitarPrenda(prenda));
 
         repository.save(user);
     }

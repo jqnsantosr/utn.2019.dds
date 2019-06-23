@@ -35,7 +35,7 @@ public class AtuendoClimaBuilder extends AtuendoBuilder {
                     throw new AtuendoIncompletoException();
         } else {
             //agregar la prenda al SET
-            atuendo.add_prenda(unaPrenda);
+            atuendo.agregar_prenda(unaPrenda);
         }
     }
 
