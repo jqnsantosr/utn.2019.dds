@@ -1,6 +1,7 @@
 package quemepongoAPI.prenda;
 
 import lombok.Data;
+import quemepongoAPI.clima.CondicionesClimaticas;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -64,6 +65,11 @@ public class Prenda implements Comparable<Prenda>{
         }
 
         return pertenece;
+    }
+
+    public boolean incompatibleConCondicion(List<CondicionesClimaticas> condiciones)
+    {
+        return tipo.incompatibleConCondicion(condiciones);
     }
 
     @Override

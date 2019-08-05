@@ -14,6 +14,7 @@ import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.atuendo.AtuendoIncompletoException;
 import quemepongoAPI.clima.Clima;
 import quemepongoAPI.clima.ClimaController;
+import quemepongoAPI.clima.CondicionesClimaticas;
 import quemepongoAPI.clima.Currently;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.PartesCuerpo;
@@ -182,7 +183,7 @@ class AtuendoBuilderClimaTest {
 
         Prenda remeraTermicaBlanca = new Prenda("Remera Termica Blanca", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Blanca");
         Prenda jeanNegro = new Prenda("Jean Negro", JEAN,Collections.singletonList(PIERNAS), pantalonPesado, "Negro");
-        Prenda adidasNegra = new Prenda("Adidas Negras", LONA,Collections.singletonList(CALZADO), zapatilla, "Negras");
+        Prenda adidasNegra = new Prenda("Adidas Negras", LONA,Collections.singletonList(CALZADO), zapatilla, "Negro");
 
         unGuardarropa.agregarPrenda(remeraTermicaBlanca);
         unGuardarropa.agregarPrenda(jeanNegro);
@@ -256,5 +257,41 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.CALZADO);
 
         assertThrows(AtuendoIncompletoException.class, () -> unGuardarropa.crearAtuendoClima(partesPedidas));
+    }
+
+    @Test
+    void crearNuevoAtuendoParaVientoNoTienePollera() {
+        Guardarropa unGuardarropa = new Guardarropa("TEST");
+
+        unGuardarropa.setClimaController(climaController);
+        when(climaController.getClima()).thenReturn(clima);
+        when(clima.getClimateNow()).thenReturn(currentClima);
+        when(currentClima.getTemperature()).thenReturn(0.0);
+
+        Prenda polleraNegra = new Prenda("Pollera Negra", SEDA, Arrays.asList(PIERNAS), pollera, "Negro");
+        Prenda jeanGris = new Prenda("Jean Gris", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Gris");
+        Prenda remeraTermicaBlanca = new Prenda("Remera Termica Blanca", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Blanca");
+        Prenda adidasNegra = new Prenda("Adidas Negras", LONA,Collections.singletonList(CALZADO), zapatilla, "Negro");
+
+        //TODO
+        pollera.agregarIncompatibilidad(CondicionesClimaticas.VIENTO);
+
+        unGuardarropa.agregarPrenda(polleraNegra);
+        unGuardarropa.agregarPrenda(jeanGris);
+        unGuardarropa.agregarPrenda(remeraTermicaBlanca);
+        unGuardarropa.agregarPrenda(adidasNegra);
+
+        List<PartesCuerpo> partesPedidas = new ArrayList<>();
+        partesPedidas.add(PartesCuerpo.TORSO);
+        partesPedidas.add(PartesCuerpo.PIERNAS);
+        partesPedidas.add(PartesCuerpo.CALZADO);
+
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas);
+        unAtuendo.mostrarAtuendo();
+
+        assertTrue(unAtuendo.tiene_prenda(remeraTermicaBlanca));
+        assertTrue(unAtuendo.tiene_prenda(jeanGris));
+        assertTrue(unAtuendo.tiene_prenda(adidasNegra));
+        assertFalse(unAtuendo.tiene_prenda(polleraNegra));
     }
 }
