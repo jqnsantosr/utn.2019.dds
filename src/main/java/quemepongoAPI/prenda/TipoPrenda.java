@@ -17,7 +17,9 @@ public class TipoPrenda {
     @ElementCollection
     private List<PartesCuerpo> partesCuerpo;
     private int calor;
+    @ElementCollection
     private List<CondicionesClimaticas> incompatible;
+    @ElementCollection
     private List<CondicionesClimaticas> especialidad;
 
     public TipoPrenda(String nombre, List<Tela> telasPosibles, List<PartesCuerpo> partesCuerpo, int calor)

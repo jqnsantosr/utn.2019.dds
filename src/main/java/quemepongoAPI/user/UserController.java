@@ -6,11 +6,16 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
 import quemepongoAPI.atuendo.Atuendo;
+import quemepongoAPI.clima.ClimaService;
 import quemepongoAPI.guardarropa.Guardarropa;
+import quemepongoAPI.lugar.Geometry;
+import quemepongoAPI.lugar.Lugar;
+import quemepongoAPI.lugar.LugarService;
 import quemepongoAPI.prenda.Prenda;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -21,10 +26,17 @@ class UserController {
 
     private final UserRepository repository;
     private final UserResourceAssembler assembler;
+    private final ClimaService climaService;
+    private final LugarService lugarService;
 
-    UserController(UserRepository repository, UserResourceAssembler assembler) {
+    UserController(UserRepository repository,
+                   UserResourceAssembler assembler,
+                   ClimaService climaService,
+                   LugarService lugarService) {
         this.repository = repository;
         this.assembler = assembler;
+        this.climaService = climaService;
+        this.lugarService = lugarService;
     }
 
     /* Get de todos los usuarios */
@@ -80,6 +92,14 @@ class UserController {
                     return gson.toJson(a);
                 })
                 .collect(Collectors.toList()).toString();
+    }
+
+    /* Get de atuendos aleatorios de todos los guardarropas */
+    @GetMapping("/clima/{place}")
+    String all(@PathVariable String place) throws ExecutionException, InterruptedException {
+        Gson gson = new Gson();
+        Lugar lugar = lugarService.getLugar(place);
+        return gson.toJson(climaService.getClima(lugar));
     }
 
     /* Post de un usuario: creación de cuenta.*/

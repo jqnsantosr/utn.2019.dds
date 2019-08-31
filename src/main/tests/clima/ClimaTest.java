@@ -15,6 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -73,8 +74,8 @@ public class ClimaTest {
                         "    }}"));
 
         Darksky service = retrofit.create(Darksky.class);
-        Call<Clima> call = service.getClima("-34.6237933,-58.4022563", "key");
-        assertNotNull(call.execute());
+        CompletableFuture<Clima> clima = service.getClima("-34.6237933,-58.4022563", "key");
+        assertNotNull(clima);
     }
 
 }
