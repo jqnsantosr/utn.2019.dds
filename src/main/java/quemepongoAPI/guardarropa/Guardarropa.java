@@ -5,14 +5,14 @@ import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.atuendo.AtuendoBuilder;
 import quemepongoAPI.atuendo.AtuendoClimaBuilder;
 import quemepongoAPI.atuendo.AtuendoRandomBuilder;
-import quemepongoAPI.clima.ClimaController;
+import quemepongoAPI.clima.Clima;
+import quemepongoAPI.clima.ClimaService;
 import quemepongoAPI.clima.CondicionesClimaticas;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Data
 @Entity
@@ -25,12 +25,12 @@ public class Guardarropa {
     private List<Prenda> prendas;
     @Transient
     private AtuendoBuilder atuendoBuilder;
-    @Transient
-    private ClimaController climaController;
     @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Prenda> ultimasPrendasPedidas;
+    @Transient
     private double ultimaTemperaturaPedida;
+    @Transient
     private List<CondicionesClimaticas> ultimasCondicionesClimaticas;
 
     public Guardarropa() {}
@@ -78,10 +78,10 @@ public class Guardarropa {
         return atuendoBuilder.dameAtuendo();
     }
 
-    public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes/*, Evento unEvento*/) //TODO: recibe un evento del usuario
+    public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes, Clima clima) //TODO: recibe un evento del usuario
     {
         //TODO: deberia ser pronostico?
-        ultimaTemperaturaPedida = climaController.getClima().getClimateNow().getTemperature();
+        ultimaTemperaturaPedida = clima.getClimateNow().getTemperature();
         //ultimasCondicionesClimaticas = climaController.dameCondiciones();
         //TODO: condiciones climaticas del adapter
         ultimasCondicionesClimaticas = new ArrayList<>();

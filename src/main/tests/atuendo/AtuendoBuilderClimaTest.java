@@ -6,6 +6,7 @@ import static quemepongoAPI.prenda.PartesCuerpo.*;
 import static quemepongoAPI.prenda.Tela.*;
 import static quemepongoAPI.prenda.Tela.SINTETICA;
 
+import com.sun.xml.internal.ws.util.CompletedFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -13,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.atuendo.AtuendoIncompletoException;
 import quemepongoAPI.clima.Clima;
-import quemepongoAPI.clima.ClimaController;
+import quemepongoAPI.clima.ClimaService;
 import quemepongoAPI.clima.CondicionesClimaticas;
 import quemepongoAPI.clima.Currently;
 import quemepongoAPI.guardarropa.Guardarropa;
@@ -25,11 +26,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 class AtuendoBuilderClimaTest {
 
     @Mock
-    ClimaController climaController;
+    ClimaService climaService;
     @Mock
     Currently currentClima;
     @Mock
@@ -62,11 +65,10 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaFrio() {
+    void crearNuevoAtuendoParaClimaFrio() throws ExecutionException, InterruptedException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio");
 
-        unGuardarropa.setClimaController(climaController);
-        when(climaController.getClima()).thenReturn(clima);
+        when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getClimateNow()).thenReturn(currentClima);
         when(currentClima.getTemperature()).thenReturn(25.0);
 
@@ -90,7 +92,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.CABEZA);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(buzoVerde));
@@ -100,11 +102,10 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaCaliente() {
+    void crearNuevoAtuendoParaClimaCaliente() throws ExecutionException, InterruptedException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Caliente");
 
-        unGuardarropa.setClimaController(climaController);
-        when(climaController.getClima()).thenReturn(clima);
+        when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getClimateNow()).thenReturn(currentClima);
         when(currentClima.getTemperature()).thenReturn(35.0);
 
@@ -124,7 +125,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.CABEZA);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(remeraVerde));
@@ -134,11 +135,10 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaFrioTieneMasDeUnaCapa() {
+    void crearNuevoAtuendoParaClimaFrioTieneMasDeUnaCapa() throws ExecutionException, InterruptedException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio Power");
 
-        unGuardarropa.setClimaController(climaController);
-        when(climaController.getClima()).thenReturn(clima);
+        when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getClimateNow()).thenReturn(currentClima);
         when(currentClima.getTemperature()).thenReturn(15.0);
 
@@ -162,7 +162,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.CABEZA);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(camperaGris));
@@ -173,11 +173,10 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaFrioNoAlcanzanPrendas() {
+    void crearNuevoAtuendoParaClimaFrioNoAlcanzanPrendas() throws ExecutionException, InterruptedException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio No Alcanzan Prendas");
 
-        unGuardarropa.setClimaController(climaController);
-        when(climaController.getClima()).thenReturn(clima);
+        when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getClimateNow()).thenReturn(currentClima);
         when(currentClima.getTemperature()).thenReturn(17.0);
 
@@ -194,7 +193,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.PIERNAS);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(remeraTermicaBlanca));
@@ -203,11 +202,10 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaCalienteTieneSoloUnaCapa() {
+    void crearNuevoAtuendoParaClimaCalienteTieneSoloUnaCapa() throws ExecutionException, InterruptedException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Caliente Una Capa");
 
-        unGuardarropa.setClimaController(climaController);
-        when(climaController.getClima()).thenReturn(clima);
+        when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getClimateNow()).thenReturn(currentClima);
         when(currentClima.getTemperature()).thenReturn(32.0);
 
@@ -228,7 +226,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.PIERNAS);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(remeraVerde));
@@ -239,11 +237,10 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaTiraExceptionPorNoTenerPrendas() {
+    void crearNuevoAtuendoParaClimaTiraExceptionPorNoTenerPrendas() throws ExecutionException, InterruptedException {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
-        unGuardarropa.setClimaController(climaController);
-        when(climaController.getClima()).thenReturn(clima);
+        when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getClimateNow()).thenReturn(currentClima);
         when(currentClima.getTemperature()).thenReturn(9001.0); // it's over 9000!!!
 
@@ -256,15 +253,14 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.PIERNAS);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        assertThrows(AtuendoIncompletoException.class, () -> unGuardarropa.crearAtuendoClima(partesPedidas));
+        assertThrows(AtuendoIncompletoException.class, () -> unGuardarropa.crearAtuendoClima(partesPedidas, clima));
     }
 
     @Test
-    void crearNuevoAtuendoParaVientoNoTienePollera() {
+    void crearNuevoAtuendoParaVientoNoTienePollera() throws ExecutionException, InterruptedException {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
-        unGuardarropa.setClimaController(climaController);
-        when(climaController.getClima()).thenReturn(clima);
+        when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getClimateNow()).thenReturn(currentClima);
         when(currentClima.getTemperature()).thenReturn(0.0);
 
@@ -286,7 +282,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.PIERNAS);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(remeraTermicaBlanca));
