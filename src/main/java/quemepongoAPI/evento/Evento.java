@@ -16,10 +16,23 @@ public class Evento
     private boolean esFormal;
     private Date fecha;
 
-    public Evento(String date, boolean isFormal) throws ParseException {
+    public Evento(String date, boolean isFormal) throws FechaYHoraParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy 'a las' hh:mm");
-        fecha = sdf.parse(date);
+
+        try
+        {
+            fecha = sdf.parse(date);
+        }
+        catch(ParseException e)
+        {
+            throw new FechaYHoraParseException(date);
+        }
 
         esFormal = isFormal;
+    }
+
+    public boolean getEsFormal()
+    {
+        return esFormal;
     }
 }

@@ -31,11 +31,12 @@ public class AtuendoClimaBuilder extends AtuendoBuilder {
         //si no hay prendas disponibles
         if(unaPrenda == null)
         {
-            if(capaActual == 0)
+            if(capaActual == 0 && !partesOcupadas.contains(unaParte))
                     throw new AtuendoIncompletoException();
         } else {
             //agregar la prenda al SET
             atuendo.agregar_prenda(unaPrenda);
+            ocuparEspacios(unaPrenda);
         }
     }
 

@@ -24,6 +24,7 @@ public class Prenda implements Comparable<Prenda>{
     private List<PartesCuerpo> partes;
     private String colorPrimario;
     private String colorSecundario;
+    private boolean esFormal = false;
 
     Prenda(){}
 
@@ -67,13 +68,23 @@ public class Prenda implements Comparable<Prenda>{
         return pertenece;
     }
 
-    public boolean incompatibleConCondicion(List<CondicionesClimaticas> condiciones)
+    public boolean compatibleConCondicion(List<CondicionesClimaticas> condiciones)
     {
-        return tipo.incompatibleConCondicion(condiciones);
+        return tipo.compatibleConCondicion(condiciones);
     }
 
     @Override
     public int compareTo(Prenda otraPrenda) {
         return this.tipo.factorCalor() - otraPrenda.tipo.factorCalor();
+    }
+
+    public boolean getEsFormal()
+    {
+        return esFormal;
+    }
+
+    public void setEsFormal(boolean value)
+    {
+        esFormal = value;
     }
 }
