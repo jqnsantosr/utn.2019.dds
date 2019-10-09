@@ -17,6 +17,8 @@ import quemepongoAPI.clima.Clima;
 import quemepongoAPI.clima.ClimaService;
 import quemepongoAPI.clima.CondicionesClimaticas;
 import quemepongoAPI.clima.Currently;
+import quemepongoAPI.evento.Evento;
+import quemepongoAPI.evento.FechaYHoraParseException;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
@@ -43,6 +45,7 @@ class AtuendoBuilderClimaTest {
     private TipoPrenda camisa = new TipoPrenda("Camisa", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 10);
     private TipoPrenda pantalonLiviano = new TipoPrenda("Pantalon", Collections.singletonList(JEAN), Collections.singletonList(PIERNAS), 10);
     private TipoPrenda pantalonPesado = new TipoPrenda("Pantalon", Collections.singletonList(JEAN), Collections.singletonList(PIERNAS), 15);
+    private TipoPrenda pantalonDeVestir = new TipoPrenda("Pantalon", Collections.singletonList(ALGODON), Collections.singletonList(PIERNAS), 12);
     private TipoPrenda gorraLiviana = new TipoPrenda("Gorra", Arrays.asList(ALGODON, POLIESTER), Collections.singletonList(CABEZA), 3);
     private TipoPrenda gorra = new TipoPrenda("Gorra", Arrays.asList(ALGODON, POLIESTER), Collections.singletonList(CABEZA), 7);
     private TipoPrenda zapatilla = new TipoPrenda("Zapatilla", Arrays.asList(CUERO, LONA, CUERINA), Collections.singletonList(CALZADO), 2);
@@ -58,6 +61,26 @@ class AtuendoBuilderClimaTest {
     private TipoPrenda pantalonInvierno = new TipoPrenda("Pantalon de Invierno", Collections.singletonList(ALGODON), Collections.singletonList(PIERNAS), 15);
     private TipoPrenda campera = new TipoPrenda("Campera", Arrays.asList(ALGODON, SINTETICA), Collections.singletonList(TORSO), 20);
     private TipoPrenda pantalonCorto = new TipoPrenda("Pantalon Corto", Arrays.asList(JEAN, ALGODON, SINTETICA), Collections.singletonList(PIERNAS), 5);
+
+    private Evento eventoNoFormal;
+
+    {
+        try {
+            eventoNoFormal = new Evento("25/12/2019 a las 00:00", false);
+        } catch (FechaYHoraParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Evento eventoFormal;
+
+    {
+        try {
+            eventoFormal = new Evento("25/12/2019 a las 00:00", true);
+        } catch (FechaYHoraParseException e) {
+            e.printStackTrace();
+        }
+    }
 
     @BeforeEach
     void setUp() {
@@ -92,7 +115,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.CABEZA);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoNoFormal);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(buzoVerde));
@@ -125,7 +148,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.CABEZA);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoNoFormal);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(remeraVerde));
@@ -162,7 +185,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.CABEZA);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoNoFormal);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(camperaGris));
@@ -193,7 +216,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.PIERNAS);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoNoFormal);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(remeraTermicaBlanca));
@@ -226,7 +249,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.PIERNAS);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoNoFormal);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(remeraVerde));
@@ -253,7 +276,7 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.PIERNAS);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        assertThrows(AtuendoIncompletoException.class, () -> unGuardarropa.crearAtuendoClima(partesPedidas, clima));
+        assertThrows(AtuendoIncompletoException.class, () -> unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoNoFormal));
     }
 
     @Test
@@ -282,12 +305,90 @@ class AtuendoBuilderClimaTest {
         partesPedidas.add(PartesCuerpo.PIERNAS);
         partesPedidas.add(PartesCuerpo.CALZADO);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima);
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoNoFormal);
         unAtuendo.mostrarAtuendo();
 
         assertTrue(unAtuendo.tiene_prenda(remeraTermicaBlanca));
         assertTrue(unAtuendo.tiene_prenda(jeanGris));
         assertTrue(unAtuendo.tiene_prenda(adidasNegra));
         assertFalse(unAtuendo.tiene_prenda(polleraNegra));
+    }
+
+    @Test
+    void crearNuevoAtuendoParaEventoFormalConClimaFrio() throws ExecutionException, InterruptedException
+    {
+        Guardarropa unGuardarropa = new Guardarropa("TEST");
+
+        when(climaService.getClima(any())).thenReturn(clima);
+        when(clima.getClimateNow()).thenReturn(currentClima);
+        when(currentClima.getTemperature()).thenReturn(23.95);
+
+        Prenda camisaBlanca = new Prenda("Camisa Blanca", ALGODON, Arrays.asList(TORSO), camisa, "Blanco");
+        Prenda pantalonNegro = new Prenda("Pantalon Negro", ALGODON, Arrays.asList(PIERNAS), pantalonDeVestir, "Negro");
+        Prenda sacoNegro = new Prenda("Saco Negro", ALGODON, Arrays.asList(TORSO), campera, "Negro");
+        Prenda zapatosNegros = new Prenda("Zapatos Negros", CUERO, Arrays.asList(CALZADO), zapato, "Negro");
+        Prenda jeanGris = new Prenda("Jean Gris", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Gris");
+
+        camisaBlanca.setEsFormal(true);
+        pantalonNegro.setEsFormal(true);
+        sacoNegro.setEsFormal(true);
+        zapatosNegros.setEsFormal(true);
+
+        unGuardarropa.agregarPrenda(camisaBlanca);
+        unGuardarropa.agregarPrenda(pantalonNegro);
+        unGuardarropa.agregarPrenda(sacoNegro);
+        unGuardarropa.agregarPrenda(zapatosNegros);
+        unGuardarropa.agregarPrenda(jeanGris);
+
+        List<PartesCuerpo> partesPedidas = new ArrayList<>();
+        partesPedidas.add(PartesCuerpo.TORSO);
+        partesPedidas.add(PartesCuerpo.PIERNAS);
+        partesPedidas.add(PartesCuerpo.CALZADO);
+
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoFormal);
+        unAtuendo.mostrarAtuendo();
+
+        assertTrue(unAtuendo.tiene_prenda(sacoNegro));
+        assertTrue(unAtuendo.tiene_prenda(camisaBlanca));
+        assertTrue(unAtuendo.tiene_prenda(pantalonNegro));
+        assertTrue(unAtuendo.tiene_prenda(zapatosNegros));
+        assertFalse(unAtuendo.tiene_prenda(jeanGris));
+    }
+
+    @Test
+    void crearNuevoAtuendoParaEventoFormalConClimaCaliente() throws ExecutionException, InterruptedException
+    {
+        Guardarropa unGuardarropa = new Guardarropa("TEST");
+
+        when(climaService.getClima(any())).thenReturn(clima);
+        when(clima.getClimateNow()).thenReturn(currentClima);
+        when(currentClima.getTemperature()).thenReturn(32.2);
+
+        Prenda sacoNegro = new Prenda("Saco Negro", ALGODON, Arrays.asList(TORSO), campera, "Negro");
+        Prenda zapatosNegros = new Prenda("Zapatos Negros", CUERO, Arrays.asList(CALZADO), zapato, "Negro");
+        Prenda jeanGris = new Prenda("Jean Gris", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Gris");
+        Prenda vestidoRojo = new Prenda("Vestido Rojo", SEDA, Arrays.asList(TORSO, PIERNAS), vestido, "Rojo");
+
+        vestidoRojo.setEsFormal(true);
+        sacoNegro.setEsFormal(true);
+        zapatosNegros.setEsFormal(true);
+
+        unGuardarropa.agregarPrenda(sacoNegro);
+        unGuardarropa.agregarPrenda(zapatosNegros);
+        unGuardarropa.agregarPrenda(jeanGris);
+        unGuardarropa.agregarPrenda(vestidoRojo);
+
+        List<PartesCuerpo> partesPedidas = new ArrayList<>();
+        partesPedidas.add(PartesCuerpo.TORSO);
+        partesPedidas.add(PartesCuerpo.PIERNAS);
+        partesPedidas.add(PartesCuerpo.CALZADO);
+
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoFormal);
+        unAtuendo.mostrarAtuendo();
+
+        assertFalse(unAtuendo.tiene_prenda(sacoNegro));
+        assertTrue(unAtuendo.tiene_prenda(vestidoRojo));
+        assertTrue(unAtuendo.tiene_prenda(zapatosNegros));
+        assertFalse(unAtuendo.tiene_prenda(jeanGris));
     }
 }
