@@ -6,13 +6,17 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
 import quemepongoAPI.atuendo.Atuendo;
+import quemepongoAPI.clima.Clima;
 import quemepongoAPI.clima.ClimaService;
+import quemepongoAPI.evento.Evento;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.lugar.Geometry;
 import quemepongoAPI.lugar.Lugar;
 import quemepongoAPI.lugar.LugarService;
+import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -92,6 +96,41 @@ class UserController {
                     return gson.toJson(a);
                 })
                 .collect(Collectors.toList()).toString();
+    }
+
+    /* Get de un atuendo para un evento */
+    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/{idEvento}/atuendo")
+    String one(@PathVariable Long idUser, @PathVariable Long idGuard, @PathVariable Long idEvento) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
+        Guardarropa guardarropa;
+
+        if (guardarropaOptional.isPresent()) {
+            guardarropa = guardarropaOptional.get();
+
+            Optional<Evento> eventoOptional = user.traerEventoPorId(idEvento);
+            if(eventoOptional.isPresent()) {
+                Evento evento = eventoOptional.get();
+
+                /*TODO: lista de partes del cuerpo por variable*/
+                List<PartesCuerpo> listaPartesDefault = new ArrayList<>();
+                listaPartesDefault.add(PartesCuerpo.TORSO);
+                listaPartesDefault.add(PartesCuerpo.PIERNAS);
+                listaPartesDefault.add(PartesCuerpo.CABEZA);
+                listaPartesDefault.add(PartesCuerpo.CALZADO);
+
+                Clima clima = new Clima();
+
+                return gson.toJson(guardarropa.crearAtuendoClima(listaPartesDefault, clima, evento));
+            }
+            else {
+                throw new EventoNotFoundException(idEvento);
+            }
+        } else {
+            throw new GuardarropasNotFoundException(idGuard);
+        }
     }
 
     /* Get de atuendos aleatorios de todos los guardarropas */
