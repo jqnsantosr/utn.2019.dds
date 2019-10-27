@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 public class Evento
 {
-    private @Id @GeneratedValue long id;
+    private @Id @GeneratedValue Long id;
     private String nombre;
     private boolean esFormal;
     private Date fecha;
