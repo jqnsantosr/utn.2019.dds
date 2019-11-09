@@ -53,12 +53,12 @@ public class TipoPrenda {
         return calor;
     }
 
-    public boolean incompatibleConCondicion(List<CondicionesClimaticas> condiciones)
+    public boolean compatibleConCondicion(List<CondicionesClimaticas> condiciones)
     {
         for (CondicionesClimaticas condicion : condiciones) {
-            if(incompatible.contains(condicion)) return true;
+            if(incompatible.contains(condicion)) return false;
         }
 
-        return false;
+        return true;
     }
 }

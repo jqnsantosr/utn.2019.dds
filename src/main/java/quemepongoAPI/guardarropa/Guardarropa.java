@@ -8,6 +8,7 @@ import quemepongoAPI.atuendo.AtuendoRandomBuilder;
 import quemepongoAPI.clima.Clima;
 import quemepongoAPI.clima.ClimaService;
 import quemepongoAPI.clima.CondicionesClimaticas;
+import quemepongoAPI.evento.Evento;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 
@@ -32,6 +33,8 @@ public class Guardarropa {
     private double ultimaTemperaturaPedida;
     @Transient
     private List<CondicionesClimaticas> ultimasCondicionesClimaticas;
+    @Transient
+    private boolean eventoFormal = false;
 
     public Guardarropa() {}
 
@@ -78,7 +81,7 @@ public class Guardarropa {
         return atuendoBuilder.dameAtuendo();
     }
 
-    public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes, Clima clima) //TODO: recibe un evento del usuario
+    public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes, Clima clima, Evento unEvento)
     {
         //TODO: deberia ser pronostico?
         ultimaTemperaturaPedida = clima.getClimateNow().getTemperature();
@@ -88,6 +91,8 @@ public class Guardarropa {
         ultimasCondicionesClimaticas.add(CondicionesClimaticas.LLUVIA);
         ultimasCondicionesClimaticas.add(CondicionesClimaticas.VIENTO);
 
+        eventoFormal = unEvento.getEsFormal();
+
         //relaciona temperatura con calor de las prendas
         int target = obtenerTarget();
 
@@ -96,14 +101,12 @@ public class Guardarropa {
 
         while(atuendoBuilder.calorAtuendo() < target)
         {
-            if(hayPrendasParaEntregar(listaPartes))
+            if(hayPrendasParaEntregar(listaPartes, eventoFormal))
                 atuendoBuilder.agregar_nueva_capa();
             else
                 break;
             constriurAtuendoClima(listaPartes);
         }
-
-        //atuendoBuilder.modificarPorCondicionesClimaticas();
 
         return atuendoBuilder.dameAtuendo();
     }
@@ -171,7 +174,7 @@ public class Guardarropa {
         //lista con las prendas que son de la parte del cuerpo pedida
         List<Prenda> prendasResultado = new ArrayList<>();
 
-        filtrarListaClima(prendasResultado, unaParte);
+        filtrarListaClima(prendasResultado, unaParte, eventoFormal);
 
         ordenarListaPorTemperatura(prendasResultado);
 
@@ -214,14 +217,19 @@ public class Guardarropa {
         }
     }
 
-    private void filtrarListaClima(List<Prenda> unaLista, PartesCuerpo unaParte)
+    private void filtrarListaClima(List<Prenda> unaLista, PartesCuerpo unaParte, boolean formal)
     {
         //filtra de todas las prendas en el guardarropas y las agrega en la lista nueva
         for (Prenda unaPrenda : prendas) {
             List<PartesCuerpo> partesCuerpoDeLaPrenda = unaPrenda.damePartesCuerpo();
 
-            if (partesCuerpoDeLaPrenda.contains(unaParte) && !unaPrenda.incompatibleConCondicion(ultimasCondicionesClimaticas))
-                unaLista.add(unaPrenda);
+            if (partesCuerpoDeLaPrenda.contains(unaParte) && unaPrenda.compatibleConCondicion(ultimasCondicionesClimaticas))
+            {
+                if(formal && unaPrenda.getEsFormal())
+                    unaLista.add(unaPrenda);
+                else if (!formal)
+                    unaLista.add(unaPrenda);
+            }
         }
     }
 
@@ -230,13 +238,18 @@ public class Guardarropa {
         Collections.sort(unaLista);
     }
 
-    private boolean hayPrendasParaEntregar(List<PartesCuerpo> listaPartes)
+    private boolean hayPrendasParaEntregar(List<PartesCuerpo> listaPartes, boolean formal)
     {
         int cantPrendasPosibles = 0;
 
         for (Prenda unaPrenda : prendas) {
-            if(unaPrenda.perteneceA(listaPartes) && !unaPrenda.incompatibleConCondicion(ultimasCondicionesClimaticas))
-                cantPrendasPosibles++;
+            if(unaPrenda.perteneceA(listaPartes) && unaPrenda.compatibleConCondicion(ultimasCondicionesClimaticas))
+            {
+                if(formal && unaPrenda.getEsFormal())
+                    cantPrendasPosibles++;
+                if(!formal)
+                    cantPrendasPosibles++;
+            }
         }
 
         return cantPrendasPosibles > atuendoBuilder.cant_prendas();

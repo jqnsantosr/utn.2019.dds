@@ -1,6 +1,7 @@
 package quemepongoAPI.user;
 
 import lombok.Data;
+import quemepongoAPI.evento.Evento;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.Prenda;
 
@@ -18,6 +19,8 @@ class User {
     private String googleId;
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Guardarropa> guardarropas;
+    @OneToMany(cascade = {CascadeType.ALL})
+    private List<Evento> eventos;
 
     public User() {
 
@@ -42,6 +45,10 @@ class User {
         return guardarropas.stream().filter(g -> g.getId().equals(id)).findFirst();
     }
 
+    Optional<Evento> traerEventoPorId(Long id){
+        return eventos.stream().filter(g -> g.getId().equals(id)).findFirst();
+    }
+
     void crearGuardarropas(Guardarropa guardarropa) {
         this.guardarropas.add(guardarropa);
     }
@@ -61,4 +68,6 @@ class User {
     void crearPrendaGuardarropas(Prenda prenda, Long idGuardarropa) {
       traerGuardarropasPorId(idGuardarropa).ifPresent(guardarropa -> guardarropa.agregarPrenda(prenda));
     }
+
+    void crearEvento(Evento unEvento) { this.eventos.add(unEvento); }
 }
