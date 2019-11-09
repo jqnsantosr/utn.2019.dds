@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 public class LugarService {
 
     private static final String BASE_URL = "https://maps.googleapis.com/";
-    private static final String key = "fafafa"; // google key
+    private static final String key = "AIzaSyD7Int-FkF8Ad2UgtK4J-6Pd8hWIZzs1Y8"; // google key
 
     public Lugar getLugar(String lugar) throws ExecutionException, InterruptedException {
         Gson gson = new GsonBuilder()

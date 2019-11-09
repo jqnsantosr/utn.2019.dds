@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 public class ClimaService {
 
     private static final String BASE_URL = "https://api.darksky.net/";
-    private static final String key = "fafafa2"; // darksky key
+    private static final String key = "cb486004816f422cfe6a4218f77b71c1"; // darksky key
 
     public Clima getClima(Lugar lugar) throws ExecutionException, InterruptedException {
         Gson gson = new GsonBuilder()

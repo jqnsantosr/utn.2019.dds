@@ -16,10 +16,12 @@ class User {
     Long id;
     private String nombre;
     private String googleId;
-    @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Guardarropa> guardarropas;
 
+    public User() {
+
+    }
     /*
     TODO:
         - Lógica de premium / comunes (en guardarropas?).
