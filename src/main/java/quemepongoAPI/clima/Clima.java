@@ -1,51 +1,29 @@
 package quemepongoAPI.clima;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class Clima {
-    @SerializedName("latitude")
-    @Expose
-    private float latitude;
-    @SerializedName("longitude")
-    @Expose
-    private float longitude;
-    @SerializedName("currently")
-    @Expose
-    private Currently climateNow;
-    @SerializedName("timezone")
-    @Expose
+
+    private List<Daily> forecast;
     private String location;
 
-    public float getLatitude() {
-        return latitude;
+    public Clima() {
+
     }
 
-    public void setLatitude(float latitude) {
-        this.latitude = latitude;
+    Clima(List<Daily> f, String l) {
+        forecast = f;
+        location = l;
     }
 
-    public float getLongitude() {
-        return longitude;
+    public List<Daily> getForecast() {
+        return forecast;
     }
 
-    public void setLongitude(float longitude) {
-        this.longitude = longitude;
+    public String getLocation() { return location; }
+
+    public Double getMostProximateTemperature() {
+        return forecast.get(0).getTemperatureMax();
     }
 
-    public Currently getClimateNow() {
-        return climateNow;
-    }
-
-    public void setClimateNow(Currently climateNow) {
-        this.climateNow = climateNow;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 }

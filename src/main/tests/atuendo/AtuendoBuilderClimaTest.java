@@ -6,17 +6,13 @@ import static quemepongoAPI.prenda.PartesCuerpo.*;
 import static quemepongoAPI.prenda.Tela.*;
 import static quemepongoAPI.prenda.Tela.SINTETICA;
 
-import com.sun.xml.internal.ws.util.CompletedFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.atuendo.AtuendoIncompletoException;
-import quemepongoAPI.clima.Clima;
-import quemepongoAPI.clima.ClimaService;
-import quemepongoAPI.clima.CondicionesClimaticas;
-import quemepongoAPI.clima.Currently;
+import quemepongoAPI.clima.*;
 import quemepongoAPI.evento.Evento;
 import quemepongoAPI.evento.FechaYHoraParseException;
 import quemepongoAPI.guardarropa.Guardarropa;
@@ -28,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 class AtuendoBuilderClimaTest {
@@ -36,7 +31,7 @@ class AtuendoBuilderClimaTest {
     @Mock
     ClimaService climaService;
     @Mock
-    Currently currentClima;
+    Daily currentClima;
     @Mock
     Clima clima;
 
@@ -88,12 +83,11 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaFrio() throws ExecutionException, InterruptedException {
+    void crearNuevoAtuendoParaClimaFrio() throws ClimateApisNotWorkingException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio");
 
         when(climaService.getClima(any())).thenReturn(clima);
-        when(clima.getClimateNow()).thenReturn(currentClima);
-        when(currentClima.getTemperature()).thenReturn(25.0);
+        when(clima.getMostProximateTemperature()).thenReturn(25.0);
 
         Prenda remeraAzul = new Prenda("Remera Azul", ALGODON,Collections.singletonList(TORSO), remeraLiviana, "Azul");
         Prenda buzoVerde = new Prenda("Buzo Verde", ALGODON, Collections.singletonList(TORSO), buzo, "Verde");
@@ -125,12 +119,11 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaCaliente() throws ExecutionException, InterruptedException {
+    void crearNuevoAtuendoParaClimaCaliente() throws ClimateApisNotWorkingException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Caliente");
 
         when(climaService.getClima(any())).thenReturn(clima);
-        when(clima.getClimateNow()).thenReturn(currentClima);
-        when(currentClima.getTemperature()).thenReturn(35.0);
+        when(clima.getMostProximateTemperature()).thenReturn(35.0);
 
         Prenda remeraVerde = new Prenda("Remera Verde", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Verde");
         Prenda jeanGris = new Prenda("Jean Gris", JEAN, Collections.singletonList(PIERNAS),pantalonLiviano, "Gris");
@@ -158,12 +151,11 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaFrioTieneMasDeUnaCapa() throws ExecutionException, InterruptedException {
+    void crearNuevoAtuendoParaClimaFrioTieneMasDeUnaCapa() throws ClimateApisNotWorkingException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio Power");
 
         when(climaService.getClima(any())).thenReturn(clima);
-        when(clima.getClimateNow()).thenReturn(currentClima);
-        when(currentClima.getTemperature()).thenReturn(15.0);
+        when(clima.getMostProximateTemperature()).thenReturn(15.0);
 
         Prenda remeraTermicaBlanca = new Prenda("Remera Termica Blanca", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Blanca");
         Prenda buzoNegro = new Prenda("Buzo Negro", ALGODON, Collections.singletonList(TORSO), buzoFrisa, "Negro");
@@ -196,12 +188,11 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaFrioNoAlcanzanPrendas() throws ExecutionException, InterruptedException {
+    void crearNuevoAtuendoParaClimaFrioNoAlcanzanPrendas() throws ClimateApisNotWorkingException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio No Alcanzan Prendas");
 
         when(climaService.getClima(any())).thenReturn(clima);
-        when(clima.getClimateNow()).thenReturn(currentClima);
-        when(currentClima.getTemperature()).thenReturn(17.0);
+        when(clima.getMostProximateTemperature()).thenReturn(17.0);
 
         Prenda remeraTermicaBlanca = new Prenda("Remera Termica Blanca", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Blanca");
         Prenda jeanNegro = new Prenda("Jean Negro", JEAN,Collections.singletonList(PIERNAS), pantalonPesado, "Negro");
@@ -225,12 +216,11 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaCalienteTieneSoloUnaCapa() throws ExecutionException, InterruptedException {
+    void crearNuevoAtuendoParaClimaCalienteTieneSoloUnaCapa() throws ClimateApisNotWorkingException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Caliente Una Capa");
 
         when(climaService.getClima(any())).thenReturn(clima);
-        when(clima.getClimateNow()).thenReturn(currentClima);
-        when(currentClima.getTemperature()).thenReturn(32.0);
+        when(clima.getMostProximateTemperature()).thenReturn(32.0);
 
         Prenda remeraVerde = new Prenda("Remera Verde", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Verde");
         Prenda camperaRosa = new Prenda("Campera Rosa", SINTETICA, Collections.singletonList(TORSO), campera, "Rosa");
@@ -260,12 +250,11 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaTiraExceptionPorNoTenerPrendas() throws ExecutionException, InterruptedException {
+    void crearNuevoAtuendoParaClimaTiraExceptionPorNoTenerPrendas() throws ClimateApisNotWorkingException {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
         when(climaService.getClima(any())).thenReturn(clima);
-        when(clima.getClimateNow()).thenReturn(currentClima);
-        when(currentClima.getTemperature()).thenReturn(9001.0); // it's over 9000!!!
+        when(clima.getMostProximateTemperature()).thenReturn(9001.0); // it's over 9000!!!
 
         Prenda vestidoRosa = new Prenda("Vestido Rosa", SEDA, Arrays.asList(TORSO, PIERNAS), vestido, "Rosa");
 
@@ -280,12 +269,11 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaVientoNoTienePollera() throws ExecutionException, InterruptedException {
+    void crearNuevoAtuendoParaVientoNoTienePollera() throws ClimateApisNotWorkingException {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
         when(climaService.getClima(any())).thenReturn(clima);
-        when(clima.getClimateNow()).thenReturn(currentClima);
-        when(currentClima.getTemperature()).thenReturn(0.0);
+        when(clima.getMostProximateTemperature()).thenReturn(0.0);
 
         Prenda polleraNegra = new Prenda("Pollera Negra", SEDA, Arrays.asList(PIERNAS), pollera, "Negro");
         Prenda jeanGris = new Prenda("Jean Gris", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Gris");
@@ -315,13 +303,12 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaEventoFormalConClimaFrio() throws ExecutionException, InterruptedException
+    void crearNuevoAtuendoParaEventoFormalConClimaFrio() throws ClimateApisNotWorkingException
     {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
         when(climaService.getClima(any())).thenReturn(clima);
-        when(clima.getClimateNow()).thenReturn(currentClima);
-        when(currentClima.getTemperature()).thenReturn(23.95);
+        when(clima.getMostProximateTemperature()).thenReturn(23.95);
 
         Prenda camisaBlanca = new Prenda("Camisa Blanca", ALGODON, Arrays.asList(TORSO), camisa, "Blanco");
         Prenda pantalonNegro = new Prenda("Pantalon Negro", ALGODON, Arrays.asList(PIERNAS), pantalonDeVestir, "Negro");
@@ -356,13 +343,12 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaEventoFormalConClimaCaliente() throws ExecutionException, InterruptedException
+    void crearNuevoAtuendoParaEventoFormalConClimaCaliente() throws ClimateApisNotWorkingException
     {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
         when(climaService.getClima(any())).thenReturn(clima);
-        when(clima.getClimateNow()).thenReturn(currentClima);
-        when(currentClima.getTemperature()).thenReturn(32.2);
+        when(clima.getMostProximateTemperature()).thenReturn(32.2);
 
         Prenda sacoNegro = new Prenda("Saco Negro", ALGODON, Arrays.asList(TORSO), campera, "Negro");
         Prenda zapatosNegros = new Prenda("Zapatos Negros", CUERO, Arrays.asList(CALZADO), zapato, "Negro");
@@ -391,4 +377,6 @@ class AtuendoBuilderClimaTest {
         assertTrue(unAtuendo.tiene_prenda(zapatosNegros));
         assertFalse(unAtuendo.tiene_prenda(jeanGris));
     }
+
 }
+

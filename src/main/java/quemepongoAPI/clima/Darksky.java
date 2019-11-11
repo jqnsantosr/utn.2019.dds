@@ -7,6 +7,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface Darksky {
 
-    @GET("forecast/{key}/{latlong}?lang=es&units=si")
-    CompletableFuture<Clima> getClima(@Path("latlong") String latlong, @Path("key") String key);
+    @GET("forecast/{key}/{latlong}?lang=es&units=si&exclude=[currently,minutely,hourly]")
+    CompletableFuture<ClimaDarksky> getClima(@Path("latlong") String latlong, @Path("key") String key);
 }

@@ -8,8 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import quemepongoAPI.clima.Clima;
-import quemepongoAPI.clima.Darksky;
+import quemepongoAPI.clima.*;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -21,8 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ClimaTest {
 
-    private MockWebServer mockWebServer;
+    private MockWebServer mockWebServerOne;
+    private MockWebServer mockWebServerTwo;
     private Retrofit retrofit;
+    private Retrofit secondRetrofit;
 
     @Before
     public void setUp() {
@@ -31,22 +32,28 @@ public class ClimaTest {
                 .create();
 
         MockitoAnnotations.initMocks(this);
-        mockWebServer = new MockWebServer();
+        mockWebServerOne = new MockWebServer();
+        mockWebServerTwo = new MockWebServer();
         retrofit = new Retrofit.Builder()
-                .baseUrl(mockWebServer.url("").toString())
+                .baseUrl(mockWebServerOne.url("").toString())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        secondRetrofit = new Retrofit.Builder()
+                .baseUrl(mockWebServerTwo.url("").toString())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 
     @After
     public void tearDown() throws Exception {
-        mockWebServer.shutdown();
+        mockWebServerOne.shutdown();
+        mockWebServerTwo.shutdown();
     }
 
     @Test
-    public void getClimateFromDarksky() throws IOException {
+    public void getClimateFromDarksky() {
 
-        mockWebServer.enqueue(new MockResponse()
+        mockWebServerOne.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .setBody("{\n" +
@@ -73,8 +80,48 @@ public class ClimaTest {
                         "        \"ozone\": 241.1\n" +
                         "    }}"));
 
+
         Darksky service = retrofit.create(Darksky.class);
-        CompletableFuture<Clima> clima = service.getClima("-34.6237933,-58.4022563", "key");
+        CompletableFuture<ClimaDarksky> clima = service.getClima("-34.6237933,-58.4022563", "key");
+        assertNotNull(clima);
+    }
+
+    @Test
+    public void getClimateFromOpenWeather() {
+
+        mockWebServerOne.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .addHeader("Content-Type", "application/json; charset=utf-8")
+                .setBody("\"{    \\\"cod\\\": \\\"200\\\",    " +
+                        "\\\"message\\\": 0,    \\\"cnt\\\": 40,    " +
+                        "\\\"list\\\": [        {            " +
+                        "\\\"dt\\\": 1573441200,            " +
+                        "\\\"main\\\": {                " +
+                        "\\\"temp\\\": 18.79,                " +
+                        "\\\"temp_min\\\": 18.79,                " +
+                        "\\\"temp_max\\\": 19.36,                " +
+                        "\\\"pressure\\\": 1022,                " +
+                        "\\\"sea_level\\\": 1022,                " +
+                        "\\\"grnd_level\\\": 1020,                " +
+                        "\\\"humidity\\\": 70,                " +
+                        "\\\"temp_kf\\\": -0.57            },            " +
+                        "\\\"weather\\\": [                {                    " +
+                        "\\\"id\\\": 800,                    " +
+                        "\\\"main\\\": \\\"Clear\\\",                    " +
+                        "\\\"description\\\": \\\"cielo claro\\\",                    " +
+                        "\\\"icon\\\": \\\"01n\\\"                }            ],            " +
+                        "\\\"clouds\\\": {               " +
+                        " \\\"all\\\": 0            },            " +
+                        "\\\"wind\\\": {                " +
+                        "\\\"speed\\\": 7.25,               " +
+                        " \\\"deg\\\": 74            },           " +
+                        " \\\"sys\\\": {               " +
+                        " \\\"pod\\\": \\\"n\\\"            },       " +
+                        "     \\\"dt_txt\\\": \\\"2019-11-11 03:00:00\\\" " +
+                        "       },\""));
+
+        OpenWeather service = secondRetrofit.create(OpenWeather.class);
+        CompletableFuture<ClimaOpenWeather> clima = service.getClima("-34.6237933", "-58.4022563", "key", "metric", "es");
         assertNotNull(clima);
     }
 
