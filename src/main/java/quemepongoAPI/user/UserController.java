@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.clima.Clima;
 import quemepongoAPI.clima.ClimaService;
+import quemepongoAPI.clima.ClimateApisNotWorkingException;
 import quemepongoAPI.evento.Evento;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.lugar.Geometry;
@@ -135,7 +136,7 @@ class UserController {
 
     /* Get de atuendos aleatorios de todos los guardarropas */
     @GetMapping("/clima/{place}")
-    String all(@PathVariable String place) throws ExecutionException, InterruptedException {
+    String all(@PathVariable String place) throws ExecutionException, InterruptedException, ClimateApisNotWorkingException {
         Gson gson = new Gson();
         Lugar lugar = lugarService.getLugar(place);
         return gson.toJson(climaService.getClima(lugar));

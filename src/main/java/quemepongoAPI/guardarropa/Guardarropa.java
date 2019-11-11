@@ -27,7 +27,6 @@ public class Guardarropa {
     @Transient
     private AtuendoBuilder atuendoBuilder;
     @ElementCollection
-    @OneToMany(cascade = {CascadeType.ALL})
     private List<Prenda> ultimasPrendasPedidas;
     @Transient
     private double ultimaTemperaturaPedida;
@@ -84,8 +83,9 @@ public class Guardarropa {
     public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes, Clima clima, Evento unEvento)
     {
         //TODO: deberia ser pronostico?
-        ultimaTemperaturaPedida = clima.getClimateNow().getTemperature();
+        ultimaTemperaturaPedida = clima.getMostProximateTemperature();
         //ultimasCondicionesClimaticas = climaController.dameCondiciones();
+        
         //TODO: condiciones climaticas del adapter
         ultimasCondicionesClimaticas = new ArrayList<>();
         ultimasCondicionesClimaticas.add(CondicionesClimaticas.LLUVIA);
