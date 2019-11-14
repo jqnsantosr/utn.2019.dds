@@ -1,6 +1,8 @@
 package quemepongoAPI.user;
 
 import lombok.Data;
+import quemepongoAPI.evento.Evento;
+import quemepongoAPI.guardarropa.CantidadMaximaPrendaSuperadaException;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.Prenda;
 
@@ -10,44 +12,69 @@ import java.util.Optional;
 
 @Data
 @Entity
-public class User {
+class User {
     private @Id
     @GeneratedValue
     Long id;
-    private String username;
+    private String nombre;
     private String googleId;
-    @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Guardarropa> guardarropas;
+    @OneToMany(cascade = {CascadeType.ALL})
+    private List<Evento> eventos;
+
+    public User() {
+
+    }
+    /*
+    TODO:
+        - Lógica de premium / comunes (en guardarropas?).
+     */
 
     User(String username, String googleId) {
-        this.username = username;
+        this.nombre = username;
         this.googleId = googleId;
     }
 
-    /* GETTER de un Guardarropas */
-    public Optional<Guardarropa> getGuardarropasById(Long id){
+    User(String username, String googleId, List<Guardarropa> guard) {
+        this.nombre = username;
+        this.googleId = googleId;
+        this.guardarropas = guard;
+    }
+
+    Optional<Guardarropa> traerGuardarropasPorId(Long id){
         return guardarropas.stream().filter(g -> g.getId().equals(id)).findFirst();
     }
 
-    public void addGuardarropas(Guardarropa guardarropa) {
+    Optional<Evento> traerEventoPorId(Long id){
+        return eventos.stream().filter(g -> g.getId().equals(id)).findFirst();
+    }
+
+    void crearGuardarropas(Guardarropa guardarropa) {
         this.guardarropas.add(guardarropa);
     }
 
-    public boolean deleteGuardarropas(Guardarropa guardarropa) {
+    void borrarGuardarropas(Guardarropa guardarropa) throws GuardarropasNotEmptyException {
         if(guardarropa.getPrendas().isEmpty()){
             this.guardarropas.remove(guardarropa);
-            return true;
         } else {
-            return false;
+            throw new GuardarropasNotEmptyException(guardarropa.getId());
         }
     }
 
-    public boolean isPrendaInAnyGuardarropas(Prenda prenda) {
-        return guardarropas.stream().anyMatch(guardarropa -> guardarropa.hasThisPrenda(prenda));
+    boolean existePrendaEnAlgunGuardarropas(Prenda prenda) {
+        return guardarropas.stream().anyMatch(guardarropa -> guardarropa.existePrenda(prenda));
     }
 
-    public void addPrendaToGuardarropas(Prenda prenda, Long idGuardarropa) {
-      getGuardarropasById(idGuardarropa).ifPresent(guardarropa -> guardarropa.addPrenda(prenda));
+    void crearPrendaGuardarropas(Prenda prenda, Long idGuardarropa) {
+      traerGuardarropasPorId(idGuardarropa).ifPresent(guardarropa -> {
+          try {
+              guardarropa.agregarPrenda(prenda);
+          } catch (CantidadMaximaPrendaSuperadaException e) {
+              e.printStackTrace();
+          }
+      });
     }
+
+    void crearEvento(Evento unEvento) { this.eventos.add(unEvento); }
 }

@@ -22,6 +22,8 @@ public enum Tela {
     RASO,
     CORDERITO,
     JEAN, /* DENIM */
-    LANILLA
+    LANILLA,
+    LONA,
+    PANA
 
 }

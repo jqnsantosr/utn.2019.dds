@@ -4,14 +4,10 @@ import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AtuendoRandomBuilder extends AtuendoBuilder
 {
-    private List<PartesCuerpo> partesOcupadas = new ArrayList<>();
-    private List<PartesCuerpo> partesAOcupar = new ArrayList<>();
-
     @Override
     public void buildPorParte(Guardarropa unGuardarropa, PartesCuerpo unaParte)
     {
@@ -34,7 +30,7 @@ public class AtuendoRandomBuilder extends AtuendoBuilder
         }
 
         //agregar la prenda al SET, la parte del cuerpo a Pedida y Ocupada
-        atuendo.add_prenda(unaPrenda);
+        atuendo.agregar_prenda(unaPrenda);
         ocuparEspacios(unaPrenda);
     }
 
@@ -44,7 +40,7 @@ public class AtuendoRandomBuilder extends AtuendoBuilder
         partesAOcupar = partes;
     }
 
-    private boolean verificarEspacios(Prenda unaPrenda)
+    public boolean verificarEspacios(Prenda unaPrenda)
     {
         List<PartesCuerpo> listaPartes = unaPrenda.damePartesCuerpo();
 
@@ -56,14 +52,8 @@ public class AtuendoRandomBuilder extends AtuendoBuilder
         return true;
     }
 
-    private void ocuparEspacios(Prenda unaPrenda)
-    {
-        List<PartesCuerpo> listaPartes = unaPrenda.damePartesCuerpo();
-
-        for (PartesCuerpo parte: listaPartes)
-        {
-            atuendo.add_parte_del_cuerpo(parte);
-            partesOcupadas.add(parte);
-        }
+    @Override
+    public void agregar_nueva_capa() {
+        //Por ahora no hace nada
     }
 }
