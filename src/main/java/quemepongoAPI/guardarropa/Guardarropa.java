@@ -6,7 +6,6 @@ import quemepongoAPI.atuendo.AtuendoBuilder;
 import quemepongoAPI.atuendo.AtuendoClimaBuilder;
 import quemepongoAPI.atuendo.AtuendoRandomBuilder;
 import quemepongoAPI.clima.Clima;
-import quemepongoAPI.clima.ClimaService;
 import quemepongoAPI.clima.CondicionesClimaticas;
 import quemepongoAPI.evento.Evento;
 import quemepongoAPI.prenda.PartesCuerpo;
@@ -24,9 +23,10 @@ public class Guardarropa {
     @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Prenda> prendas;
+    private int cantidad_maxima_prendas = 20; //20 Normal - Ilimitado Premium
     @Transient
     private AtuendoBuilder atuendoBuilder;
-    @ElementCollection
+    @Transient
     private List<Prenda> ultimasPrendasPedidas;
     @Transient
     private double ultimaTemperaturaPedida;
@@ -49,7 +49,21 @@ public class Guardarropa {
         this.ultimasPrendasPedidas = new ArrayList<>();
     }
 
-    public void agregarPrenda(Prenda prenda){
+    public Guardarropa(String nombre, boolean premium) {
+        this.nombre = nombre;
+        this.prendas = new ArrayList<>();
+        this.ultimasPrendasPedidas = new ArrayList<>();
+        if (premium) this.cantidad_maxima_prendas = Integer.MAX_VALUE;
+    }
+
+    public void PasarAPremium()
+    {
+        cantidad_maxima_prendas = Integer.MAX_VALUE;
+    }
+
+    public void agregarPrenda(Prenda prenda) throws CantidadMaximaPrendaSuperadaException {
+        if((prendas.size() + 1) > cantidad_maxima_prendas)
+            throw new CantidadMaximaPrendaSuperadaException("Guardarropas Lleno, Compre Premium");
         prendas.add(prenda);
     }
 

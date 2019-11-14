@@ -1,24 +1,20 @@
-package quemepongoAPI.atuendo;
+package guardarropa;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import quemepongoAPI.guardarropa.CantidadMaximaPrendaSuperadaException;
 import quemepongoAPI.guardarropa.Guardarropa;
-import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 import quemepongoAPI.prenda.TipoPrenda;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static quemepongoAPI.prenda.PartesCuerpo.*;
+import static quemepongoAPI.prenda.PartesCuerpo.CALZADO;
 import static quemepongoAPI.prenda.Tela.*;
-import static quemepongoAPI.prenda.Tela.SINTETICA;
 
-class AtuendoBuilderAleatorioTest {
+class GuardarropaTest {
 
     private TipoPrenda remeraLiviana = new TipoPrenda("Remera", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 5);
     private TipoPrenda remeraPesada = new TipoPrenda("Remera", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 15);
@@ -57,95 +53,101 @@ class AtuendoBuilderAleatorioTest {
     Prenda anteojosSol = new Prenda("Anteojos de Sol", SINTETICA, Arrays.asList(OJOS), anteojos, "Negro");
     Prenda trajeDeBatman = new Prenda("Traje De Batman", SINTETICA, Arrays.asList(CALZADO, TORSO, PIERNAS, CABEZA), traje_entero, "Negro");
     Prenda botas_cpt_america = new Prenda("Botas de Capitan America", CUERO, Collections.singletonList(CALZADO), zapato, "Blanco?");
-
-    @BeforeEach
-    void setUp() {
-    }
+    Prenda musculosaFloreada = new Prenda("Musculosa Floreada", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Multicolor");
+    Prenda anteojosNocturnos = new Prenda("Anteojos de Noche", SINTETICA, Arrays.asList(OJOS), anteojos, "Verde");
+    Prenda jeanCorto = new Prenda("Jean Corto", JEAN, Collections.singletonList(PIERNAS), pantalonCorto, "Blanco");
+    Prenda camperaDeLluvia = new Prenda("Campera de LLuvia", SINTETICA, Collections.singletonList(TORSO), campera, "Azul");
+    Prenda camisetaRacing = new Prenda("Camiseta de Rasin", ALGODON, Collections.singletonList(TORSO), remeraPesada, "No Existen");
+    //21 prendas - un guardarropa normal tiene 20 como maximo
 
     @Test
-    void crearNuevoAtuendoBasico() throws CantidadMaximaPrendaSuperadaException {
-        Guardarropa unGuardarropa = new Guardarropa("TEST");
+    void agregarPrendaFallaPorSerGuardarropaNormal() throws CantidadMaximaPrendaSuperadaException {
+        Guardarropa unGuardarropa = new Guardarropa("Guardarropa1", false);
 
         unGuardarropa.agregarPrenda(remeraAzul);
         unGuardarropa.agregarPrenda(jeanNegro);
         unGuardarropa.agregarPrenda(gorraBlanca);
         unGuardarropa.agregarPrenda(nikesAmarillas);
-
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
-        unAtuendo.mostrarAtuendo();
-
-        assertTrue(unAtuendo.tiene_prenda(gorraBlanca));
-        assertTrue(unAtuendo.tiene_prenda(remeraAzul));
-        assertTrue(unAtuendo.tiene_prenda(jeanNegro));
-        assertTrue(unAtuendo.tiene_prenda(nikesAmarillas));
-    }
-
-    @Test
-    void crearNuevoAtuendoConPrendasDeMultiplesPartes() throws CantidadMaximaPrendaSuperadaException {
-        Guardarropa unGuardarropa = new Guardarropa("TEST");
-
         unGuardarropa.agregarPrenda(vestidoRosa);
         unGuardarropa.agregarPrenda(polleraVioleta);
         unGuardarropa.agregarPrenda(sombreroGrande);
         unGuardarropa.agregarPrenda(zapatosConTacosYPlataforma);
-
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
-        unAtuendo.mostrarAtuendo();
-
-        assertTrue(unAtuendo.tiene_prenda(vestidoRosa));
-        assertFalse(unAtuendo.tiene_prenda(polleraVioleta));
-        assertTrue(unAtuendo.tiene_prenda(sombreroGrande));
-        assertTrue(unAtuendo.tiene_prenda(zapatosConTacosYPlataforma));
-    }
-
-    @Test
-    void crearNuevoAtuendoEspecifico() throws CantidadMaximaPrendaSuperadaException {
-        Guardarropa unGuardarropa = new Guardarropa("TEST");
-
-        unGuardarropa.agregarPrenda(bikiniRoja);
-        unGuardarropa.agregarPrenda(sombreroVaquero);
-        unGuardarropa.agregarPrenda(zapatosConTacosYPlataforma);
-        unGuardarropa.agregarPrenda(anteojosSol);
-
-        List<PartesCuerpo> partesPedidas = new ArrayList<>();
-        partesPedidas.add(PartesCuerpo.TORSO);
-        partesPedidas.add(PartesCuerpo.PIERNAS);
-        partesPedidas.add(PartesCuerpo.CABEZA);
-        partesPedidas.add(PartesCuerpo.OJOS);
-
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio(partesPedidas);
-        unAtuendo.mostrarAtuendo();
-
-        assertTrue(unAtuendo.tiene_prenda(bikiniRoja));
-        assertTrue(unAtuendo.tiene_prenda(sombreroVaquero));
-        assertFalse(unAtuendo.tiene_prenda(zapatosConTacosYPlataforma));
-        assertTrue(unAtuendo.tiene_prenda(anteojosSol));
-    }
-
-    @Test
-    void crearNuevoAtuendoConPartesQueNoEntranPorEstarOcupadas() throws CantidadMaximaPrendaSuperadaException {
-        Guardarropa unGuardarropa = new Guardarropa("TEST");
-
-        unGuardarropa.agregarPrenda(trajeDeBatman);
         unGuardarropa.agregarPrenda(pantalon_thor);
         unGuardarropa.agregarPrenda(pantalon_flash);
         unGuardarropa.agregarPrenda(casco_ironman);
+        unGuardarropa.agregarPrenda(bikiniRoja);
+        unGuardarropa.agregarPrenda(sombreroVaquero);
+        unGuardarropa.agregarPrenda(anteojosSol);
+        unGuardarropa.agregarPrenda(trajeDeBatman);
         unGuardarropa.agregarPrenda(botas_cpt_america);
+        unGuardarropa.agregarPrenda(musculosaFloreada);
+        unGuardarropa.agregarPrenda(anteojosNocturnos);
+        unGuardarropa.agregarPrenda(jeanCorto);
+        unGuardarropa.agregarPrenda(camperaDeLluvia);
 
-        Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
-        unAtuendo.mostrarAtuendo();
-
-        assertTrue(unAtuendo.tiene_prenda(trajeDeBatman));
-        assertFalse(unAtuendo.tiene_prenda(pantalon_thor));
-        assertFalse(unAtuendo.tiene_prenda(pantalon_flash));
-        assertFalse(unAtuendo.tiene_prenda(casco_ironman));
-        assertFalse(unAtuendo.tiene_prenda(botas_cpt_america));
+        //ahora tiene que fallar
+        assertThrows(CantidadMaximaPrendaSuperadaException.class,() -> unGuardarropa.agregarPrenda(camisetaRacing));
     }
 
     @Test
-    void crearNuevoAtuendoTiraExceptionPorEstarIncompleto() {
-        Guardarropa unGuardarropa = new Guardarropa("TEST");
+    void agregarPrendaPorSerGuardarropaPremium() throws CantidadMaximaPrendaSuperadaException {
+        Guardarropa unGuardarropa = new Guardarropa("Guardarropa1", true);
 
-        assertThrows(AtuendoIncompletoException.class, unGuardarropa::crearAtuendoAleatorio);
+        unGuardarropa.agregarPrenda(remeraAzul);
+        unGuardarropa.agregarPrenda(jeanNegro);
+        unGuardarropa.agregarPrenda(gorraBlanca);
+        unGuardarropa.agregarPrenda(nikesAmarillas);
+        unGuardarropa.agregarPrenda(vestidoRosa);
+        unGuardarropa.agregarPrenda(polleraVioleta);
+        unGuardarropa.agregarPrenda(sombreroGrande);
+        unGuardarropa.agregarPrenda(zapatosConTacosYPlataforma);
+        unGuardarropa.agregarPrenda(pantalon_thor);
+        unGuardarropa.agregarPrenda(pantalon_flash);
+        unGuardarropa.agregarPrenda(casco_ironman);
+        unGuardarropa.agregarPrenda(bikiniRoja);
+        unGuardarropa.agregarPrenda(sombreroVaquero);
+        unGuardarropa.agregarPrenda(anteojosSol);
+        unGuardarropa.agregarPrenda(trajeDeBatman);
+        unGuardarropa.agregarPrenda(botas_cpt_america);
+        unGuardarropa.agregarPrenda(musculosaFloreada);
+        unGuardarropa.agregarPrenda(anteojosNocturnos);
+        unGuardarropa.agregarPrenda(jeanCorto);
+        unGuardarropa.agregarPrenda(camperaDeLluvia);
+
+        //ahora no tiene que fallar
+        unGuardarropa.agregarPrenda(camisetaRacing);
+    }
+
+    @Test
+    void agregarPrendaFallaPrimeroPeroPasaAPremiumYFunciona() throws CantidadMaximaPrendaSuperadaException {
+        Guardarropa unGuardarropa = new Guardarropa("Guardarropa1", false);
+
+        unGuardarropa.agregarPrenda(remeraAzul);
+        unGuardarropa.agregarPrenda(jeanNegro);
+        unGuardarropa.agregarPrenda(gorraBlanca);
+        unGuardarropa.agregarPrenda(nikesAmarillas);
+        unGuardarropa.agregarPrenda(vestidoRosa);
+        unGuardarropa.agregarPrenda(polleraVioleta);
+        unGuardarropa.agregarPrenda(sombreroGrande);
+        unGuardarropa.agregarPrenda(zapatosConTacosYPlataforma);
+        unGuardarropa.agregarPrenda(pantalon_thor);
+        unGuardarropa.agregarPrenda(pantalon_flash);
+        unGuardarropa.agregarPrenda(casco_ironman);
+        unGuardarropa.agregarPrenda(bikiniRoja);
+        unGuardarropa.agregarPrenda(sombreroVaquero);
+        unGuardarropa.agregarPrenda(anteojosSol);
+        unGuardarropa.agregarPrenda(trajeDeBatman);
+        unGuardarropa.agregarPrenda(botas_cpt_america);
+        unGuardarropa.agregarPrenda(musculosaFloreada);
+        unGuardarropa.agregarPrenda(anteojosNocturnos);
+        unGuardarropa.agregarPrenda(jeanCorto);
+        unGuardarropa.agregarPrenda(camperaDeLluvia);
+
+        //ahora tiene que fallar
+        assertThrows(CantidadMaximaPrendaSuperadaException.class,() -> unGuardarropa.agregarPrenda(camisetaRacing));
+
+        unGuardarropa.PasarAPremium();
+
+        unGuardarropa.agregarPrenda(camisetaRacing);
     }
 }

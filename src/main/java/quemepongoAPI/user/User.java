@@ -2,6 +2,7 @@ package quemepongoAPI.user;
 
 import lombok.Data;
 import quemepongoAPI.evento.Evento;
+import quemepongoAPI.guardarropa.CantidadMaximaPrendaSuperadaException;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.Prenda;
 
@@ -66,7 +67,13 @@ class User {
     }
 
     void crearPrendaGuardarropas(Prenda prenda, Long idGuardarropa) {
-      traerGuardarropasPorId(idGuardarropa).ifPresent(guardarropa -> guardarropa.agregarPrenda(prenda));
+      traerGuardarropasPorId(idGuardarropa).ifPresent(guardarropa -> {
+          try {
+              guardarropa.agregarPrenda(prenda);
+          } catch (CantidadMaximaPrendaSuperadaException e) {
+              e.printStackTrace();
+          }
+      });
     }
 
     void crearEvento(Evento unEvento) { this.eventos.add(unEvento); }

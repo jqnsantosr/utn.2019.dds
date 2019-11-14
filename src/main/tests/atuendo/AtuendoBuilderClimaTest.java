@@ -15,6 +15,7 @@ import quemepongoAPI.atuendo.AtuendoIncompletoException;
 import quemepongoAPI.clima.*;
 import quemepongoAPI.evento.Evento;
 import quemepongoAPI.evento.FechaYHoraParseException;
+import quemepongoAPI.guardarropa.CantidadMaximaPrendaSuperadaException;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
@@ -83,7 +84,7 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaFrio() throws ClimateApisNotWorkingException {
+    void crearNuevoAtuendoParaClimaFrio() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio");
 
         when(climaService.getClima(any())).thenReturn(clima);
@@ -119,7 +120,7 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaCaliente() throws ClimateApisNotWorkingException {
+    void crearNuevoAtuendoParaClimaCaliente() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Caliente");
 
         when(climaService.getClima(any())).thenReturn(clima);
@@ -151,7 +152,7 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaFrioTieneMasDeUnaCapa() throws ClimateApisNotWorkingException {
+    void crearNuevoAtuendoParaClimaFrioTieneMasDeUnaCapa() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio Power");
 
         when(climaService.getClima(any())).thenReturn(clima);
@@ -188,7 +189,7 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaFrioNoAlcanzanPrendas() throws ClimateApisNotWorkingException {
+    void crearNuevoAtuendoParaClimaFrioNoAlcanzanPrendas() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Frio No Alcanzan Prendas");
 
         when(climaService.getClima(any())).thenReturn(clima);
@@ -216,7 +217,7 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaCalienteTieneSoloUnaCapa() throws ClimateApisNotWorkingException {
+    void crearNuevoAtuendoParaClimaCalienteTieneSoloUnaCapa() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
         Guardarropa unGuardarropa = new Guardarropa("Test Clima Caliente Una Capa");
 
         when(climaService.getClima(any())).thenReturn(clima);
@@ -250,7 +251,7 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaClimaTiraExceptionPorNoTenerPrendas() throws ClimateApisNotWorkingException {
+    void crearNuevoAtuendoParaClimaTiraExceptionPorNoTenerPrendas() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
         when(climaService.getClima(any())).thenReturn(clima);
@@ -269,7 +270,7 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaVientoNoTienePollera() throws ClimateApisNotWorkingException {
+    void crearNuevoAtuendoParaVientoNoTienePollera() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
         when(climaService.getClima(any())).thenReturn(clima);
@@ -303,8 +304,7 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaEventoFormalConClimaFrio() throws ClimateApisNotWorkingException
-    {
+    void crearNuevoAtuendoParaEventoFormalConClimaFrio() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
         when(climaService.getClima(any())).thenReturn(clima);
@@ -343,8 +343,7 @@ class AtuendoBuilderClimaTest {
     }
 
     @Test
-    void crearNuevoAtuendoParaEventoFormalConClimaCaliente() throws ClimateApisNotWorkingException
-    {
+    void crearNuevoAtuendoParaEventoFormalConClimaCaliente() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
         Guardarropa unGuardarropa = new Guardarropa("TEST");
 
         when(climaService.getClima(any())).thenReturn(clima);
