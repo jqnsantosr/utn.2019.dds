@@ -7,8 +7,7 @@ import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.Prenda;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Data
 @Entity
@@ -22,14 +21,11 @@ class User {
     private List<Guardarropa> guardarropas;
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Evento> eventos;
+    private boolean esPremium = false;
 
     public User() {
 
     }
-    /*
-    TODO:
-        - Lógica de premium / comunes (en guardarropas?).
-     */
 
     User(String username, String googleId) {
         this.nombre = username;
@@ -40,6 +36,22 @@ class User {
         this.nombre = username;
         this.googleId = googleId;
         this.guardarropas = guard;
+    }
+
+    public User(String username, String googleId, boolean premium)
+    {
+        this.nombre = username;
+        this.googleId = googleId;
+        this.guardarropas = new ArrayList<>();
+        this.esPremium = premium;
+    }
+
+    public void PasarAPremium()
+    {
+        this.esPremium = true;
+        for (Guardarropa unGuardarropa : guardarropas) {
+            unGuardarropa.PasarAPremium();
+        }
     }
 
     Optional<Guardarropa> traerGuardarropasPorId(Long id){

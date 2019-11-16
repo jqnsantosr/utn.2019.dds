@@ -58,8 +58,31 @@ class AtuendoBuilderClimaTest {
     private TipoPrenda campera = new TipoPrenda("Campera", Arrays.asList(ALGODON, SINTETICA), Collections.singletonList(TORSO), 20);
     private TipoPrenda pantalonCorto = new TipoPrenda("Pantalon Corto", Arrays.asList(JEAN, ALGODON, SINTETICA), Collections.singletonList(PIERNAS), 5);
 
-    private Evento eventoNoFormal;
+    private Prenda camisaBlanca = new Prenda("Camisa Blanca", ALGODON, Collections.singletonList(TORSO), camisa, "Blanco");
+    private Prenda pantalonNegro = new Prenda("Pantalon Negro", ALGODON, Collections.singletonList(PIERNAS), pantalonDeVestir, "Negro");
+    private Prenda sacoNegro = new Prenda("Saco Negro", ALGODON, Collections.singletonList(TORSO), campera, "Negro");
+    private Prenda zapatosNegros = new Prenda("Zapatos Negros", CUERO, Collections.singletonList(CALZADO), zapato, "Negro");
+    private Prenda jeanGris = new Prenda("Jean Gris", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Gris");
+    private Prenda remeraAzul = new Prenda("Remera Azul", ALGODON,Collections.singletonList(TORSO), remeraLiviana, "Azul");
+    private Prenda buzoVerde = new Prenda("Buzo Verde", ALGODON, Collections.singletonList(TORSO), buzo, "Verde");
+    private Prenda jeanNegro = new Prenda("Jean Negro", JEAN,Collections.singletonList(PIERNAS), pantalonPesado, "Negro");
+    private Prenda pantalonSnow = new Prenda("Pantalon para Nieve", ALGODON,Collections.singletonList(PIERNAS), pantalonInvierno, "Rojo");
+    private Prenda gorraBlanca = new Prenda("Gorra Blanca", ALGODON,Collections.singletonList(CABEZA), gorra, "Blanca");
+    private Prenda nikesAmarillas = new Prenda("Nikes Amarillas", LONA,Collections.singletonList(CALZADO), zapatilla, "Amarillas");
+    private Prenda remeraVerde = new Prenda("Remera Verde", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Verde");
+    private Prenda gorraNegra = new Prenda("Gorra negra", ALGODON, Collections.singletonList(CABEZA),gorraLiviana, "Negra");
+    private Prenda nikesVerdes = new Prenda("Nikes Verdes", LONA,Collections.singletonList(CALZADO), zapatilla, "Verdes");
+    private Prenda remeraTermicaBlanca = new Prenda("Remera Termica Blanca", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Blanca");
+    private Prenda buzoNegro = new Prenda("Buzo Negro", ALGODON, Collections.singletonList(TORSO), buzoFrisa, "Negro");
+    private Prenda camperaGris = new Prenda("Campera Gris", SINTETICA, Collections.singletonList(TORSO), campera, "Gris");
+    private Prenda gorraLanaNegra = new Prenda("Gorra de lana negra", ALGODON,Collections.singletonList(CABEZA), gorra, "Negra");
+    private Prenda adidasNegra = new Prenda("Adidas Negras", LONA,Collections.singletonList(CALZADO), zapatilla, "Negras");
+    private Prenda camperaRosa = new Prenda("Campera Rosa", SINTETICA, Collections.singletonList(TORSO), campera, "Rosa");
+    private Prenda bermudaVioleta = new Prenda("Bermuda Violeta", JEAN, Collections.singletonList(PIERNAS), pantalonCorto, "Violeta");
+    private Prenda vestidoRosa = new Prenda("Vestido Rosa", SEDA, Arrays.asList(TORSO, PIERNAS), vestido, "Rosa");
+    private Prenda polleraNegra = new Prenda("Pollera Negra", SEDA, Arrays.asList(PIERNAS), pollera, "Negro");
 
+    private Evento eventoNoFormal;
     {
         try {
             eventoNoFormal = new Evento("25/12/2019 a las 00:00", false);
@@ -90,13 +113,6 @@ class AtuendoBuilderClimaTest {
         when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getMostProximateTemperature()).thenReturn(25.0);
 
-        Prenda remeraAzul = new Prenda("Remera Azul", ALGODON,Collections.singletonList(TORSO), remeraLiviana, "Azul");
-        Prenda buzoVerde = new Prenda("Buzo Verde", ALGODON, Collections.singletonList(TORSO), buzo, "Verde");
-        Prenda jeanNegro = new Prenda("Jean Negro", JEAN,Collections.singletonList(PIERNAS), pantalonPesado, "Negro");
-        Prenda pantalonSnow = new Prenda("Pantalon para Nieve", ALGODON,Collections.singletonList(PIERNAS), pantalonInvierno, "Rojo");
-        Prenda gorraBlanca = new Prenda("Gorra Blanca", ALGODON,Collections.singletonList(CABEZA), gorra, "Blanca");
-        Prenda nikesAmarillas = new Prenda("Nikes Amarillas", LONA,Collections.singletonList(CALZADO), zapatilla, "Amarillas");
-
         unGuardarropa.agregarPrenda(remeraAzul);
         unGuardarropa.agregarPrenda(buzoVerde);
         unGuardarropa.agregarPrenda(jeanNegro);
@@ -126,11 +142,6 @@ class AtuendoBuilderClimaTest {
         when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getMostProximateTemperature()).thenReturn(35.0);
 
-        Prenda remeraVerde = new Prenda("Remera Verde", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Verde");
-        Prenda jeanGris = new Prenda("Jean Gris", JEAN, Collections.singletonList(PIERNAS),pantalonLiviano, "Gris");
-        Prenda gorraNegra = new Prenda("Gorra negra", ALGODON, Collections.singletonList(CABEZA),gorraLiviana, "Negra");
-        Prenda nikesVerdes = new Prenda("Nikes Verdes", LONA,Collections.singletonList(CALZADO), zapatilla, "Verdes");
-
         unGuardarropa.agregarPrenda(remeraVerde);
         unGuardarropa.agregarPrenda(jeanGris);
         unGuardarropa.agregarPrenda(gorraNegra);
@@ -157,13 +168,6 @@ class AtuendoBuilderClimaTest {
 
         when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getMostProximateTemperature()).thenReturn(15.0);
-
-        Prenda remeraTermicaBlanca = new Prenda("Remera Termica Blanca", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Blanca");
-        Prenda buzoNegro = new Prenda("Buzo Negro", ALGODON, Collections.singletonList(TORSO), buzoFrisa, "Negro");
-        Prenda camperaGris = new Prenda("Campera Gris", SINTETICA, Collections.singletonList(TORSO), campera, "Gris");
-        Prenda jeanNegro = new Prenda("Jean Negro", JEAN,Collections.singletonList(PIERNAS), pantalonPesado, "Negro");
-        Prenda gorraLanaNegra = new Prenda("Gorra de lana negra", ALGODON,Collections.singletonList(CABEZA), gorra, "Negra");
-        Prenda adidasNegra = new Prenda("Adidas Negras", LONA,Collections.singletonList(CALZADO), zapatilla, "Negras");
 
         unGuardarropa.agregarPrenda(remeraTermicaBlanca);
         unGuardarropa.agregarPrenda(buzoNegro);
@@ -195,10 +199,6 @@ class AtuendoBuilderClimaTest {
         when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getMostProximateTemperature()).thenReturn(17.0);
 
-        Prenda remeraTermicaBlanca = new Prenda("Remera Termica Blanca", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Blanca");
-        Prenda jeanNegro = new Prenda("Jean Negro", JEAN,Collections.singletonList(PIERNAS), pantalonPesado, "Negro");
-        Prenda adidasNegra = new Prenda("Adidas Negras", LONA,Collections.singletonList(CALZADO), zapatilla, "Negro");
-
         unGuardarropa.agregarPrenda(remeraTermicaBlanca);
         unGuardarropa.agregarPrenda(jeanNegro);
         unGuardarropa.agregarPrenda(adidasNegra);
@@ -222,12 +222,6 @@ class AtuendoBuilderClimaTest {
 
         when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getMostProximateTemperature()).thenReturn(32.0);
-
-        Prenda remeraVerde = new Prenda("Remera Verde", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Verde");
-        Prenda camperaRosa = new Prenda("Campera Rosa", SINTETICA, Collections.singletonList(TORSO), campera, "Rosa");
-        Prenda jeanGris = new Prenda("Jean Gris", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Gris");
-        Prenda bermudaVioleta = new Prenda("Bermuda Violeta", JEAN, Collections.singletonList(PIERNAS), pantalonCorto, "Violeta");
-        Prenda nikesVerdes = new Prenda("Nikes Verdes", LONA, Collections.singletonList(CALZADO), zapatilla, "Verdes");
 
         unGuardarropa.agregarPrenda(remeraVerde);
         unGuardarropa.agregarPrenda(jeanGris);
@@ -257,8 +251,6 @@ class AtuendoBuilderClimaTest {
         when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getMostProximateTemperature()).thenReturn(9001.0); // it's over 9000!!!
 
-        Prenda vestidoRosa = new Prenda("Vestido Rosa", SEDA, Arrays.asList(TORSO, PIERNAS), vestido, "Rosa");
-
         unGuardarropa.agregarPrenda(vestidoRosa);
 
         List<PartesCuerpo> partesPedidas = new ArrayList<>();
@@ -275,11 +267,6 @@ class AtuendoBuilderClimaTest {
 
         when(climaService.getClima(any())).thenReturn(clima);
         when(clima.getMostProximateTemperature()).thenReturn(0.0);
-
-        Prenda polleraNegra = new Prenda("Pollera Negra", SEDA, Arrays.asList(PIERNAS), pollera, "Negro");
-        Prenda jeanGris = new Prenda("Jean Gris", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Gris");
-        Prenda remeraTermicaBlanca = new Prenda("Remera Termica Blanca", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Blanca");
-        Prenda adidasNegra = new Prenda("Adidas Negras", LONA,Collections.singletonList(CALZADO), zapatilla, "Negro");
 
         //TODO
         pollera.agregarIncompatibilidad(CondicionesClimaticas.VIENTO);
@@ -377,5 +364,38 @@ class AtuendoBuilderClimaTest {
         assertFalse(unAtuendo.tiene_prenda(jeanGris));
     }
 
+    @Test
+    void crearNuevoAtuendoParaGuardarropaCompratidoTieneDistintasPrendas() throws ClimateApisNotWorkingException, CantidadMaximaPrendaSuperadaException {
+        Guardarropa unGuardarropa = new Guardarropa("TEST");
+
+        when(climaService.getClima(any())).thenReturn(clima);
+        when(clima.getMostProximateTemperature()).thenReturn(28.0);
+
+        unGuardarropa.agregarPrenda(camisaBlanca); //calor 10
+        unGuardarropa.agregarPrenda(pantalonNegro); //calor 12
+        unGuardarropa.agregarPrenda(remeraAzul); //calor 5
+        unGuardarropa.agregarPrenda(zapatosNegros); //calor 4
+        unGuardarropa.agregarPrenda(jeanGris); //calor 10
+        unGuardarropa.agregarPrenda(nikesAmarillas); //calor 2
+
+        List<PartesCuerpo> partesPedidas = new ArrayList<>();
+        partesPedidas.add(PartesCuerpo.TORSO);
+        partesPedidas.add(PartesCuerpo.PIERNAS);
+        partesPedidas.add(PartesCuerpo.CALZADO);
+
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoNoFormal);
+        unAtuendo.mostrarAtuendo();
+        unGuardarropa.AceptarAtuendo(unAtuendo);
+
+        Atuendo otroAtuendo = unGuardarropa.crearAtuendoClima(partesPedidas, clima, eventoNoFormal);
+        otroAtuendo.mostrarAtuendo();
+
+        assertTrue(otroAtuendo.tiene_prenda(camisaBlanca));
+        assertTrue(otroAtuendo.tiene_prenda(pantalonNegro));
+        assertTrue(otroAtuendo.tiene_prenda(zapatosNegros));
+        assertTrue(unAtuendo.tiene_prenda(remeraAzul));
+        assertTrue(unAtuendo.tiene_prenda(jeanGris));
+        assertTrue(unAtuendo.tiene_prenda(nikesAmarillas));
+    }
 }
 

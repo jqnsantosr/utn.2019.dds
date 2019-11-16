@@ -27,32 +27,31 @@ public class Guardarropa {
     @Transient
     private AtuendoBuilder atuendoBuilder;
     @Transient
-    private List<Prenda> ultimasPrendasPedidas;
+    private List<Prenda> ultimasPrendasPedidas = new ArrayList<>();
     @Transient
     private double ultimaTemperaturaPedida;
     @Transient
     private List<CondicionesClimaticas> ultimasCondicionesClimaticas;
     @Transient
     private boolean eventoFormal = false;
+    @Transient
+    private List<Atuendo> atuendosAceptados = new ArrayList<>();
 
     public Guardarropa() {}
 
     public Guardarropa(String nombre) {
         this.nombre = nombre;
         this.prendas = new ArrayList<>();
-        this.ultimasPrendasPedidas = new ArrayList<>();
     }
 
     public Guardarropa(String nombre, List<Prenda> prendasList) {
         this.nombre = nombre;
         this.prendas = prendasList;
-        this.ultimasPrendasPedidas = new ArrayList<>();
     }
 
     public Guardarropa(String nombre, boolean premium) {
         this.nombre = nombre;
         this.prendas = new ArrayList<>();
-        this.ultimasPrendasPedidas = new ArrayList<>();
         if (premium) this.cantidad_maxima_prendas = Integer.MAX_VALUE;
     }
 
@@ -96,11 +95,10 @@ public class Guardarropa {
 
     public Atuendo crearAtuendoClima(List<PartesCuerpo> listaPartes, Clima clima, Evento unEvento)
     {
-        //TODO: deberia ser pronostico?
         ultimaTemperaturaPedida = clima.getMostProximateTemperature();
-        //ultimasCondicionesClimaticas = climaController.dameCondiciones();
         
-        //TODO: condiciones climaticas del adapter
+        //TODO OPCIONAL: condiciones climaticas del adapter
+        //ultimasCondicionesClimaticas = climaController.dameCondiciones();
         ultimasCondicionesClimaticas = new ArrayList<>();
         ultimasCondicionesClimaticas.add(CondicionesClimaticas.LLUVIA);
         ultimasCondicionesClimaticas.add(CondicionesClimaticas.VIENTO);
@@ -226,7 +224,7 @@ public class Guardarropa {
         {
             List<PartesCuerpo> partesCuerpoDeLaPrenda = unaPrenda.damePartesCuerpo();
 
-            if(partesCuerpoDeLaPrenda.contains(unaParte))
+            if(partesCuerpoDeLaPrenda.contains(unaParte) && !AtuendoAceptadoTienePrenda(unaPrenda))
                 unaLista.add(unaPrenda);
         }
     }
@@ -237,7 +235,9 @@ public class Guardarropa {
         for (Prenda unaPrenda : prendas) {
             List<PartesCuerpo> partesCuerpoDeLaPrenda = unaPrenda.damePartesCuerpo();
 
-            if (partesCuerpoDeLaPrenda.contains(unaParte) && unaPrenda.compatibleConCondicion(ultimasCondicionesClimaticas))
+            if (partesCuerpoDeLaPrenda.contains(unaParte)
+                    && unaPrenda.compatibleConCondicion(ultimasCondicionesClimaticas)
+                    && !AtuendoAceptadoTienePrenda(unaPrenda))
             {
                 if(formal && unaPrenda.getEsFormal())
                     unaLista.add(unaPrenda);
@@ -279,5 +279,27 @@ public class Guardarropa {
             //hace frio, el target debe ser lo mas aproximado
             return Math.abs(27-(int)ultimaTemperaturaPedida) * 10;
         }
+    }
+
+    //Para GUADARROPAS COMPARTIDOS: si un usuario acepta un atuendo,
+    // los otros usuarios no pueden tener las mismas prendas
+    public void AceptarAtuendo(Atuendo unAtuendo)
+    {
+        atuendosAceptados.add(unAtuendo);
+    }
+
+    public boolean AtuendoAceptadoTienePrenda(Prenda unaPrenda)
+    {
+        for (Atuendo atuendo : atuendosAceptados) {
+            if (atuendo.tiene_prenda(unaPrenda))
+                return true;
+        }
+        return false;
+    }
+
+    //Para Tests
+    public int CantPrendas()
+    {
+        return prendas.size();
     }
 }

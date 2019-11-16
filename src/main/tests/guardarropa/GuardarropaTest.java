@@ -58,7 +58,8 @@ class GuardarropaTest {
     Prenda jeanCorto = new Prenda("Jean Corto", JEAN, Collections.singletonList(PIERNAS), pantalonCorto, "Blanco");
     Prenda camperaDeLluvia = new Prenda("Campera de LLuvia", SINTETICA, Collections.singletonList(TORSO), campera, "Azul");
     Prenda camisetaRacing = new Prenda("Camiseta de Rasin", ALGODON, Collections.singletonList(TORSO), remeraPesada, "No Existen");
-    //21 prendas - un guardarropa normal tiene 20 como maximo
+    Prenda camisetaIndependiente = new Prenda("Camiseta de Independoente", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "ROJO");
+    //22 prendas - un guardarropa normal tiene 20 como maximo
 
     @Test
     void agregarPrendaFallaPorSerGuardarropaNormal() throws CantidadMaximaPrendaSuperadaException {
@@ -115,7 +116,9 @@ class GuardarropaTest {
         unGuardarropa.agregarPrenda(camperaDeLluvia);
 
         //ahora no tiene que fallar
-        unGuardarropa.agregarPrenda(camisetaRacing);
+        unGuardarropa.agregarPrenda(camisetaIndependiente);
+
+        assertTrue(unGuardarropa.CantPrendas() > 20);
     }
 
     @Test
@@ -148,6 +151,7 @@ class GuardarropaTest {
 
         unGuardarropa.PasarAPremium();
 
-        unGuardarropa.agregarPrenda(camisetaRacing);
+        unGuardarropa.agregarPrenda(camisetaIndependiente);
+        assertTrue(unGuardarropa.CantPrendas() > 20);
     }
 }
