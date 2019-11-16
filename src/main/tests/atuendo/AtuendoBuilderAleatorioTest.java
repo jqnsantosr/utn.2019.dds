@@ -148,4 +148,38 @@ class AtuendoBuilderAleatorioTest {
 
         assertThrows(AtuendoIncompletoException.class, unGuardarropa::crearAtuendoAleatorio);
     }
+
+    @Test
+    void crearNuevoAtuendoEnUnGuardarropasCompartidoTienePrendasDistintas() throws CantidadMaximaPrendaSuperadaException {
+        Guardarropa unGuardarropa = new Guardarropa("TEST");
+
+        unGuardarropa.agregarPrenda(trajeDeBatman);
+        unGuardarropa.agregarPrenda(pantalon_thor);
+        unGuardarropa.agregarPrenda(remeraAzul);
+        unGuardarropa.agregarPrenda(casco_ironman);
+        unGuardarropa.agregarPrenda(botas_cpt_america);
+
+        Atuendo unAtuendo = unGuardarropa.crearAtuendoAleatorio();
+        unAtuendo.mostrarAtuendo();
+
+        unGuardarropa.AceptarAtuendo(unAtuendo);
+
+        Atuendo otroAtuendo = unGuardarropa.crearAtuendoAleatorio();
+        otroAtuendo.mostrarAtuendo();
+
+        //como el metodo es aleatorio solo puede haber 2 combinaciones posibles
+        assertTrue((unAtuendo.tiene_prenda(trajeDeBatman)
+                && otroAtuendo.tiene_prenda(pantalon_thor)
+                && otroAtuendo.tiene_prenda(pantalon_thor)
+                && otroAtuendo.tiene_prenda(remeraAzul)
+                && otroAtuendo.tiene_prenda(casco_ironman)
+                && otroAtuendo.tiene_prenda(botas_cpt_america))
+                || (otroAtuendo.tiene_prenda(trajeDeBatman)
+                && unAtuendo.tiene_prenda(pantalon_thor)
+                && unAtuendo.tiene_prenda(pantalon_thor)
+                && unAtuendo.tiene_prenda(remeraAzul)
+                && unAtuendo.tiene_prenda(casco_ironman)
+                && unAtuendo.tiene_prenda(botas_cpt_america))
+        );
+    }
 }
