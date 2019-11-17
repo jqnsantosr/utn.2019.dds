@@ -11,7 +11,7 @@ import java.util.*;
 
 @Data
 @Entity
-class User {
+public class User {
     private @Id
     @GeneratedValue
     Long id;
