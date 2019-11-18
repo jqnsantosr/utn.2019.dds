@@ -31,14 +31,17 @@ public class Evento
         EventoObserver unObserver = new EventoObserver(usuario, this);
     }
 
+    public Evento(String nombre, String fecha_evento, String fecha_notificacion, boolean isFormal, User usuario){
+        this.nombre = nombre;
+        fecha = LocalDateTime.parse(fecha_evento, formatter);
+        esFormal = isFormal;
+        this.fecha_notificacion = LocalDateTime.parse(fecha_notificacion, formatter);
+        EventoObserver unObserver = new EventoObserver(usuario, this);
+    }
+
     public boolean getEsFormal()
     {
         return esFormal;
-    }
-
-    public LocalDateTime getDateTime()
-    {
-        return fecha_notificacion;
     }
 
     public String getFechaEvento()

@@ -2,6 +2,11 @@ package quemepongoAPI.evento;
 
 import quemepongoAPI.user.User;
 
+import com.twilio.Twilio;
+import com.twilio.converter.Promoter;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
@@ -12,12 +17,14 @@ public class EventoObserver implements Runnable {
     private User user;
     private Evento evento;
     private static ScheduledExecutorService ses = Executors.newScheduledThreadPool(10); //Maximo de hilos posibles
+    public static final String ACCOUNT_SID = "AC803578d89db1117e5c7551b9cc9ac298";
+    public static final String AUTH_TOKEN = "96c1005c0624315b0b6c28a97c3cb575";
 
     public EventoObserver(User usuario, Evento evento){
         this.user = usuario;
         this.evento = evento;
 
-        LocalDateTime fecha_evento = evento.getDateTime();
+        LocalDateTime fecha_evento = evento.getFecha_notificacion();
         LocalDateTime fecha_hoy = LocalDateTime.now();
         long tiempoHastaEvento = Duration.between(fecha_hoy, fecha_evento).getSeconds();
 
@@ -25,7 +32,14 @@ public class EventoObserver implements Runnable {
     }
 
     public void run(){
-        //TODO: Integrar con API de Whatsapp
-        System.out.println( "HI, YOUR EVENT IS ABOUT TO START AT " + evento.getFechaEvento());
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Message message = Message.creator(
+                new com.twilio.type.PhoneNumber("whatsapp:+549" + user.getNumeroCelular()),
+                new com.twilio.type.PhoneNumber("whatsapp:+14155238886"),
+                "El Evento " + evento.getNombre()  + " está por Comenzar")
+                .create();
+
+        System.out.println(message.getSid());
+        System.out.println( "SE ENVIO UN MENSAJE AL USUARIO: " + user.getNombre() + ", DEL EVENTO: " + evento.getFechaEvento());
     }
 }

@@ -2,6 +2,8 @@ package quemepongoAPI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import quemepongoAPI.evento.Evento;
+import quemepongoAPI.user.User;
 
 import java.util.concurrent.ExecutionException;
 
@@ -12,7 +14,7 @@ public class Main {
         SpringApplication.run(Main.class, args);
 
         //SOLO PARA TESTEAR QUE EL MENSAJE SE ENVIA EN TIEMPO Y FORMA
-        /*User unUsuario = new User();
-        Evento unEvento = new Evento("17/11/2019 a las 07:49 PM", true, unUsuario);*/
+        /*User unUsuario = new User("Ferna", "googleID", "1158257317", true);
+        Evento unEvento = new Evento("Cumple Pepe", "18/11/2019 a las 03:30 PM","18/11/2019 a las 01:35 PM", true, unUsuario);*/
     }
 }
