@@ -4,8 +4,10 @@ import lombok.Data;
 import quemepongoAPI.user.User;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeoutException;
 
 @Data
 @Entity

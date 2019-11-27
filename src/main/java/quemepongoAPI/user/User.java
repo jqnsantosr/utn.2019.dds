@@ -1,13 +1,10 @@
 package quemepongoAPI.user;
 
 import lombok.Data;
-import org.checkerframework.checker.regex.qual.Regex;
 import quemepongoAPI.evento.Evento;
 import quemepongoAPI.guardarropa.CantidadMaximaPrendaSuperadaException;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.Prenda;
-
-import javax.annotation.RegEx;
 import javax.persistence.*;
 import java.util.*;
 

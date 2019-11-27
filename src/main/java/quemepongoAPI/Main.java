@@ -15,6 +15,7 @@ public class Main {
 
         //SOLO PARA TESTEAR QUE EL MENSAJE SE ENVIA EN TIEMPO Y FORMA
         /*User unUsuario = new User("Ferna", "googleID", "1158257317", true);
-        Evento unEvento = new Evento("Cumple Pepe", "18/11/2019 a las 03:30 PM","18/11/2019 a las 01:35 PM", true, unUsuario);*/
+        Evento unEvento = new Evento("Cumple Pepe", "27/11/2019 a las 11:25 AM","27/11/2019 a las 11:22 AM", true, unUsuario);
+        */
     }
 }

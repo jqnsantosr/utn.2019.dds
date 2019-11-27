@@ -3,7 +3,6 @@ package quemepongoAPI.evento;
 import quemepongoAPI.user.User;
 
 import com.twilio.Twilio;
-import com.twilio.converter.Promoter;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
@@ -34,12 +33,11 @@ public class EventoObserver implements Runnable {
     public void run(){
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
-                new com.twilio.type.PhoneNumber("whatsapp:+549" + user.getNumeroCelular()),
-                new com.twilio.type.PhoneNumber("whatsapp:+14155238886"),
+                new PhoneNumber("whatsapp:+549" + user.getNumeroCelular()),
+                new PhoneNumber("whatsapp:+14155238886"),
                 "El Evento " + evento.getNombre()  + " está por Comenzar")
                 .create();
 
-        System.out.println(message.getSid());
         System.out.println( "SE ENVIO UN MENSAJE AL USUARIO: " + user.getNombre() + ", DEL EVENTO: " + evento.getFechaEvento());
     }
 }
