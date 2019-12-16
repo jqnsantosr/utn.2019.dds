@@ -81,10 +81,10 @@ class LoadDatabase {
             Guardarropa g1 = new Guardarropa("Guardarropa Comun", prendasDelGuardarropaComun);
 
             List<Prenda> prendasDelGuardarropaRaro1 = Arrays.asList(vestidoRosa, polleraVioleta, sombreroGrande, zapatosConTacosYPlataforma, casco_ironman, pantalon_flash, remeraBlanca, camisaBlanca);
-            Guardarropa g2 = new Guardarropa("Guardarropa Comun", prendasDelGuardarropaRaro1);
+            Guardarropa g2 = new Guardarropa("Guardarropa Raro1", prendasDelGuardarropaRaro1);
 
             List<Prenda> prendasDelGuardarropaRaro2 = Arrays.asList(bikiniRoja, sombreroVaquero, zapatosConTacosYPlataformaRojos, anteojosSol, trajeDeBatman, botas_cpt_america, pantalon_thor, remeraVioleta, camisaVioleta);
-            Guardarropa g3 = new Guardarropa("Guardarropa Comun", prendasDelGuardarropaRaro2);
+            Guardarropa g3 = new Guardarropa("Guardarropa Raro2", prendasDelGuardarropaRaro2);
 
             log.info("Preloading " + repository.save(new User("Ricardo", "12345", Arrays.asList(g1, g2, g3))));
 

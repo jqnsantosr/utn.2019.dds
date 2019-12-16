@@ -92,6 +92,12 @@
             <artifactId>logging-interceptor</artifactId>
             <version>3.0.0-RC1</version>
         </dependency>
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>7.45.1</version>
+        </dependency>
+
     </dependencies>
 
     <properties>
