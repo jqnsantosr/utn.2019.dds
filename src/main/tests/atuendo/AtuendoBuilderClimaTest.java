@@ -14,7 +14,6 @@ import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.atuendo.AtuendoIncompletoException;
 import quemepongoAPI.clima.*;
 import quemepongoAPI.evento.Evento;
-import quemepongoAPI.evento.FechaYHoraParseException;
 import quemepongoAPI.guardarropa.CantidadMaximaPrendaSuperadaException;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.PartesCuerpo;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 class AtuendoBuilderClimaTest {
 
@@ -84,21 +82,12 @@ class AtuendoBuilderClimaTest {
 
     private Evento eventoNoFormal;
     {
-        try {
             eventoNoFormal = new Evento("25/12/2019 a las 00:00", false);
-        } catch (FechaYHoraParseException e) {
-            e.printStackTrace();
-        }
     }
 
     private Evento eventoFormal;
-
     {
-        try {
-            eventoFormal = new Evento("25/12/2019 a las 00:00", true);
-        } catch (FechaYHoraParseException e) {
-            e.printStackTrace();
-        }
+        eventoFormal = new Evento("25/12/2019 a las 00:00", true);
     }
 
     @BeforeEach

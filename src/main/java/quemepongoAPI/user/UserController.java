@@ -11,12 +11,12 @@ import quemepongoAPI.clima.ClimaService;
 import quemepongoAPI.clima.ClimateApisNotWorkingException;
 import quemepongoAPI.evento.Evento;
 import quemepongoAPI.guardarropa.Guardarropa;
-import quemepongoAPI.lugar.Geometry;
 import quemepongoAPI.lugar.Lugar;
 import quemepongoAPI.lugar.LugarService;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+@CrossOrigin(origins = { "http://localhost:3000"})
 @RestController
 class UserController {
 
@@ -65,6 +66,18 @@ class UserController {
         return assembler.toResource(user);
     }
 
+    /* Get de todos los guardarropas del usuario */
+    @GetMapping("/user/{id}/guardarropa")
+    String allGuardarropas(@PathVariable Long id) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        List<Guardarropa> guardarropas = user.getGuardarropas();
+
+        return gson.toJson(guardarropas);
+    }
+
     /* Get de un atuendo aleatorio */
     @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
     String one(@PathVariable Long idUser, @PathVariable Long idGuard) {
@@ -101,7 +114,7 @@ class UserController {
 
     /* Get de un atuendo para un evento */
     @GetMapping("/user/{idUser}/guardarropa/{idGuard}/{idEvento}/atuendo")
-    String one(@PathVariable Long idUser, @PathVariable Long idGuard, @PathVariable Long idEvento) {
+    String one(@PathVariable Long idUser, @PathVariable Long idGuard, @PathVariable Long idEvento) throws ClimateApisNotWorkingException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
@@ -116,15 +129,7 @@ class UserController {
                 Evento evento = eventoOptional.get();
 
                 /*TODO: lista de partes del cuerpo por variable*/
-                List<PartesCuerpo> listaPartesDefault = new ArrayList<>();
-                listaPartesDefault.add(PartesCuerpo.TORSO);
-                listaPartesDefault.add(PartesCuerpo.PIERNAS);
-                listaPartesDefault.add(PartesCuerpo.CABEZA);
-                listaPartesDefault.add(PartesCuerpo.CALZADO);
-
-                Clima clima = new Clima();
-
-                return gson.toJson(guardarropa.crearAtuendoClima(listaPartesDefault, clima, evento));
+                return getAtuendo(gson, guardarropa, evento);
             }
             else {
                 throw new EventoNotFoundException(idEvento);
@@ -134,7 +139,39 @@ class UserController {
         }
     }
 
-    /* Get de atuendos aleatorios de todos los guardarropas */
+    /* Get de un atuendo por clima */
+    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/atuendo")
+    String oneAtuendoClimaSinEvento(@PathVariable Long idUser, @PathVariable Long idGuard) throws ClimateApisNotWorkingException{
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
+        Guardarropa guardarropa;
+
+        if (guardarropaOptional.isPresent()) {
+            guardarropa = guardarropaOptional.get();
+            Evento evento = new Evento(LocalDateTime.now(), false);
+
+            return getAtuendo(gson, guardarropa, evento);
+        } else {
+            throw new GuardarropasNotFoundException(idGuard);
+        }
+    }
+
+    private String getAtuendo(Gson gson, Guardarropa guardarropa, Evento evento) throws ClimateApisNotWorkingException {
+        /*TODO: lista de partes del cuerpo por variable*/
+        List<PartesCuerpo> listaPartesDefault = new ArrayList<>();
+        listaPartesDefault.add(PartesCuerpo.TORSO);
+        listaPartesDefault.add(PartesCuerpo.PIERNAS);
+        listaPartesDefault.add(PartesCuerpo.CABEZA);
+        listaPartesDefault.add(PartesCuerpo.CALZADO);
+
+        Clima clima = climaService.getClima();
+
+        return gson.toJson(guardarropa.crearAtuendoClima(listaPartesDefault, clima, evento));
+    }
+
+    /* no se lo que hace */
     @GetMapping("/clima/{place}")
     String all(@PathVariable String place) throws ExecutionException, InterruptedException, ClimateApisNotWorkingException {
         Gson gson = new Gson();

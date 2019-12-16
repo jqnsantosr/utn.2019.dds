@@ -5,18 +5,18 @@ import quemepongoAPI.evento.Evento;
 import quemepongoAPI.guardarropa.CantidadMaximaPrendaSuperadaException;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.prenda.Prenda;
-
 import javax.persistence.*;
 import java.util.*;
 
 @Data
 @Entity
-class User {
+public class User {
     private @Id
     @GeneratedValue
     Long id;
     private String nombre;
     private String googleId;
+    private String numeroCelular;
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Guardarropa> guardarropas;
     @OneToMany(cascade = {CascadeType.ALL})
@@ -38,11 +38,12 @@ class User {
         this.guardarropas = guard;
     }
 
-    public User(String username, String googleId, boolean premium)
+    public User(String username, String googleId, String numeroCelular, boolean premium)
     {
         this.nombre = username;
         this.googleId = googleId;
         this.guardarropas = new ArrayList<>();
+        this.numeroCelular = ChequearNumeroCelular(numeroCelular);
         this.esPremium = premium;
     }
 
@@ -56,6 +57,10 @@ class User {
 
     Optional<Guardarropa> traerGuardarropasPorId(Long id){
         return guardarropas.stream().filter(g -> g.getId().equals(id)).findFirst();
+    }
+
+    List<Guardarropa> traerGuardarropas(){
+        return guardarropas;
     }
 
     Optional<Evento> traerEventoPorId(Long id){
@@ -89,4 +94,16 @@ class User {
     }
 
     void crearEvento(Evento unEvento) { this.eventos.add(unEvento); }
+
+    private String ChequearNumeroCelular(String numero)
+    {
+        if(numero.matches("11[0-9]{8}"))
+        {
+            return numero;
+        }
+        else
+        {
+            throw new NumeroCelularFormatoIncorrectoException();
+        }
+    }
 }

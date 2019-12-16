@@ -32,9 +32,10 @@ public class ClimaService {
                 .build();
 
         Darksky darksky = retrofit.create(Darksky.class);
-        String latLongForQuery = Double.toString(lugar.getCandidates().get(0).getGeometry().getLocation().getLatitude()) + ',' + Double.toString(lugar.getCandidates().get(0).getGeometry().getLocation().getLongitude());
+        //String latLongForQuery = Double.toString(lugar.getCandidates().get(0).getGeometry().getLocation().getLatitude()) + ',' + Double.toString(lugar.getCandidates().get(0).getGeometry().getLocation().getLongitude());
+        String latLongCapFederal = "-34.603722,-58.381592";
 
-        CompletableFuture<ClimaDarksky> clima = darksky.getClima(latLongForQuery, dkKey).toCompletableFuture();
+        CompletableFuture<ClimaDarksky> clima = darksky.getClima(latLongCapFederal, dkKey).toCompletableFuture();
 
         try {
             clima.get();
@@ -54,7 +55,52 @@ public class ClimaService {
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
             OpenWeather openWea = secondRetrofit.create(OpenWeather.class);
-            String[] splitter = latLongForQuery.split(",");
+            String[] splitter = latLongCapFederal.split(",");
+            CompletableFuture<ClimaOpenWeather> secondClima = openWea.getClima(splitter[0], splitter[1], owKey, "metric", "es").toCompletableFuture();
+            try {
+                return adapter.normalizeClima(clima.get());
+            } catch (InterruptedException | ExecutionException ignored) {
+                throw new ClimateApisNotWorkingException();
+            }
+        }
+        return null;
+    }
+
+    public Clima getClima() throws ClimateApisNotWorkingException {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL_DARKSKY)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        Darksky darksky = retrofit.create(Darksky.class);
+        //String latLongForQuery = Double.toString(lugar.getCandidates().get(0).getGeometry().getLocation().getLatitude()) + ',' + Double.toString(lugar.getCandidates().get(0).getGeometry().getLocation().getLongitude());
+        String latLongCapFederal = "-34.603722,-58.381592";
+
+        CompletableFuture<ClimaDarksky> clima = darksky.getClima(latLongCapFederal, dkKey).toCompletableFuture();
+
+        try {
+            clima.get();
+        } catch (InterruptedException | ExecutionException e) {
+            clima = null;
+        }
+
+        if (!isNull(clima)) {
+            try {
+                return adapter.normalizeClima(clima.get());
+            } catch (InterruptedException | ExecutionException ignored) {
+                // ignored
+            }
+        } else {
+            Retrofit secondRetrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL_OPENWEA)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+            OpenWeather openWea = secondRetrofit.create(OpenWeather.class);
+            String[] splitter = latLongCapFederal.split(",");
             CompletableFuture<ClimaOpenWeather> secondClima = openWea.getClima(splitter[0], splitter[1], owKey, "metric", "es").toCompletableFuture();
             try {
                 return adapter.normalizeClima(clima.get());
