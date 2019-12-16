@@ -26,6 +26,11 @@ public class Evento
         esFormal = isFormal;
     }
 
+    public Evento(LocalDateTime date, boolean isFormal){
+        fecha = date;
+        esFormal = isFormal;
+    }
+
     public Evento(String date, boolean isFormal, User usuario){
         fecha = LocalDateTime.parse(date, formatter);
         esFormal = isFormal;

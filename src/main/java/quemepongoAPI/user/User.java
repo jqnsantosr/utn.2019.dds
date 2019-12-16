@@ -59,6 +59,10 @@ public class User {
         return guardarropas.stream().filter(g -> g.getId().equals(id)).findFirst();
     }
 
+    List<Guardarropa> traerGuardarropas(){
+        return guardarropas;
+    }
+
     Optional<Evento> traerEventoPorId(Long id){
         return eventos.stream().filter(g -> g.getId().equals(id)).findFirst();
     }
