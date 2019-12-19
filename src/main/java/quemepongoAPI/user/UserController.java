@@ -2,6 +2,11 @@ package quemepongoAPI.user;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +18,7 @@ import quemepongoAPI.evento.Evento;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.lugar.Lugar;
 import quemepongoAPI.lugar.LugarService;
-import quemepongoAPI.prenda.PartesCuerpo;
-import quemepongoAPI.prenda.Prenda;
-import quemepongoAPI.prenda.Tela;
+import quemepongoAPI.prenda.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,15 +35,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 class UserController {
 
     private final UserRepository repository;
+    private final TipoPrendaRepository tipoPrendaRepository;
     private final UserResourceAssembler assembler;
     private final ClimaService climaService;
     private final LugarService lugarService;
 
     UserController(UserRepository repository,
+                   TipoPrendaRepository tipoPrendaRepository,
                    UserResourceAssembler assembler,
                    ClimaService climaService,
                    LugarService lugarService) {
         this.repository = repository;
+        this.tipoPrendaRepository = tipoPrendaRepository;
         this.assembler = assembler;
         this.climaService = climaService;
         this.lugarService = lugarService;
@@ -111,6 +117,25 @@ class UserController {
                     return gson.toJson(a);
                 })
                 .collect(Collectors.toList()).toString();
+    }
+
+    /* Get de atuendo aleatorio de un guardarropa con lista de partes del cuerpo */
+    @GetMapping("/user/{idUser}/guardarropa/{idGuarda}/random2")
+    String atuendoAleatorioPartesCuerpoPorBody(@RequestBody JsonArray partesCuerpo, @PathVariable Long idUser, @PathVariable Long idGuarda) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuarda);
+        Guardarropa guardarropa;
+
+        List<PartesCuerpo> listaPartes = gson.<List<PartesCuerpo>>fromJson(partesCuerpo, PartesCuerpo.class);
+
+        if (guardarropaOptional.isPresent()) {
+            guardarropa = guardarropaOptional.get();
+            return gson.toJson(guardarropa.crearAtuendoAleatorio(listaPartes));
+        } else {
+            throw new GuardarropasNotFoundException(idGuarda);
+        }
     }
 
     /* Get de un atuendo para un evento */
@@ -184,6 +209,20 @@ class UserController {
     String allTelas() {
         Gson gson = new Gson();
         return gson.toJson(Tela.values());
+    }
+
+    /* Get de todas las partes del cuerpo */
+    @GetMapping("/partes")
+    String allPartesCuerpo() {
+        Gson gson = new Gson();
+        return gson.toJson(PartesCuerpo.values());
+    }
+
+    /* Get de todas los tipos de prendas */
+    @GetMapping("/tipos")
+    String allTipoPrendas() {
+        Gson gson = new Gson();
+        return gson.toJson(tipoPrendaRepository.findAll());
     }
 
     /* Post de un usuario: creación de cuenta.*/
