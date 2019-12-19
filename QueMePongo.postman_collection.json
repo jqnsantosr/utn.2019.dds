@@ -64,7 +64,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"username\": \"fran\", \"googleId\": \"6612351\"}"
+					"raw": "{ \"nombre\": \"fran\", \"googleId\": \"6612351\"}"
 				},
 				"url": {
 					"raw": "localhost:8080/user",

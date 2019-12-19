@@ -128,7 +128,6 @@ class UserController {
             if(eventoOptional.isPresent()) {
                 Evento evento = eventoOptional.get();
 
-                /*TODO: lista de partes del cuerpo por variable*/
                 return getAtuendo(gson, guardarropa, evento);
             }
             else {
@@ -185,6 +184,16 @@ class UserController {
         return repository.save(newUser);
     }
 
+    /* Post de un usuario: creación de cuenta.*/
+    @PostMapping("/user/{id}/premium")
+    User userPremium(@PathVariable Long id) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        user.PasarAPremium();
+
+        return repository.save(user);
+    }
+
     /* Post de un guardarropas: creación de guardarropas para ese usuario.*/
     @PostMapping("/user/{id}/guardarropa")
     User newGuardarropaForUser(@RequestBody Guardarropa newGuardarropa, @PathVariable Long id) {
@@ -200,19 +209,7 @@ class UserController {
         return repository.save(user);
     }
 
-    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}")
-    void deleteGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa) throws GuardarropasNotEmptyException {
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
-
-        if (user.traerGuardarropasPorId(idGuardarropa).isPresent()) {
-            user.borrarGuardarropas(user.traerGuardarropasPorId(idGuardarropa).get());
-        }
-        ;
-
-        repository.save(user);
-    }
-
+    /* Post de un prenda: creación de prendas para ese guardarropas.*/
     @PostMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda")
     User newPrendaForGuardarropas(@RequestBody Prenda prenda, @PathVariable Long idUser, @PathVariable Long idGuardarropa) {
         User user = repository.findById(idUser)
@@ -227,6 +224,29 @@ class UserController {
         }
 
         return repository.save(user);
+    }
+
+    @PostMapping("/user/{id}/evento")
+    User newEventoForUser(@RequestBody Evento newEvento, @PathVariable Long id) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        user.crearEvento(newEvento);
+
+        return repository.save(user);
+    }
+
+    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}")
+    void deleteGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa) throws GuardarropasNotEmptyException {
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+
+        if (user.traerGuardarropasPorId(idGuardarropa).isPresent()) {
+            user.borrarGuardarropas(user.traerGuardarropasPorId(idGuardarropa).get());
+        }
+        ;
+
+        repository.save(user);
     }
 
     @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}/{idPrenda}")

@@ -77,6 +77,8 @@ class LoadDatabase {
             Prenda remeraVioleta = new Prenda("Remera Violeta", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Violeta");
             Prenda camisaVioleta = new Prenda("Camisa Violeta", ALGODON, Collections.singletonList(TORSO), camisa, "Violeta");
 
+            Prenda sandaliasVerdes = new Prenda("Sandalias Verdes", LONA, Collections.singletonList(CALZADO), zapatilla, "Verde");
+
             List<Prenda> prendasDelGuardarropaComun = Arrays.asList(remeraAzul, remeraNegra, jeanAzul, jeanNegro, gorraBlanca, gorraRoja, nikesAmarillas, adidasAzules);
             Guardarropa g1 = new Guardarropa("Guardarropa Comun", prendasDelGuardarropaComun);
 
@@ -86,7 +88,10 @@ class LoadDatabase {
             List<Prenda> prendasDelGuardarropaRaro2 = Arrays.asList(bikiniRoja, sombreroVaquero, zapatosConTacosYPlataformaRojos, anteojosSol, trajeDeBatman, botas_cpt_america, pantalon_thor, remeraVioleta, camisaVioleta);
             Guardarropa g3 = new Guardarropa("Guardarropa Raro2", prendasDelGuardarropaRaro2);
 
-            log.info("Preloading " + repository.save(new User("Ricardo", "12345", Arrays.asList(g1, g2, g3))));
+            List<Prenda> prendasDelGuardarropaVerano = Arrays.asList(bikiniRoja, sombreroVaquero, vestidoRosa, polleraVioleta, remeraVioleta, anteojosSol, nikesAmarillas, adidasAzules, camisaBlanca, jeanNegro, gorraBlanca, sandaliasVerdes);
+            Guardarropa g4 = new Guardarropa("Guardarropa de Verano 2019", prendasDelGuardarropaVerano);
+
+            log.info("Preloading " + repository.save(new User("Paula", "12346", Arrays.asList(g1, g2, g3,g4))));
 
             tipoPrendaRep.save(remeraLiviana);
             tipoPrendaRep.save(remeraPesada);
