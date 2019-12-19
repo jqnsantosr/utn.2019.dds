@@ -15,6 +15,7 @@ import quemepongoAPI.lugar.Lugar;
 import quemepongoAPI.lugar.LugarService;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
+import quemepongoAPI.prenda.Tela;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -176,6 +177,13 @@ class UserController {
         Gson gson = new Gson();
         Lugar lugar = lugarService.getLugar(place);
         return gson.toJson(climaService.getClima(lugar));
+    }
+
+    /* Get de todas las telas */
+    @GetMapping("/telas")
+    String allTelas() {
+        Gson gson = new Gson();
+        return gson.toJson(Tela.values());
     }
 
     /* Post de un usuario: creación de cuenta.*/
