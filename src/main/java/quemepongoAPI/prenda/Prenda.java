@@ -1,9 +1,12 @@
 package quemepongoAPI.prenda;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonObject;
 import lombok.Data;
 import quemepongoAPI.clima.CondicionesClimaticas;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +29,17 @@ public class Prenda implements Comparable<Prenda>{
     private String colorSecundario;
     private boolean esFormal = false;
 
-    Prenda(){}
+    //public Prenda(){}
+
+    public Prenda(final JsonNode jn, final TipoPrenda tipo){ //para no usar Jackson autobinding
+        this.nombre = jn.get("nombre").asText();
+        this.colorPrimario = jn.get("colorPrimario").asText();
+        this.colorSecundario = jn.get("colorSecundario").asText();
+        this.esFormal = jn.get("esFormal").asBoolean();
+        this.tipo = tipo;
+        this.partes = new ArrayList<>();
+        this.tela = Tela.fromInt(jn.get("tela").asInt());
+    }
 
     public Prenda(String nombre, Tela tela, List<PartesCuerpo> partes, TipoPrenda tipo, String colorPrimario) {
         this.nombre = nombre;

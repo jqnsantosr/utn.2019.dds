@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Qué me pongo</title>
+</head>
+
+<body onload="load();">
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#"></a>
+</nav>
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <h1>Pedir atuendo aleatorio</h1>
+        <h2>
+            <span th:text="'Atuendo aleatorio para ' + ${nombre}"></span>
+        </h2>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <select>Seleccionar guardarropa</select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select>Seleccionar metodo (aleatorio o clima)</select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="pedirAtuendo();">Pedir atuendo</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    LISTA
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</main>
+<script type="text/javascript">
+    function load(){
+        alert("Cargar de base de datos.");
+    };
+    function pedirAtuendo(){
+        alert("Se enviara POST con pedido de atuendo mediante AJAX");
+    };
+</script>
+</body>
+</html>

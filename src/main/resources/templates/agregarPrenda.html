@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Qué me pongo</title>
+</head>
+
+<body onload="load();">
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#"></a>
+</nav>
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <h1>Agregar prenda</h1>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    Seleccionar guardarropas
+                    <select th:id="selectGuardarropas"></select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Nombre prenda
+                    <input th:id="nombre" th:type="text"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tipo prenda
+                    <select onchange="tiposPrendaChanged();" th:id="selectTipo"></select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Partes del cuerpo
+                    <select th:id="selectPartes"></select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Material
+                    <select th:id="selectMaterial"></select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Color primario
+                    <input th:id="colorPrimario" th:type="text"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Color secundario
+                    <input th:id="colorSecundario" th:type="text"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Es formal
+                    <input th:id="formal" th:type="checkbox"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="agregarPrenda();">Agregar</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</main>
+<script type="text/javascript">
+    var guardarropas = [];
+    var tiposPrenda = [];
+    var partesCuerpo = [];
+    var materiales = [];
+    function load(){
+        var idUsuario = 1;
+        loadGuardarropas(idUsuario);
+    };
+    function loadGuardarropas(idUsuario){
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/user/" + idUsuario + "/guardarropa",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                for(var x in response){
+                    var elem = response[x];
+                    guardarropas.push(elem);
+                    var option = document.createElement("option");
+                    option.text = elem.nombre;
+                    option.value = elem.id;
+                    selectGuardarropas.add(option);
+                }
+                loadTiposPrenda();
+            }
+        });
+    };
+    function loadTiposPrenda(){
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/tipos",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                for(var x in response){
+                    var elem = response[x];
+                    //{"idTipoPrenda":4,"nombre":"Remera","telasPosibles":["ALGODON"],"partesCuerpo":["TORSO"],"calor":5,"incompatible":[],"especialidad":[]}
+                    tiposPrenda.push(elem);
+                    var option = document.createElement("option");
+                    var texto = elem.nombre;
+                    option.text = texto;
+                    option.value = elem.idTipoPrenda;
+                    selectTipo.add(option);
+                }
+                loadPartesCuerpo();
+            }
+        });
+    };
+    function loadPartesCuerpo(){
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/partes",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                for(var x in response){
+                    var elem = response[x];
+                    partesCuerpo.push(elem);
+                    var option = document.createElement("option");
+                    option.text = elem;
+                    option.value = x;
+                    selectPartes.add(option);
+                }
+                loadMateriales();
+            }
+        });
+    };
+    function loadMateriales(){
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/telas",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                for(var x in response){
+                    var elem = response[x];
+                    materiales.push(elem);
+                    var option = document.createElement("option");
+                    option.text = elem;
+                    option.value = x;
+                    selectMaterial.add(option);
+                }
+                tiposPrendaChanged();
+            }
+        });
+    };
+    function agregarPrenda(){
+        var idUsuario = 1;
+        var idGuardarropa = selectGuardarropas[selectGuardarropas.selectedIndex].value;
+        ///user/{idUser}/guardarropa/{idGuardarropa}/prenda
+        //podria validar que ese nombre no este en la lista que me traje inicialmente
+        var valNombre = nombre.value;//$("#nombre").value
+        var valTipo = selectTipo[selectTipo.selectedIndex].value;
+        var valPartes = selectPartes[selectPartes.selectedIndex].value;
+        var valTela = selectMaterial[selectMaterial.selectedIndex].value;
+        var valColorPrimario = colorPrimario.value;
+        var valColorSecundario = colorSecundario.value;
+        var valEsFormal = formal.checked;
+        var payload = {
+            nombre: valNombre,
+            tipo: parseInt(valTipo),
+            partes: parseInt(valPartes),
+            tela: parseInt(valTela),
+            colorPrimario: valColorPrimario,
+            colorSecundario: valColorSecundario,
+            esFormal: valEsFormal
+        };
+        $.ajax({
+            asynch: false,
+            type: "POST",
+            url: "/user/" + idUsuario + "/guardarropa/" + idGuardarropa + "/prenda",
+            data: JSON.stringify(payload),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                alert("La prenda se ha guardado correctamente.");
+            },
+        });
+    };
+    function tiposPrendaChanged(){
+        var partesValidas = tiposPrenda[selectTipo.selectedIndex].partesCuerpo;
+        clearSelect(selectPartes);
+        for(var x in partesValidas){
+            var parte = partesValidas[x];
+            var index = getIndexOf(partesCuerpo,parte);
+            if(index != -1){
+                var option = document.createElement("option");
+                option.text = parte;
+                option.value = index;
+                selectPartes.add(option);
+            }
+        }
+        var telasValidas = tiposPrenda[selectTipo.selectedIndex].telasPosibles;
+        clearSelect(selectMaterial);
+        for(var x in telasValidas){
+            var tela = telasValidas[x];
+            var index = getIndexOf(materiales,tela);
+            if(index != -1){
+                var option = document.createElement("option");
+                option.text = tela;
+                option.value = index;
+                selectMaterial.add(option);
+            }
+        }
+    };
+    function clearSelect(selector){
+        var i;
+        for(i = selector.options.length - 1 ; i >= 0 ; i--){
+            selector.remove(i);
+        }
+    };
+    function getIndexOf(array,val){
+        for(var x in array){
+            if(array[x] === val){
+                return x;
+            }
+        }
+        return -1;
+    };
+</script>
+</body>
+</html>

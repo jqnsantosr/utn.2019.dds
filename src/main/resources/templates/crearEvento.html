@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Qué me pongo</title>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#"></a>
+</nav>
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <h1>Crear evento</h1>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    Nombre
+                    <input th:id="nombre" th:type="text"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Fecha inicio
+                    <input th:id="fechaInicio" th:type="date"></input>
+                    <input th:id="horaInicio" th:type="time"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Fecha notificacion
+                    <input th:id="fechaNotificacion" th:type="date"></input>
+                    <input th:id="horaNotificacion" th:type="time"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Es formal
+                    <input th:id="formal" th:type="checkbox"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="crear();">Crear</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</main>
+<script type="text/javascript">
+    function crear(){
+        var idUsuario = 1;
+        //podria validar que ese nombre no este en la lista que me traje inicialmente
+        if(!validarFechas()){
+            alert("Error de formato en fechas");
+            return;
+        }
+        var payload = {
+            nombre: nombre.value,
+            fecha: crearFechaHora(fechaInicio.value,horaInicio.value),
+            fecha_notificacion: crearFechaHora(fechaNotificacion.value,horaNotificacion.value),
+            esFormal: formal.checked
+        };
+        $.ajax({
+            asynch: false,
+            type: "POST",
+            url: "/user/" + idUsuario + "/evento",
+            data: JSON.stringify(payload),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                alert("El evento se ha guardado correctamente.");
+            },
+        });
+    };
+    function crearFechaHora(fecha,hora){
+        var date = new Date(fecha + ' ' + hora);
+        var fecha = padTwo(date.getDate()) + "/" + padTwo((date.getMonth() + 1)) + "/" + padFour(date.getFullYear());
+        var momento = date.getHours() < 12 ? "AM" : "PM";
+        var hora = (date.getHours() > 12) ? date.getHours() - 12 : date.getHours();
+        if(hora <= 0) hora = 12;
+        var tiempo = padTwo(hora) + ":" + padTwo(date.getMinutes()) + " " + momento;
+        return fecha + " a las " + tiempo;
+    };
+    function padTwo(valor){
+        if(valor < 10){
+            return "0" + valor;
+        }
+        return valor;
+    };
+    function padFour(valor){
+        if(valor < 10){
+            return "000" + valor;
+        }
+        if(valor < 100){
+            return "00" + valor;
+        }
+        if(valor < 1000){
+            return "0" + valor;
+        }
+        return valor;
+    };
+    function validarFechas(){
+        var date = new Date(fechaInicio.value + ' ' + horaInicio.value);
+        var date2 = new Date(fechaNotificacion.value + ' ' + horaNotificacion.value);
+        return date != "Invalid Date" && date2 != "Invalid Date";
+    }
+</script>
+</body>
+</html>

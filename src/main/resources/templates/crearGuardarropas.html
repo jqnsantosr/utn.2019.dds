@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Qué me pongo</title>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#"></a>
+</nav>
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <h1>Crear guardarropas</h1>
+        <h2>
+            <span th:text="'Crear guardarropas para ' + ${nombre}"></span>
+        </h2>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    Nombre
+                    <input th:id="nombre" th:type="text"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick="crear();">Crear</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</main>
+
+<script type="text/javascript">
+    function crear(){
+        var idUsuario = 1;
+        //podria validar que ese nombre no este en la lista que me traje inicialmente
+        var payload = {
+            nombre: nombre.value
+        };
+        $.ajax({
+            asynch: false,
+            type: "POST",
+            url: "/user/" + idUsuario + "/guardarropa",
+            data: JSON.stringify(payload),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                alert("El guardarropas se ha guardado correctamente.");
+            },
+        });
+    };
+</script>
+</body>
+</html>

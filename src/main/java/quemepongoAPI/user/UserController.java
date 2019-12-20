@@ -1,14 +1,9 @@
 package quemepongoAPI.user;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +15,11 @@ import quemepongoAPI.evento.Evento;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.lugar.Lugar;
 import quemepongoAPI.lugar.LugarService;
-import quemepongoAPI.prenda.*;
+import quemepongoAPI.prenda.PartesCuerpo;
+import quemepongoAPI.prenda.Prenda;
+import quemepongoAPI.prenda.Tela;
+import quemepongoAPI.prenda.TipoPrendaRepository;
+import quemepongoAPI.prenda.TipoPrenda;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
@@ -286,8 +285,9 @@ class UserController {
 
     /* Post de un prenda: creación de prendas para ese guardarropas.*/
     @PostMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda")
-    User newPrendaForGuardarropas(@RequestBody Prenda prenda, @PathVariable Long idUser, @PathVariable Long idGuardarropa) {
-        User user = repository.findById(idUser)
+    User newPrendaForGuardarropas(@RequestBody JsonNode prendaAsJsonNode, @PathVariable Long idUser, @PathVariable Long idGuardarropa) {
+        final Optional<TipoPrenda> tipo = tipoPrendaRepository.findById(prendaAsJsonNode.get("tipo").asLong());
+        Prenda prenda = new Prenda(prendaAsJsonNode,tipo.get());User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
 
         if (user.traerGuardarropasPorId(idGuardarropa).isPresent()) {
@@ -302,7 +302,8 @@ class UserController {
     }
 
     @PostMapping("/user/{id}/evento")
-    User newEventoForUser(@RequestBody Evento newEvento, @PathVariable Long id) {
+    User newEventoForUser(@RequestBody JsonNode newEventoAsJsonNode, @PathVariable Long id) {
+        final Evento newEvento = new Evento(newEventoAsJsonNode);
         User user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 

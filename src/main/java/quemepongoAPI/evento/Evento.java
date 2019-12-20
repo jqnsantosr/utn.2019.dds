@@ -1,5 +1,6 @@
 package quemepongoAPI.evento;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import quemepongoAPI.user.User;
 
@@ -20,6 +21,13 @@ public class Evento
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'a las' hh:mm a");
     private LocalDateTime fecha;
     private LocalDateTime fecha_notificacion;
+
+    public Evento(final JsonNode jn){
+        this.nombre = jn.get("nombre").asText();
+        this.fecha = LocalDateTime.parse(jn.get("fecha").asText(), formatter);
+        this.fecha_notificacion = LocalDateTime.parse(jn.get("fecha_notificacion").asText(), formatter);
+        this.esFormal = jn.get("esFormal").asBoolean();
+    }
 
     public Evento(String date, boolean isFormal){
         fecha = LocalDateTime.parse(date, formatter);

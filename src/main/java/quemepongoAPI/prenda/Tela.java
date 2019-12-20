@@ -24,6 +24,10 @@ public enum Tela {
     JEAN, /* DENIM */
     LANILLA,
     LONA,
-    PANA
+    PANA;
+
+    public static Tela fromInt(final int index){
+        return Tela.values()[index];
+    }
 
 }
