@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b56b7837-8dd8-40e8-b0c3-31ac493e67c8",
+		"_postman_id": "dc66b4c8-f6c9-4594-8e45-102572c9c083",
 		"name": "QueMePongo",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -10,10 +10,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/user",
 					"host": [
@@ -33,10 +29,6 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/user/13",
 					"host": [
@@ -64,7 +56,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"nombre\": \"fran\", \"googleId\": \"6612351\"}"
+					"raw": "{ \"username\": \"fran\", \"googleId\": \"6612351\"}"
 				},
 				"url": {
 					"raw": "localhost:8080/user",
@@ -140,14 +132,10 @@
 			"response": []
 		},
 		{
-			"name": "Un Atuendo de Cada Guardarropa",
+			"name": "Un Atuendo Aleatorio de Cada Guardarropa",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/user/1/guardarropa/random",
 					"host": [
@@ -165,14 +153,10 @@
 			"response": []
 		},
 		{
-			"name": "Un Atuendo de Un Guardarropa",
+			"name": "Un Atuendo Aleatorio",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
 					"raw": "localhost:8080/user/1/guardarropa/2/random",
 					"host": [
@@ -189,6 +173,85 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Usuario pasar a Premium",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/user/1/premium",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"premium"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Un Atuendo Por Clima con Partes del Cuerpo por Body",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\"CABEZA\", \"OJOS\", \"TORSO\", \"PIERNAS\", \"CALZADO\"]"
+				},
+				"url": {
+					"raw": "localhost:8080/user/1/guardarropa/44/atuendo2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"guardarropa",
+						"44",
+						"atuendo2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Un Atuendo Aleatorio con Partes del Cuerpo por Body",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\"CABEZA\", \"OJOS\", \"TORSO\", \"PIERNAS\", \"CALZADO\"]"
+				},
+				"url": {
+					"raw": "localhost:8080/user/1/guardarropa/44/random2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"1",
+						"guardarropa",
+						"44",
+						"random2"
+					]
+				}
+			},
+			"response": []
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
