@@ -3,6 +3,8 @@ package quemepongoAPI.user;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import quemepongoAPI.lugar.Lugar;
 import quemepongoAPI.lugar.LugarService;
 import quemepongoAPI.prenda.*;
 
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,15 +123,17 @@ class UserController {
     }
 
     /* Get de atuendo aleatorio de un guardarropa con lista de partes del cuerpo */
+    /* EJEMPLO JSON BODY -> ["CABEZA", "OJOS", "PIERNAS"] */
     @GetMapping("/user/{idUser}/guardarropa/{idGuarda}/random2")
-    String atuendoAleatorioPartesCuerpoPorBody(@RequestBody JsonArray partesCuerpo, @PathVariable Long idUser, @PathVariable Long idGuarda) {
+    String atuendoAleatorioPartesCuerpoPorBody(@RequestBody String partesCuerpo, @PathVariable Long idUser, @PathVariable Long idGuarda) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
         Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuarda);
         Guardarropa guardarropa;
 
-        List<PartesCuerpo> listaPartes = gson.<List<PartesCuerpo>>fromJson(partesCuerpo, PartesCuerpo.class);
+        Type type = new TypeToken<List<PartesCuerpo>>() {}.getType();
+        List<PartesCuerpo> listaPartes = gson.fromJson(partesCuerpo, type);
 
         if (guardarropaOptional.isPresent()) {
             guardarropa = guardarropaOptional.get();
@@ -183,8 +188,31 @@ class UserController {
         }
     }
 
+    /* Get de un atuendo por clima */
+    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/atuendo2")
+    String oneAtuendoClimaConPartesDelCuerpoPorBody(@RequestBody String partesCuerpo, @PathVariable Long idUser, @PathVariable Long idGuard) throws ClimateApisNotWorkingException{
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
+        Guardarropa guardarropa;
+
+        Type type = new TypeToken<List<PartesCuerpo>>() {}.getType();
+        List<PartesCuerpo> listaPartes = gson.fromJson(partesCuerpo, type);
+
+        if (guardarropaOptional.isPresent()) {
+            guardarropa = guardarropaOptional.get();
+            Evento evento = new Evento(LocalDateTime.now(), false);
+
+            Clima clima = climaService.getClima();
+
+            return gson.toJson(guardarropa.crearAtuendoClima(listaPartes, clima, evento));
+        } else {
+            throw new GuardarropasNotFoundException(idGuard);
+        }
+    }
+
     private String getAtuendo(Gson gson, Guardarropa guardarropa, Evento evento) throws ClimateApisNotWorkingException {
-        /*TODO: lista de partes del cuerpo por variable*/
         List<PartesCuerpo> listaPartesDefault = new ArrayList<>();
         listaPartesDefault.add(PartesCuerpo.TORSO);
         listaPartesDefault.add(PartesCuerpo.PIERNAS);
