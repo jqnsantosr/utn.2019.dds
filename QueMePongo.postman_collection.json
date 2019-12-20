@@ -56,7 +56,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"username\": \"fran\", \"googleId\": \"6612351\"}"
+					"raw": "{ \"nombre\": \"ferna\", \"googleId\": \"123423\"}"
 				},
 				"url": {
 					"raw": "localhost:8080/user",
@@ -207,7 +207,7 @@
 					"raw": "[\"CABEZA\", \"OJOS\", \"TORSO\", \"PIERNAS\", \"CALZADO\"]"
 				},
 				"url": {
-					"raw": "localhost:8080/user/1/guardarropa/44/atuendo2",
+					"raw": "localhost:8080/user/1/guardarropa/44/atuendo?custom=true",
 					"host": [
 						"localhost"
 					],
@@ -217,7 +217,13 @@
 						"1",
 						"guardarropa",
 						"44",
-						"atuendo2"
+						"atuendo"
+					],
+					"query": [
+						{
+							"key": "custom",
+							"value": "true"
+						}
 					]
 				}
 			},
@@ -236,7 +242,7 @@
 					"raw": "[\"CABEZA\", \"OJOS\", \"TORSO\", \"PIERNAS\", \"CALZADO\"]"
 				},
 				"url": {
-					"raw": "localhost:8080/user/1/guardarropa/44/random2",
+					"raw": "localhost:8080/user/1/guardarropa/44/random?custom=true",
 					"host": [
 						"localhost"
 					],
@@ -246,7 +252,13 @@
 						"1",
 						"guardarropa",
 						"44",
-						"random2"
+						"random"
+					],
+					"query": [
+						{
+							"key": "custom",
+							"value": "true"
+						}
 					]
 				}
 			},

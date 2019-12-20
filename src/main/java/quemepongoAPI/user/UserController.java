@@ -88,8 +88,15 @@ class UserController {
     }
 
     /* Get de un atuendo aleatorio */
+    /*
+        PARAMETROS: custom = true -- lee el requestBody para saber que partes del cuerpo pide el usuario
+        REQUEST BODY: --ejemplo para custom = true ["CABEZA", "PIERNAS", "CALZADO"]
+                      --nada si custom = false
+    */
     @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
-    String one(@PathVariable Long idUser, @PathVariable Long idGuard) {
+    String one(@PathVariable Long idUser, @PathVariable Long idGuard,
+               @RequestBody(required = false) String partesCuerpo,
+               @RequestParam(name = "custom", required = false) boolean custom) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
@@ -98,7 +105,45 @@ class UserController {
 
         if (guardarropaOptional.isPresent()) {
             guardarropa = guardarropaOptional.get();
-            return gson.toJson(guardarropa.crearAtuendoAleatorio());
+
+            if(custom)
+            {
+                Type type = new TypeToken<List<PartesCuerpo>>() {}.getType();
+                List<PartesCuerpo> listaPartes = gson.fromJson(partesCuerpo, type);
+                return gson.toJson(guardarropa.crearAtuendoAleatorio(listaPartes));
+            }
+            else
+                return gson.toJson(guardarropa.crearAtuendoAleatorio());
+        } else {
+            throw new GuardarropasNotFoundException(idGuard);
+        }
+    }
+
+    /* Get de un atuendo por clima */
+    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/atuendo")
+    String oneAtuendoClimaSinEvento(@PathVariable Long idUser, @PathVariable Long idGuard,
+                                    @RequestBody(required = false) String partesCuerpo,
+                                    @RequestParam(name = "custom", required = false) boolean custom) throws ClimateApisNotWorkingException{
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = repository.findById(idUser)
+                .orElseThrow(() -> new UserNotFoundException(idUser));
+        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
+        Guardarropa guardarropa;
+
+        if (guardarropaOptional.isPresent()) {
+            guardarropa = guardarropaOptional.get();
+            Evento evento = new Evento(LocalDateTime.now(), false);
+
+            if(custom)
+            {
+                Type type = new TypeToken<List<PartesCuerpo>>() {}.getType();
+                List<PartesCuerpo> listaPartes = gson.fromJson(partesCuerpo, type);
+
+                Clima clima = climaService.getClima();
+
+                return gson.toJson(guardarropa.crearAtuendoClima(listaPartes, clima, evento));
+            }
+            return getAtuendo(gson, guardarropa, evento);
         } else {
             throw new GuardarropasNotFoundException(idGuard);
         }
@@ -119,27 +164,6 @@ class UserController {
                     return gson.toJson(a);
                 })
                 .collect(Collectors.toList()).toString();
-    }
-
-    /* Get de atuendo aleatorio de un guardarropa con lista de partes del cuerpo */
-    /* EJEMPLO JSON BODY -> ["CABEZA", "OJOS", "PIERNAS"] */
-    @GetMapping("/user/{idUser}/guardarropa/{idGuarda}/random2")
-    String atuendoAleatorioPartesCuerpoPorBody(@RequestBody String partesCuerpo, @PathVariable Long idUser, @PathVariable Long idGuarda) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
-        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuarda);
-        Guardarropa guardarropa;
-
-        Type type = new TypeToken<List<PartesCuerpo>>() {}.getType();
-        List<PartesCuerpo> listaPartes = gson.fromJson(partesCuerpo, type);
-
-        if (guardarropaOptional.isPresent()) {
-            guardarropa = guardarropaOptional.get();
-            return gson.toJson(guardarropa.crearAtuendoAleatorio(listaPartes));
-        } else {
-            throw new GuardarropasNotFoundException(idGuarda);
-        }
     }
 
     /* Get de un atuendo para un evento */
@@ -163,49 +187,6 @@ class UserController {
             else {
                 throw new EventoNotFoundException(idEvento);
             }
-        } else {
-            throw new GuardarropasNotFoundException(idGuard);
-        }
-    }
-
-    /* Get de un atuendo por clima */
-    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/atuendo")
-    String oneAtuendoClimaSinEvento(@PathVariable Long idUser, @PathVariable Long idGuard) throws ClimateApisNotWorkingException{
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
-        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
-        Guardarropa guardarropa;
-
-        if (guardarropaOptional.isPresent()) {
-            guardarropa = guardarropaOptional.get();
-            Evento evento = new Evento(LocalDateTime.now(), false);
-
-            return getAtuendo(gson, guardarropa, evento);
-        } else {
-            throw new GuardarropasNotFoundException(idGuard);
-        }
-    }
-
-    /* Get de un atuendo por clima */
-    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/atuendo2")
-    String oneAtuendoClimaConPartesDelCuerpoPorBody(@RequestBody String partesCuerpo, @PathVariable Long idUser, @PathVariable Long idGuard) throws ClimateApisNotWorkingException{
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
-        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
-        Guardarropa guardarropa;
-
-        Type type = new TypeToken<List<PartesCuerpo>>() {}.getType();
-        List<PartesCuerpo> listaPartes = gson.fromJson(partesCuerpo, type);
-
-        if (guardarropaOptional.isPresent()) {
-            guardarropa = guardarropaOptional.get();
-            Evento evento = new Evento(LocalDateTime.now(), false);
-
-            Clima clima = climaService.getClima();
-
-            return gson.toJson(guardarropa.crearAtuendoClima(listaPartes, clima, evento));
         } else {
             throw new GuardarropasNotFoundException(idGuard);
         }
