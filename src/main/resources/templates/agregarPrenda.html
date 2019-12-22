@@ -41,7 +41,7 @@
             <tr>
                 <td>
                     Partes del cuerpo
-                    <select th:id="selectPartes"></select>
+                    <div th:id="partesContainer"></div>
                 </td>
             </tr>
             <tr>
@@ -81,12 +81,13 @@
     var guardarropas = [];
     var tiposPrenda = [];
     var partesCuerpo = [];
+    var checkboxes = [];
     var materiales = [];
+    var idUsuario = 1;
     function load(){
-        var idUsuario = 1;
-        loadGuardarropas(idUsuario);
+        loadGuardarropas();
     };
-    function loadGuardarropas(idUsuario){
+    function loadGuardarropas(){
         $.ajax({
             asynch: false,
             type: "GET",
@@ -142,11 +143,8 @@
                 for(var x in response){
                     var elem = response[x];
                     partesCuerpo.push(elem);
-                    var option = document.createElement("option");
-                    option.text = elem;
-                    option.value = x;
-                    selectPartes.add(option);
                 }
+                $('#partesContainer').html(createCheckboxes());
                 loadMateriales();
             }
         });
@@ -173,13 +171,12 @@
         });
     };
     function agregarPrenda(){
-        var idUsuario = 1;
         var idGuardarropa = selectGuardarropas[selectGuardarropas.selectedIndex].value;
         ///user/{idUser}/guardarropa/{idGuardarropa}/prenda
         //podria validar que ese nombre no este en la lista que me traje inicialmente
         var valNombre = nombre.value;//$("#nombre").value
         var valTipo = selectTipo[selectTipo.selectedIndex].value;
-        var valPartes = selectPartes[selectPartes.selectedIndex].value;
+        var valPartes = getPartesSeleccionadas();
         var valTela = selectMaterial[selectMaterial.selectedIndex].value;
         var valColorPrimario = colorPrimario.value;
         var valColorSecundario = colorSecundario.value;
@@ -207,7 +204,7 @@
     };
     function tiposPrendaChanged(){
         var partesValidas = tiposPrenda[selectTipo.selectedIndex].partesCuerpo;
-        clearSelect(selectPartes);
+        disableAllCheckboxes();
         for(var x in partesValidas){
             var parte = partesValidas[x];
             var index = getIndexOf(partesCuerpo,parte);
@@ -215,7 +212,7 @@
                 var option = document.createElement("option");
                 option.text = parte;
                 option.value = index;
-                selectPartes.add(option);
+                document.getElementById("checkparte_" + index).disabled = false;
             }
         }
         var telasValidas = tiposPrenda[selectTipo.selectedIndex].telasPosibles;
@@ -244,6 +241,37 @@
             }
         }
         return -1;
+    };
+    function createCheckboxes(){
+        var html = [];
+        html.push("<table>");
+        for(var x in partesCuerpo){
+            html.push("<tr>");
+            var parte = partesCuerpo[x];
+            var chkId = "checkparte_" + x;
+            var checkbox = "<input id='"+chkId+"' type='checkbox'></input>";
+            html.push("<td>" + checkbox + "&nbsp;" + parte + "</td>");
+            html.push("</tr>");
+            checkboxes.push(chkId);
+        }
+        html.push("</table>");
+        return html.join("");
+    };
+    function disableAllCheckboxes(){
+        for(var x in checkboxes){
+            document.getElementById(checkboxes[x]).disabled = true;
+            document.getElementById(checkboxes[x]).checked = false;
+        }
+    };
+    function getPartesSeleccionadas(){
+        var retVal = [];
+        for(var x in checkboxes){
+            var chk = checkboxes[x];
+            if(document.getElementById(chk).checked){
+                retVal.push(x);
+            }
+        }
+        return retVal;
     };
 </script>
 </body>
