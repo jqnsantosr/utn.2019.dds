@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>Qué me pongo</title>
 </head>
 
@@ -17,20 +17,37 @@
 
     <div class="starter-template">
         <h1>Pedir atuendo aleatorio</h1>
-        <h2>
-            <span th:text="'Atuendo aleatorio para ' + ${nombre}"></span>
-        </h2>
     </div>
     <div>
         <table>
             <tr>
                 <td>
-                    <select>Seleccionar guardarropa</select>
+                    Todos los guardarropas
+                    <input th:id="allGuardarropas" th:type="checkbox"></input>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <select>Seleccionar metodo (aleatorio o clima)</select>
+                    Seleccionar guardarropas
+                    <select th:id="selectGuardarropas"></select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Personalizar partes
+                    <input th:id="customChk" th:type="checkbox"></input>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Partes del cuerpo
+                    <div th:id="partesContainer"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Seleccionar metodo
+                    <select th:id="selectMetodo"></select>
                 </td>
             </tr>
             <tr>
@@ -38,21 +55,182 @@
                     <button onclick="pedirAtuendo();">Pedir atuendo</button>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    LISTA
-                </td>
-            </tr>
         </table>
+        <div th:id="results"></div>
     </div>
 
 </main>
 <script type="text/javascript">
+    var partesCuerpo = [];
+    var checkboxes = [];
+    var idUsuario = 1;
+    document.getElementById("allGuardarropas").onclick = function(){
+        document.getElementById('selectGuardarropas').disabled = document.getElementById('allGuardarropas').checked;
+    };
+    document.getElementById("customChk").onclick = function(){
+        changeStatusAllCheckboxes(!document.getElementById('customChk').checked);
+    };
     function load(){
-        alert("Cargar de base de datos.");
+        loadGuardarropas();
+        loadPartesCuerpo();
+        var optionAleatorio = document.createElement("option");
+        optionAleatorio.text = "Aleatorio";
+        optionAleatorio.value = "random";
+        selectMetodo.add(optionAleatorio);
+        var optionClima = document.createElement("option");
+        optionClima.text = "Clima";
+        optionClima.value = "atuendo";
+        selectMetodo.add(optionClima);
+    };
+    function loadGuardarropas(){
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/user/" + idUsuario + "/guardarropa",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                for(var x in response){
+                    var elem = response[x];
+                    var option = document.createElement("option");
+                    option.text = elem.nombre;
+                    option.value = elem.id;
+                    selectGuardarropas.add(option);
+                }
+            }
+        });
     };
     function pedirAtuendo(){
-        alert("Se enviara POST con pedido de atuendo mediante AJAX");
+        /*
+        @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
+    PARAMETROS: custom = true -- lee el requestBody para saber que partes del cuerpo pide el usuario
+    REQUEST BODY: --ejemplo para custom = true ["CABEZA", "PIERNAS", "CALZADO"]
+                  --nada si custom = false
+*/
+        var partesCuerpo = [];
+        var idGuardarropas = selectGuardarropas[selectGuardarropas.selectedIndex].value;
+        var metodo = selectMetodo[selectMetodo.selectedIndex].value;
+        var urlEnd;
+        var allGuardarropasSelected = document.getElementById('allGuardarropas').checked;
+        var data = {};
+        if(metodo == 'random')  {
+            if(allGuardarropasSelected) {
+                urlEnd = "random"; //randomAll
+            } else {
+                var custom = document.getElementById('customChk').checked;
+                urlEnd = idGuardarropas + "/random?custom=" + custom; //randomDeUno, y ver el body
+                if(custom){
+                    data = getPartesSeleccionadas();
+                }
+            }
+        } else {
+            if(allGuardarropasSelected) {
+                alert('Si elije la opción de clima debe elegir un guardarropas.');
+                return;
+            }
+            urlEnd = idGuardarropas + "/atuendo"; //clima
+        }
+
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/user/" + idUsuario + "/guardarropa/" + urlEnd,
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                var prendas = response.prendasElegidas;
+                var partes = response.partesCuerpoACubrir;
+                $('#results').html(crearTablaResultados(prendas));
+                for(var x in partes){
+                    var parte = partes[x];
+                    console.log(parte);
+                }
+            }
+        });
+    };
+    function crearTablaResultados(prendas){
+        var html = [];
+        html.push("<table><tr>");
+        html.push("<td>ID</td>");
+        html.push("<td>Nombre de la prenda</td>");
+        html.push("<td>Tipo de prenda</td>");
+        html.push("<td>Tela</td>");
+        html.push("<td>Partes del cuerpo</td>");
+        html.push("<td>Color primario</td>");
+        html.push("<td>Es formal?</td>");
+        html.push("</tr>");
+        for(var x in prendas){
+            html.push("<tr>");
+            var prenda = prendas[x];
+            var id = prenda.id; //int
+            html.push("<td>" + id + "</td>");
+            var nombre = prenda.nombre; //string;
+            html.push("<td>" + nombre + "</td>");
+            var tipo = prenda.tipo;//jsonobject
+            var nombreTipo = tipo.nombre; //string
+            html.push("<td>" + nombreTipo + "</td>");
+            var tela = prenda.tela; //string;
+            html.push("<td>" + tela + "</td>");
+            var partes = prenda.partes; //string array
+            html.push("<td>" + partes[0] + "</td>");
+            var colorPrimario = prenda.colorPrimario; //string;
+            html.push("<td>" + colorPrimario + "</td>");
+            var esFormal = prenda.esFormal; //bool
+            html.push("<td>" + esFormal + "</td>");
+            console.log(prenda);
+            html.push("</tr>");
+        }
+        html.push("</table>");
+        return html.join("");
+    };
+    function loadPartesCuerpo(){
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/partes",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                for(var x in response){
+                    var elem = response[x];
+                    partesCuerpo.push(elem);
+                }
+                $('#partesContainer').html(createCheckboxes());
+            }
+        });
+    };
+    function changeStatusAllCheckboxes(val){
+        for(var x in checkboxes){
+            document.getElementById(checkboxes[x]).disabled = val;
+        }
+    };
+    function createCheckboxes(){
+        var html = [];
+        html.push("<table>");
+        for(var x in partesCuerpo){
+            html.push("<tr>");
+            var parte = partesCuerpo[x];
+            var chkId = "checkparte_" + x;
+            var checkbox = "<input id='"+chkId+"' type='checkbox' disabled='true'></input>";
+            html.push("<td>" + checkbox + "&nbsp;" + parte + "</td>");
+            html.push("</tr>");
+            checkboxes.push(chkId);
+        }
+        html.push("</table>");
+        return html.join("");
+    };
+    function getPartesSeleccionadas(){
+        var retVal = [];
+        for(var x in checkboxes){
+            var chk = checkboxes[x];
+            if(document.getElementById(chk).checked){
+                retVal.push(x);
+            }
+        }
+        return retVal;
     };
 </script>
 </body>
