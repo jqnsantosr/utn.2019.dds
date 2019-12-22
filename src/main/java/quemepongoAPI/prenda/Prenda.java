@@ -6,10 +6,7 @@ import lombok.Data;
 import quemepongoAPI.clima.CondicionesClimaticas;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity

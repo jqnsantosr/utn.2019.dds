@@ -1,16 +1,24 @@
 package quemepongoAPI.atuendo;
 
+import lombok.Data;
 import quemepongoAPI.prenda.PartesCuerpo;
 import quemepongoAPI.prenda.Prenda;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Data
+@Entity
 public class Atuendo
 {
+    private @Id @GeneratedValue Long id;
+    @ElementCollection
+    @OneToMany(cascade = {CascadeType.ALL})
     private Set<Prenda> prendasElegidas = new HashSet<>();
+    @ElementCollection
     private List<PartesCuerpo> partesCuerpoACubrir = new ArrayList<>();
 
     public void mostrarAtuendo()

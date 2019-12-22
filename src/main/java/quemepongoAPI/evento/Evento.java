@@ -2,6 +2,7 @@ package quemepongoAPI.evento;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
+import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.user.User;
 
 import javax.persistence.*;
@@ -21,12 +22,16 @@ public class Evento
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'a las' hh:mm a");
     private LocalDateTime fecha;
     private LocalDateTime fecha_notificacion;
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn (name = "idAtuendo")
+    private Atuendo atuendo;
 
-    public Evento(final JsonNode jn){
+    public Evento(final JsonNode jn, User usuario){
         this.nombre = jn.get("nombre").asText();
         this.fecha = LocalDateTime.parse(jn.get("fecha").asText(), formatter);
         this.fecha_notificacion = LocalDateTime.parse(jn.get("fecha_notificacion").asText(), formatter);
         this.esFormal = jn.get("esFormal").asBoolean();
+        EventoObserver unObserver = new EventoObserver(usuario, this);
     }
 
     public Evento(String date, boolean isFormal){
@@ -62,5 +67,10 @@ public class Evento
     public String getFechaEvento()
     {
         return fecha.format(formatter);
+    }
+
+    public void aceptarAtuendo(Atuendo unAtuendo){
+        this.atuendo = unAtuendo;
+        System.out.println("Atuendo Aceptado");
     }
 }

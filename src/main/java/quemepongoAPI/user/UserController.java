@@ -87,6 +87,16 @@ class UserController {
         return gson.toJson(guardarropas);
     }
 
+    /* Get de todos los eventos del usuario */
+    @GetMapping("/user/{id}/evento")
+    String allEventos(@PathVariable Long id) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        return gson.toJson(user.getEventos());
+    }
+
     /* Get de un atuendo aleatorio */
     /*
         PARAMETROS: custom = true -- lee el requestBody para saber que partes del cuerpo pide el usuario
@@ -268,7 +278,8 @@ class UserController {
     @PostMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda")
     User newPrendaForGuardarropas(@RequestBody JsonNode prendaAsJsonNode, @PathVariable Long idUser, @PathVariable Long idGuardarropa) {
         final Optional<TipoPrenda> tipo = tipoPrendaRepository.findById(prendaAsJsonNode.get("tipo").asLong());
-        Prenda prenda = new Prenda(prendaAsJsonNode,tipo.get());User user = repository.findById(idUser)
+        Prenda prenda = new Prenda(prendaAsJsonNode,tipo.get());
+        User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
 
         if (user.traerGuardarropasPorId(idGuardarropa).isPresent()) {
@@ -284,11 +295,27 @@ class UserController {
 
     @PostMapping("/user/{id}/evento")
     User newEventoForUser(@RequestBody JsonNode newEventoAsJsonNode, @PathVariable Long id) {
-        final Evento newEvento = new Evento(newEventoAsJsonNode);
+        User user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        final Evento newEvento = new Evento(newEventoAsJsonNode, user);
+
+        user.crearEvento(newEvento);
+
+        return repository.save(user);
+    }
+
+    /*Aceptar la sugerencia de un evento*/
+    @PostMapping("/user/{id}/evento/{idEvento}/aceptar")
+    User aceptarAtuendoEventoForUser(@RequestBody Atuendo atuendo, @PathVariable Long id, @PathVariable Long idEvento) {
         User user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        user.crearEvento(newEvento);
+        Optional<Evento> eventoOptional = user.traerEventoPorId(idEvento);
+        if(eventoOptional.isPresent()) {
+            Evento evento = eventoOptional.get();
+
+            evento.aceptarAtuendo(atuendo);
+        }
 
         return repository.save(user);
     }
