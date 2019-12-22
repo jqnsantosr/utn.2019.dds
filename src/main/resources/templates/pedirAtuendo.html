@@ -143,10 +143,6 @@
                 var prendas = response.prendasElegidas;
                 var partes = response.partesCuerpoACubrir;
                 $('#results').html(crearTablaResultados(prendas));
-                for(var x in partes){
-                    var parte = partes[x];
-                    console.log(parte);
-                }
             }
         });
     };
@@ -179,7 +175,6 @@
             html.push("<td>" + colorPrimario + "</td>");
             var esFormal = prenda.esFormal; //bool
             html.push("<td>" + esFormal + "</td>");
-            console.log(prenda);
             html.push("</tr>");
         }
         html.push("</table>");
