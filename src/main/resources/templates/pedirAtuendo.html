@@ -113,16 +113,11 @@
         var metodo = selectMetodo[selectMetodo.selectedIndex].value;
         var urlEnd;
         var allGuardarropasSelected = document.getElementById('allGuardarropas').checked;
-        var data = {};
         if(metodo == 'random')  {
             if(allGuardarropasSelected) {
                 urlEnd = "random"; //randomAll
             } else {
-                var custom = document.getElementById('customChk').checked;
-                urlEnd = idGuardarropas + "/random?custom=" + custom; //randomDeUno, y ver el body
-                if(custom){
-                    data = getPartesSeleccionadas();
-                }
+                urlEnd = idGuardarropas + "/random"; //randomDeUno, y ver el body
             }
         } else {
             if(allGuardarropasSelected) {
@@ -132,11 +127,22 @@
             urlEnd = idGuardarropas + "/atuendo"; //clima
         }
 
+        var custom = document.getElementById('customChk').checked;
+        urlEnd += "?custom=" + custom;
+        if(custom){
+            var partesSel = getPartesSeleccionadas();
+            if(partesSel == ""){
+                alert("Si elige personalizar, debe elegir al menos una parte.");
+                return;
+            }
+            urlEnd += "&parts=" + partesSel;
+        }
+
         $.ajax({
             asynch: false,
             type: "GET",
             url: "/user/" + idUsuario + "/guardarropa/" + urlEnd,
-            data: data,
+            data: {},
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(response){
@@ -170,7 +176,15 @@
             var tela = prenda.tela; //string;
             html.push("<td>" + tela + "</td>");
             var partes = prenda.partes; //string array
-            html.push("<td>" + partes[0] + "</td>");
+            html.push("<td>");
+            var partesString = "";
+            for(var y in partes){
+                partesString += partes[y] + ", ";
+            }
+            if(partesString.length > 0){
+                html.push(partesString.substring(0,partesString.length-2));
+            }
+            html.push("</td>");
             var colorPrimario = prenda.colorPrimario; //string;
             html.push("<td>" + colorPrimario + "</td>");
             var esFormal = prenda.esFormal; //bool
@@ -218,11 +232,11 @@
         return html.join("");
     };
     function getPartesSeleccionadas(){
-        var retVal = [];
+        var retVal = "";
         for(var x in checkboxes){
             var chk = checkboxes[x];
             if(document.getElementById(chk).checked){
-                retVal.push(x);
+                retVal += x + "-";
             }
         }
         return retVal;

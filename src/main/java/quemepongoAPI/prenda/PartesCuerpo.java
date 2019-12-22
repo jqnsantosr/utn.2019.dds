@@ -12,6 +12,12 @@ public enum PartesCuerpo {
     ACCESORIO_TOBILLO_,
     OREJAS,
     OJOS,
-    CUELLO
-}
+    CUELLO;
+
 //NO AGREGAR COMBINACIONES//
+
+    public static PartesCuerpo fromInt(final int index){
+        return PartesCuerpo.values()[index];
+    }
+
+}

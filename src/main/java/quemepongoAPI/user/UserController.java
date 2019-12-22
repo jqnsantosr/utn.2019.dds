@@ -105,7 +105,7 @@ class UserController {
     */
     @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
     String one(@PathVariable Long idUser, @PathVariable Long idGuard,
-               @RequestBody(required = false) String partesCuerpo,
+               @RequestParam(name = "parts", required = false) String partesCuerpo,
                @RequestParam(name = "custom", required = false) boolean custom) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
@@ -118,8 +118,11 @@ class UserController {
 
             if(custom)
             {
-                Type type = new TypeToken<List<PartesCuerpo>>() {}.getType();
-                List<PartesCuerpo> listaPartes = gson.fromJson(partesCuerpo, type);
+                final String[] listaPartesAsArray = partesCuerpo.split("-");
+                final List<PartesCuerpo> listaPartes = new ArrayList<>();
+                for(final String parte : listaPartesAsArray){
+                    listaPartes.add(PartesCuerpo.fromInt(Integer.parseInt(parte)));
+                }
                 return gson.toJson(guardarropa.crearAtuendoAleatorio(listaPartes));
             }
             else
@@ -132,7 +135,7 @@ class UserController {
     /* Get de un atuendo por clima */
     @GetMapping("/user/{idUser}/guardarropa/{idGuard}/atuendo")
     String oneAtuendoClimaSinEvento(@PathVariable Long idUser, @PathVariable Long idGuard,
-                                    @RequestBody(required = false) String partesCuerpo,
+                                    @RequestParam(name = "parts", required = false) String partesCuerpo,
                                     @RequestParam(name = "custom", required = false) boolean custom) throws ClimateApisNotWorkingException{
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
@@ -146,8 +149,11 @@ class UserController {
 
             if(custom)
             {
-                Type type = new TypeToken<List<PartesCuerpo>>() {}.getType();
-                List<PartesCuerpo> listaPartes = gson.fromJson(partesCuerpo, type);
+                final String[] listaPartesAsArray = partesCuerpo.split("-");
+                final List<PartesCuerpo> listaPartes = new ArrayList<>();
+                for(final String parte : listaPartesAsArray){
+                    listaPartes.add(PartesCuerpo.fromInt(Integer.parseInt(parte)));
+                }
 
                 Clima clima = climaService.getClima();
 

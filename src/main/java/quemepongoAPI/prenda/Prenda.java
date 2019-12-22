@@ -36,6 +36,10 @@ public class Prenda implements Comparable<Prenda>{
         this.tipo = tipo;
         this.partes = new ArrayList<>();
         this.tela = Tela.fromInt(jn.get("tela").asInt());
+        for(final JsonNode j : jn.get("partes")){
+            this.partes.add(PartesCuerpo.fromInt(Integer.parseInt(j.asText())));
+        }
+
     }
 
     public Prenda(String nombre, Tela tela, List<PartesCuerpo> partes, TipoPrenda tipo, String colorPrimario) {

@@ -184,12 +184,16 @@
         var payload = {
             nombre: valNombre,
             tipo: parseInt(valTipo),
-            partes: parseInt(valPartes),
+            partes: valPartes,
             tela: parseInt(valTela),
             colorPrimario: valColorPrimario,
             colorSecundario: valColorSecundario,
             esFormal: valEsFormal
         };
+        if(valPartes.length == 0){
+            alert("Debe elegir al menos una parte del cuerpo.");
+            return;
+        }
         $.ajax({
             asynch: false,
             type: "POST",
