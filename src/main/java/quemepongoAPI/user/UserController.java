@@ -3,9 +3,9 @@ package quemepongoAPI.user;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.clima.Clima;
@@ -21,7 +21,6 @@ import quemepongoAPI.prenda.Tela;
 import quemepongoAPI.prenda.TipoPrendaRepository;
 import quemepongoAPI.prenda.TipoPrenda;
 
-import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +182,7 @@ class UserController {
     }
 
     /* Get de un atuendo para un evento */
-    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/{idEvento}/atuendo")
+    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/evento/{idEvento}/atuendo")
     String one(@PathVariable Long idUser, @PathVariable Long idGuard, @PathVariable Long idEvento) throws ClimateApisNotWorkingException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
@@ -326,6 +325,32 @@ class UserController {
         return repository.save(user);
     }
 
+    /*PATCH de modificar nombre guardarropa*/
+    /*EJEMPLO:
+        type : 'PATCH',
+        url : url,
+        contentType: 'application/x-www-form-urlencoded',
+        data: "nombre=Guardarropa 69"
+     */
+    @PatchMapping("/user/{id}/guardarropa/{idGuarda}/mod")
+    User modificarGuardarropa(@RequestParam("nombre") String nombre, @PathVariable Long id, @PathVariable Long idGuarda){
+        User user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuarda);
+        Guardarropa guardarropa;
+
+        if (guardarropaOptional.isPresent()) {
+            guardarropa = guardarropaOptional.get();
+
+            guardarropa.setNombre(nombre);
+
+            return repository.save(user);
+        } else {
+            throw new GuardarropasNotFoundException(idGuarda);
+        }
+    }
+
     @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}")
     void deleteGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa) throws GuardarropasNotEmptyException {
         User user = repository.findById(idUser)
@@ -339,7 +364,7 @@ class UserController {
         repository.save(user);
     }
 
-    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}/{idPrenda}")
+    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda/{idPrenda}")
     void deletePrendaFromGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa, @PathVariable Long idPrenda) throws GuardarropasNotEmptyException {
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
