@@ -2,17 +2,17 @@ package quemepongoAPI.evento;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.user.User;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.TimeoutException;
 
 @Data
 @Entity
+@Slf4j
 public class Evento
 {
     private @Id @GeneratedValue Long id;
@@ -71,6 +71,6 @@ public class Evento
 
     public void aceptarAtuendo(Atuendo unAtuendo){
         this.atuendo = unAtuendo;
-        System.out.println("Atuendo Aceptado");
+        log.info("Se aceptó una sugerencia para el evento: " + this.id);
     }
 }
