@@ -359,7 +359,6 @@ class UserController {
         if (user.traerGuardarropasPorId(idGuardarropa).isPresent()) {
             user.borrarGuardarropas(user.traerGuardarropasPorId(idGuardarropa).get());
         }
-        ;
 
         repository.save(user);
     }
