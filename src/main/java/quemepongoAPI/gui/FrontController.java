@@ -54,6 +54,12 @@ class FrontController {
         return "verGuardarropas";
     }
 
+    @GetMapping("/gui/verEventos")
+    public String guiVerEventos(@RequestParam(name="name",required = false,defaultValue = "")String nombreParametro, final Model model) {
+        model.addAttribute("nombre",nombreParametro);
+        return "verEventos";
+    }
+
     @GetMapping(value = "/crearGuardarropas")
     public String crear(){
         return "{}";

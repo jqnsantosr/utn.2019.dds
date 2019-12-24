@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <style>
+        .ui-widget-content.ui-dialog
+        {
+            border: 2px solid #DDD;
+            background-color: #ffffff;
+        }
+        .ui-widget-overlay {
+            position: fixed;
+            background-color: #eeeeee;
+            opacity: 0.5;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .ui-front{
+            z-index: 100;
+        }
+    </style>
+    <title>Qué me pongo</title>
+</head>
+
+<body onload="load();">
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#"></a>
+</nav>
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <h1>Ver eventos</h1>
+    </div>
+    <div>
+        <div th:id="popup"><div id="popupContent"></div></div>
+        <div th:id="eventosContainer"></div>
+    </div>
+
+</main>
+<script type="text/javascript">
+    $(function() {
+        $("#popup").dialog({
+            autoOpen: false,
+            modal: true,
+            show: "blind",
+            hide: "blind",
+            open: function(){
+                var idEvento = $(this).data('idEvento');
+                $(this).html(createPopupContent(idEvento));
+                loadSelector();
+            }
+        });
+    });
+    var eventos = [];
+    var guardarropas = [];
+    var idUsuario = 1;
+    function createPopupContent(idEvento){
+        var html = [];
+        html.push("<table>");
+        html.push("<tr>");
+        html.push("<td>");
+        html.push("<select id='selectGuardarropas'></select>");
+        html.push("</td>");
+        html.push("</tr>");
+        html.push("<tr>");
+        html.push("<td>");
+        html.push("<button onclick='pedirSugerenciaDeAtuendo("+idEvento+");'>Pedir atuendo</button>");
+        html.push("</td>");
+        html.push("</tr>");
+        html.push("</table>");
+        return html.join("");
+    };
+    function loadSelector(){
+        selectGuardarropas.options.length = 0;
+        for(var x in guardarropas){
+            var elem = guardarropas[x];
+            var option = document.createElement("option");
+            option.text = elem.nombre;
+            option.value = elem.id;
+            selectGuardarropas.add(option);
+        }
+    };
+    function load(){
+        loadGuardarropas();
+        loadEventos();
+    };
+    function loadGuardarropas(){
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/user/" + idUsuario + "/guardarropa",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                var htmlContent = [];
+                for(var x in response){
+                    var unGuardarropas = response[x];
+                    guardarropas.push(unGuardarropas);
+                }
+            }
+        });
+    };
+    function loadEventos(){
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/user/" + idUsuario + "/evento",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                for(var x in response){
+                    eventos.push(response[x]);
+                }
+                armarHtmlCompleto();
+            }
+        });
+    };
+    function armarHtmlCompleto(){
+        var htmlContent = [];
+        if(eventos.length != 0){
+            for(var x in eventos){
+                var unEvento = eventos[x];
+                htmlContent.push("<table>" + armarHtml(unEvento) + "</table>");
+            }
+        } else {
+            htmlContent.push("<tr>");
+            htmlContent.push("<td>");
+            htmlContent.push("(No hay eventos)");
+            htmlContent.push("</td>");
+            htmlContent.push("</tr>");
+        }
+        $('#eventosContainer').html(htmlContent.join(""));
+    };
+    function armarHtml(event){
+        var html = [];
+        var id = event.id; //int
+        var nombre = event.nombre; //string
+        var esFormal = event.esFormal; //bool
+        var fecha = event.fecha; //jsonObject
+        var fechaNotificacion = event.fecha_notificacion; //jsonObject
+        html.push("<tr>");
+        html.push("<td>");
+        html.push("Evento " + id + ": " + nombre);
+        html.push("</td>");
+        html.push("</tr>");
+        html.push("<tr>");
+        html.push("<td>");
+        html.push("· Fecha: " + formatearFecha(fecha));
+        html.push("</td>");
+        html.push("</tr>");
+        html.push("<tr>");
+        html.push("<td>");
+        html.push("· Fecha de notificación: " + formatearFecha(fechaNotificacion));
+        html.push("</td>");
+        html.push("</tr>");
+        html.push("<tr>");
+        html.push("<td>");
+        html.push("· Formal: " + esFormal);
+        html.push("</td>");
+        html.push("</tr>");
+        html.push("<tr>");
+        html.push("<td>");
+        html.push("· Atuendo:");
+        if(!true){
+            html.push(formatearAtuendo());
+        } else {
+            html.push("(aún no elegido)");
+            html.push("<tr>");
+            html.push("<td>");
+            html.push("<button onclick='openFirstPopup("+id+");'>Pedir atuendo</button>");
+            html.push("</tr>");
+            html.push("</td>");
+        }
+        html.push("</td>");
+        html.push("</tr>");
+        return html.join("");
+    };
+    function formatearFecha(fecha){
+        var fechaDate = fecha.date; //jsonObject
+        var fechaDateYear = fechaDate.year; //int
+        var fechaDateMonth = fechaDate.month; //int
+        var fechaDateDay = fechaDate.day; //int
+        var fechaTime = fecha.time; //jsonObject
+        var fechaTimeHour = fechaTime.hour; //int
+        var fechaTimeMinute = fechaTime.minute; //int
+        var fechaTimeSecond = fechaTime.second; //int
+        var fechaTimeNano = fechaTime.nano; //int
+        return crearFechaHora(fechaDateDay,fechaDateMonth,fechaDateYear,fechaTimeHour,fechaTimeMinute);
+    };
+    function crearFechaHora(dia,mes,anio,horaReal,minutos){
+        var fecha = padTwo(dia) + "/" + padTwo(mes) + "/" + padFour(anio);
+        var momento = horaReal < 12 ? "AM" : "PM";
+        var hora = (horaReal > 12) ? horaReal - 12 : horaReal;
+        if(hora <= 0) hora = 12;
+        var tiempo = padTwo(hora) + ":" + padTwo(minutos) + " " + momento;
+        return fecha + " a las " + tiempo;
+    };
+    function padTwo(valor){
+        if(valor < 10){
+            return "0" + valor;
+        }
+        return valor;
+    };
+    function padFour(valor){
+        if(valor < 10){
+            return "000" + valor;
+        }
+        if(valor < 100){
+            return "00" + valor;
+        }
+        if(valor < 1000){
+            return "0" + valor;
+        }
+        return valor;
+    };
+    function formatearAtuendo(){
+        console.log("NYI");return;
+        if(prendas.length > 0){
+            for(var x in prendas) {
+                var prenda = prendas[x];
+                var idPrenda = prenda.id;
+                html.push("<tr><td> · </td>");
+                html.push("<td>");
+                html.push(prenda.nombre);
+                html.push("</td>");
+                html.push("<td>");
+                html.push("<button onclick='quitarPrenda("+id+","+idPrenda+");'>Quitar</button>");
+                html.push("</td>");
+                html.push("</tr>");
+            }
+        }
+    };
+    function openFirstPopup(idEvento){
+        $("#popup").data('idEvento',idEvento).dialog('open');
+    }
+    function pedirSugerenciaDeAtuendo(idEvento){
+        var idGuardarropas = document.getElementById("selectGuardarropas").value;
+        console.log("borrar popup y poner uno que diga espere por favor");
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/user/" + idUsuario + "/guardarropa/" + idGuardarropas + "/evento/" + idEvento + "/atuendo",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                console.log(response);
+                console.log("cerrar popup y poner uno nuevo que muestre el atuendo");
+            }
+        });
+    };
+    function aceptarSugerenciaDeAtuendo(idEvento,atuendo){
+        //@PostMapping("/user/{id}/evento/{idEvento}/aceptar")
+    }
+</script>
+</body>
+</html>
