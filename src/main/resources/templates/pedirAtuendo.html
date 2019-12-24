@@ -102,12 +102,6 @@
         });
     };
     function pedirAtuendo(){
-        /*
-        @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
-    PARAMETROS: custom = true -- lee el requestBody para saber que partes del cuerpo pide el usuario
-    REQUEST BODY: --ejemplo para custom = true ["CABEZA", "PIERNAS", "CALZADO"]
-                  --nada si custom = false
-*/
         var partesCuerpo = [];
         var idGuardarropas = selectGuardarropas[selectGuardarropas.selectedIndex].value;
         var metodo = selectMetodo[selectMetodo.selectedIndex].value;
@@ -115,16 +109,16 @@
         var allGuardarropasSelected = document.getElementById('allGuardarropas').checked;
         if(metodo == 'random')  {
             if(allGuardarropasSelected) {
-                urlEnd = "random"; //randomAll
+                urlEnd = "random";
             } else {
-                urlEnd = idGuardarropas + "/random"; //randomDeUno, y ver el body
+                urlEnd = idGuardarropas + "/random";
             }
         } else {
             if(allGuardarropasSelected) {
                 alert('Si elije la opción de clima debe elegir un guardarropas.');
                 return;
             }
-            urlEnd = idGuardarropas + "/atuendo"; //clima
+            urlEnd = idGuardarropas + "/atuendo";
         }
 
         var custom = document.getElementById('customChk').checked;
@@ -155,7 +149,6 @@
     function crearTablaResultados(prendas){
         var html = [];
         html.push("<table><tr>");
-        html.push("<td>ID</td>");
         html.push("<td>Nombre de la prenda</td>");
         html.push("<td>Tipo de prenda</td>");
         html.push("<td>Tela</td>");
@@ -166,8 +159,6 @@
         for(var x in prendas){
             html.push("<tr>");
             var prenda = prendas[x];
-            var id = prenda.id; //int
-            html.push("<td>" + id + "</td>");
             var nombre = prenda.nombre; //string;
             html.push("<td>" + nombre + "</td>");
             var tipo = prenda.tipo;//jsonobject

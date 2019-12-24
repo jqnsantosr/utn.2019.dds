@@ -48,6 +48,12 @@ class FrontController {
         return "pedirAtuendo";
     }
 
+    @GetMapping("/gui/verGuardarropas")
+    public String guiVerGuardarropas(@RequestParam(name="name",required = false,defaultValue = "")String nombreParametro, final Model model) {
+        model.addAttribute("nombre",nombreParametro);
+        return "verGuardarropas";
+    }
+
     @GetMapping(value = "/crearGuardarropas")
     public String crear(){
         return "{}";

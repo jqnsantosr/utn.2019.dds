@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Qué me pongo</title>
+</head>
+
+<body onload="load();">
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#"></a>
+</nav>
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <h1>Ver guardarropas</h1>
+    </div>
+    <div>
+        <div th:id="guardarropasContainer"></div>
+    </div>
+
+</main>
+<script type="text/javascript">
+    var idUsuario = 1;
+    var guardarropas = [];
+    function load(){
+        $.ajax({
+            asynch: false,
+            type: "GET",
+            url: "/user/" + idUsuario + "/guardarropa",
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                var htmlContent = [];
+                for(var x in response){
+                    var unGuardarropas = response[x];
+                    guardarropas.push(unGuardarropas);
+                }
+                armarHtmlCompleto();
+            }
+        });
+    };
+    function armarHtmlCompleto(){
+        var htmlContent = [];
+        for(var x in guardarropas){
+            var unGuardarropas = guardarropas[x];
+            htmlContent.push("<table>" + armarHtml(unGuardarropas) + "</table>");
+        }
+        $('#guardarropasContainer').html(htmlContent.join(""));
+    }
+    function armarHtml(guard){
+        var html = [];
+        var id = guard.id;
+        var nombre = guard.nombre;
+        html.push("<tr>");
+        html.push("<td>");
+        html.push(nombre);
+        html.push("</td>");
+        html.push("<td>");
+        html.push("<button onclick='modificarNombreGuardarropas("+id+");'>Modificar nombre</button>");
+        html.push("</td>");
+        html.push("<td>");
+        html.push("<button onclick='eliminarGuardarropas("+id+");'>Eliminar</button>");
+        html.push("</td>");
+        html.push("</tr>");
+        html.push("<tr>");
+        html.push("<td>");
+        html.push("<table>");
+        var prendas = guard.prendas;
+        if(prendas.length > 0){
+            for(var x in prendas) {
+                var prenda = prendas[x];
+                var idPrenda = prenda.id;
+                html.push("<tr><td> · </td>");
+                html.push("<td>");
+                html.push(prenda.nombre);
+                html.push("</td>");
+                html.push("<td>");
+                html.push("<button onclick='quitarPrenda("+id+","+idPrenda+");'>Quitar</button>");
+                html.push("</td>");
+                html.push("</tr>");
+            }
+        } else {
+            html.push("<tr>");
+            html.push("<td>");
+            html.push("(Este guardarropas está vacío)");
+            html.push("</td>");
+            html.push("</tr>");
+        }
+        html.push("</table>");
+        html.push("</td>");
+        html.push("</tr>");
+        return html.join("");
+    };
+    function modificarNombreGuardarropas(idGuardarropas){
+        var nuevoNombre = prompt("Elija un nuevo nombre", "Guardarropas " + idGuardarropas);
+        if(nuevoNombre != null && nuevoNombre != ""){
+            $.ajax({
+                asynch: false,
+                type: "PATCH",
+                url: "/user/" + idUsuario + "/guardarropa/" + idGuardarropas + "/mod?nombre=" + nuevoNombre,
+                data: {},
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response){
+                    for(var x in guardarropas){
+                        var unGuardarropas = guardarropas[x];
+                        if(unGuardarropas.id == idGuardarropas){
+                            unGuardarropas.nombre = nuevoNombre;
+                            break;
+                        }
+                    }
+                    armarHtmlCompleto();
+                }
+            });
+        }
+    };
+    function eliminarGuardarropas(idGuardarropas){
+        for(var x in guardarropas){
+            var unGuardarropas = guardarropas[x];
+            if(unGuardarropas.id == idGuardarropas){
+                if(unGuardarropas.prendas.length != 0){
+                    alert("Para eliminar el guardarropas, el mismo debe estar vacío.");
+                    return;
+                }
+                break;
+            }
+        }
+        $.ajax({
+            asynch: false,
+            type: "DELETE",
+            url: "/user/" + idUsuario + "/guardarropa/" + idGuardarropas,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function(response){
+                var temp = [];
+                for(var x in guardarropas){
+                    var unGuardarropas = guardarropas[x];
+                    if(unGuardarropas.id != idGuardarropas){
+                        temp.push(unGuardarropas);
+                    }
+                }
+                guardarropas = temp;
+                armarHtmlCompleto();
+            }
+        });
+    };
+    function quitarPrenda(idGuardarropas,idPrenda){
+        $.ajax({
+            asynch: false,
+            type: "DELETE",
+            url: "/user/" + idUsuario + "/guardarropa/" + idGuardarropas + "/" + idPrenda,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function(response){
+                var temp = [];
+                for(var x in guardarropas){
+                    var unGuardarropas = guardarropas[x];
+                    if(unGuardarropas.id == idGuardarropas){
+                        var prendas = unGuardarropas.prendas;
+                        for(var y in prendas){
+                            var prenda = prendas[y];
+                            if(prenda.id != idPrenda){
+                                temp.push(prenda);
+                            }
+                        }
+                        unGuardarropas.prendas = temp;
+                        break;
+                    }
+                }
+                armarHtmlCompleto();
+            }
+        });
+    };
+</script>
+</body>
+</html>
