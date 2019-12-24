@@ -11,6 +11,9 @@
             border: 2px solid #DDD;
             background-color: #ffffff;
         }
+        .ui-dialog-titlebar {
+            visibility: hidden;
+        }
         .ui-widget-overlay {
             position: fixed;
             background-color: #eeeeee;
@@ -40,7 +43,7 @@
     </div>
     <div>
         <div th:id="popup"></div>
-        <div th:id="popupWait"><p>Espere por favor...</p></div>
+        <div th:id="popupWait">Espere por favor...</div>
         <div th:id="popupResult"></div>
         <div th:id="eventosContainer"></div>
     </div>
@@ -53,30 +56,38 @@
             modal: true,
             show: "blind",
             hide: "blind",
-            width: 400,
+            width: 250,
+            height: 100,
             open: function(){
                 var idEvento = $(this).data('idEvento');
                 $(this).html(createPopupContent(idEvento));
                 loadSelector();
+                removeTitles();
             }
         });
         $("#popupWait").dialog({
             autoOpen: false,
             modal: true,
-            width: 400,
+            width: 150,
+            height: 100,
             show: "blind",
-            hide: "blind"
+            hide: "blind",
+            open: function(){
+                removeTitles();
+            }
         });
         $("#popupResult").dialog({
             autoOpen: false,
             modal: true,
-            width: 800,
+            width: 500,
             show: "blind",
             hide: "blind",
             open: function(){
                 var idEvento = $(this).data('idEvento');
+                var response = $(this).data('response');
                 var prendasDelAtuendo = $(this).data('prendasDelAtuendo');
-                $(this).html(createPopupResultContent(idEvento,prendasDelAtuendo));
+                $(this).html(createPopupResultContent(idEvento,response,prendasDelAtuendo));
+                removeTitles();
             }
         });
     });
@@ -91,6 +102,9 @@
         html.push("<select id='selectGuardarropas'></select>");
         html.push("</td>");
         html.push("</tr>");
+        html.push("</table>");
+        html.push("<br>");
+        html.push("<table>");
         html.push("<tr>");
         html.push("<td>");
         html.push("<button onclick='pedirSugerenciaDeAtuendo("+idEvento+");'>Pedir atuendo</button>");
@@ -99,7 +113,7 @@
         html.push("</table>");
         return html.join("");
     };
-    function createPopupResultContent(idEvento,prendas){
+    function createPopupResultContent(idEvento,response,prendas){
         var html = [];
         html.push("<table>");
         html.push("<tr>");
@@ -120,8 +134,13 @@
             html.push("</td>");
             html.push("</tr>");
         }
+        html.push("</tr>")
+        html.push("</table>");
+        html.push("<br>");
+        html.push("<table>");
+        html.push("<tr>")
         html.push("<td>");
-        html.push("<button onclick='aceptarSugerenciaDeAtuendo("+idEvento+","+JSON.stringify(prendas)+");'>Aceptar atuendo</button>");
+        html.push("<button onclick='aceptarSugerenciaDeAtuendo("+idEvento+","+JSON.stringify(response)+");'>Aceptar atuendo</button>");
         html.push("</td>");
         html.push("<td>");
         html.push("<button onclick='closeSecondPopup();'>Cancelar</button>");
@@ -200,6 +219,7 @@
         var esFormal = event.esFormal; //bool
         var fecha = event.fecha; //jsonObject
         var fechaNotificacion = event.fecha_notificacion; //jsonObject
+        var atuendo = event.atuendo;
         html.push("<tr>");
         html.push("<td>");
         html.push("Evento " + id + ": " + nombre);
@@ -223,8 +243,8 @@
         html.push("<tr>");
         html.push("<td>");
         html.push("· Atuendo:");
-        if(!true){
-            html.push(formatearAtuendo());
+        if(atuendo != null){
+            html.push(formatearAtuendo(atuendo));
         } else {
             html.push("(aún no elegido)");
             html.push("<tr>");
@@ -275,9 +295,11 @@
         }
         return valor;
     };
-    function formatearAtuendo(){
-        console.log("NYI");return;
+    function formatearAtuendo(atuendo){
+        var prendas = atuendo.prendasElegidas;
+        var html = [];
         if(prendas.length > 0){
+            html.push("<table>");
             for(var x in prendas) {
                 var prenda = prendas[x];
                 var idPrenda = prenda.id;
@@ -287,14 +309,16 @@
                 html.push("</td>");
                 html.push("</tr>");
             }
+            html.push("</table>");
         }
+        return html.join("");
     };
     function openFirstPopup(idEvento){
         $("#popup").data('idEvento',idEvento).dialog('open');
     }
-    function openSecondPopup(idEvento,prendas){
+    function openSecondPopup(idEvento,response,prendas){
         $("#popupWait").dialog('close');
-        $("#popupResult").data('idEvento',idEvento).data('prendasDelAtuendo',prendas).dialog('open');
+        $("#popupResult").data('idEvento',idEvento).data('response',response).data('prendasDelAtuendo',prendas).dialog('open');
     }
     function pedirSugerenciaDeAtuendo(idEvento){
         var idGuardarropas = document.getElementById("selectGuardarropas").value;
@@ -315,7 +339,11 @@
                     var prendaElegida = {"idPrenda": prenda.id, "nombre": prenda.nombre, "tela": prenda.tela, "color": prenda.colorPrimario};
                     prendasElegidas.push(prendaElegida);
                 }
-                openSecondPopup(idEvento,prendasElegidas);
+                openSecondPopup(idEvento,response,prendasElegidas);
+            },
+            "error": function(response){
+                $("#popupWait").dialog('close');
+                alert("No se pudo generar un atuendo para este evento. Es posible que no existan prendas adecuadas.");
             }
         });
     };
@@ -323,9 +351,7 @@
         $("#popupResult").dialog('close');
     }
     function aceptarSugerenciaDeAtuendo(idEvento,atuendo){
-        console.log(idEvento);
-        console.log(atuendo);
-        var payload = {};
+        var payload = atuendo;
         $.ajax({
             asynch: false,
             type: "POST",
@@ -336,9 +362,20 @@
             success: function(response){
                 alert("El atuendo para el evento se ha guardado correctamente.");
                 closeSecondPopup();
+                location.reload();
+            },
+            error: function(response){
+                alert("Hubo un error al guardar el atuendo.");
             }
         });
-    }
+    };
+    function removeTitles(){
+        var clases = document.getElementsByClassName('ui-dialog-titlebar');
+        var tam = clases.length;
+        for(var i=0;i<tam;i++){
+            clases[0].remove();
+        }
+    };
 </script>
 </body>
 </html>
