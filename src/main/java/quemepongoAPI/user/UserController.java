@@ -97,11 +97,6 @@ class UserController {
     }
 
     /* Get de un atuendo aleatorio */
-    /*
-        PARAMETROS: custom = true -- lee el requestBody para saber que partes del cuerpo pide el usuario
-        REQUEST BODY: --ejemplo para custom = true ["CABEZA", "PIERNAS", "CALZADO"]
-                      --nada si custom = false
-    */
     @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
     String one(@PathVariable Long idUser, @PathVariable Long idGuard,
                @RequestParam(name = "parts", required = false) String partesCuerpo,
@@ -166,16 +161,34 @@ class UserController {
 
     /* Get de atuendos aleatorios de todos los guardarropas */
     @GetMapping("/user/{idUser}/guardarropa/random")
-    String all(@PathVariable Long idUser) {
+    String all(@PathVariable Long idUser,
+               @RequestParam(name = "parts", required = false) String partesCuerpo,
+               @RequestParam(name = "custom", required = false) boolean custom) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException(idUser));
         List<Guardarropa> guardarropas = user.getGuardarropas();
 
+        final List<PartesCuerpo> listaPartes = new ArrayList<>();
+        if(custom)
+        {
+            final String[] listaPartesAsArray = partesCuerpo.split("-");
+            for(final String parte : listaPartesAsArray){
+                listaPartes.add(PartesCuerpo.fromInt(Integer.parseInt(parte)));
+            }
+        }
+        else
+        {
+            listaPartes.add(PartesCuerpo.TORSO);
+            listaPartes.add(PartesCuerpo.PIERNAS);
+            listaPartes.add(PartesCuerpo.CABEZA);
+            listaPartes.add(PartesCuerpo.CALZADO);
+        }
+
         return guardarropas.stream()
                 .map(g -> {
                     Atuendo a;
-                    a = g.crearAtuendoAleatorio();
+                    a = g.crearAtuendoAleatorio(listaPartes);
                     return gson.toJson(a);
                 })
                 .collect(Collectors.toList()).toString();

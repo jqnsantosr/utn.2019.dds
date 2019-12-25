@@ -53,6 +53,18 @@ public class Prenda implements Comparable<Prenda>{
         if(!tipo.getTelasPosibles().contains(tela) || !(tipo.getPartesCuerpo().equals(partes))) throw (new PrendaIncoherenteException());
     }
 
+    public Prenda(String nombre, Tela tela, List<PartesCuerpo> partes, TipoPrenda tipo, String colorPrimario, boolean formal) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.colorPrimario = colorPrimario;
+        this.tela = tela;
+        this.partes = partes;
+        this.esFormal = formal;
+
+        Collections.sort(this.partes);
+        if(!tipo.getTelasPosibles().contains(tela) || !(tipo.getPartesCuerpo().equals(partes))) throw (new PrendaIncoherenteException());
+    }
+
     public Prenda(String nombre, Tela tela, TipoPrenda tipo, String colorPrimario, String colorSecundario){
         this.nombre = nombre;
         this.tipo = tipo;

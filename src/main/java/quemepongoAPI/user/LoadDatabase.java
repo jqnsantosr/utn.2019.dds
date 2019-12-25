@@ -26,6 +26,7 @@ class LoadDatabase {
         return args -> {
             TipoPrenda remeraLiviana = new TipoPrenda("Remera", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 5);
             TipoPrenda remeraPesada = new TipoPrenda("Remera Pesada", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 15);
+            TipoPrenda musculosa = new TipoPrenda("Musculosa", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 4);
             TipoPrenda camisa = new TipoPrenda("Camisa", Collections.singletonList(ALGODON), Collections.singletonList(TORSO), 10);
             TipoPrenda pantalonLiviano = new TipoPrenda("Pantalon", Collections.singletonList(JEAN), Collections.singletonList(PIERNAS), 10);
             TipoPrenda pantalonCorto = new TipoPrenda("Pantalon Corto", Arrays.asList(JEAN, ALGODON, SINTETICA), Collections.singletonList(PIERNAS), 5);
@@ -38,6 +39,7 @@ class LoadDatabase {
             TipoPrenda zapato = new TipoPrenda("Zapato", Arrays.asList(CUERO, CUERINA), Collections.singletonList(CALZADO), 4);
             TipoPrenda vestido = new TipoPrenda("Vestido", Arrays.asList(SEDA, LYCRA, ALGODON), Arrays.asList(TORSO, PIERNAS), 2);
             TipoPrenda pollera = new TipoPrenda("Pollera", Arrays.asList(SEDA, LYCRA, ALGODON), Collections.singletonList(PIERNAS), 2);
+            TipoPrenda miniFalda = new TipoPrenda("Mini Falda", Arrays.asList(SEDA, LYCRA, ALGODON, CUERO), Collections.singletonList(PIERNAS), 2);
             TipoPrenda anteojos = new TipoPrenda("Anteojos", Arrays.asList(SINTETICA), Collections.singletonList(OJOS), 0);
             TipoPrenda traje_de_banio = new TipoPrenda("Traje de Baño", Arrays.asList(SINTETICA), Arrays.asList(TORSO, PIERNAS), 0);
             TipoPrenda traje_entero = new TipoPrenda("Traje Entero", Arrays.asList(SINTETICA), Arrays.asList(TORSO, PIERNAS, CALZADO, CABEZA), 8);
@@ -56,18 +58,14 @@ class LoadDatabase {
             Prenda adidasAzules = new Prenda("Adidas azules", LONA, Collections.singletonList(CALZADO), zapatilla, "Azul");
 
             //Guardarropa 2
-            Prenda vestidoRosa = new Prenda("Vestido Rosa", LYCRA, Arrays.asList(TORSO, PIERNAS), vestido, "Rosa");
-            Prenda polleraVioleta = new Prenda("Pollera Violeta", SEDA, Collections.singletonList(PIERNAS), pollera, "Violeta");
-            Prenda sombreroGrande = new Prenda("Sombrero Grande", PANA, Collections.singletonList(CABEZA), sombrero, "Blanca");
-            Prenda zapatosConTacosYPlataforma = new Prenda("Tacos con Plataforma", CUERO, Collections.singletonList(CALZADO), zapato, "Negro");
-            Prenda pantalon_thor = new Prenda("Pantalon de Thor", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Negro");
-            Prenda pantalon_flash = new Prenda("Pantalon de Flash", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Rojo");
-            Prenda casco_ironman = new Prenda("Casco Iron Man", CUERO, Collections.singletonList(CABEZA), sombrero, "Rojo");
-            Prenda remeraBlanca = new Prenda("Remera Blanca", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Blanco");
-            Prenda camisaBlanca = new Prenda("Camisa Blanca", ALGODON, Collections.singletonList(TORSO), camisa, "Blanco");
+            Prenda vestidoRosa = new Prenda("Vestido Rosa", LYCRA, Arrays.asList(TORSO, PIERNAS), vestido, "Rosa", true);
+            Prenda polleraVioleta = new Prenda("Pollera Violeta", SEDA, Collections.singletonList(PIERNAS), pollera, "Violeta", true);
+            Prenda sombreroGrande = new Prenda("Sombrero Grande", PANA, Collections.singletonList(CABEZA), sombrero, "Blanca", true);
+            Prenda zapatosConTacosYPlataforma = new Prenda("Tacos con Plataforma", CUERO, Collections.singletonList(CALZADO), zapato, "Negro", true);
+            Prenda remeraBlanca = new Prenda("Remera Blanca", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Blanco", true);
+            Prenda camisaBlanca = new Prenda("Camisa Blanca", ALGODON, Collections.singletonList(TORSO), camisa, "Blanco", true);
 
             //Guardarropa 3
-            Prenda bikiniRoja = new Prenda("Bikini Roja", SINTETICA, Arrays.asList(TORSO, PIERNAS), traje_de_banio, "Roja");
             Prenda sombreroVaquero = new Prenda("Sombrero de Vaquero", CUERO, Collections.singletonList(CABEZA), sombrero, "Marron");
             Prenda zapatosConTacosYPlataformaRojos = new Prenda("Tacos con Plataforma", CUERO, Collections.singletonList(CALZADO), zapato, "Rojo");
             Prenda anteojosSol = new Prenda("Anteojos de Sol", SINTETICA, Arrays.asList(OJOS), anteojos, "Negro");
@@ -75,31 +73,43 @@ class LoadDatabase {
             Prenda botas_cpt_america = new Prenda("Botas de Capitan America", CUERO, Collections.singletonList(CALZADO), zapato, "Blanco?");
             Prenda remeraVioleta = new Prenda("Remera Violeta", ALGODON, Collections.singletonList(TORSO), remeraPesada, "Violeta");
             Prenda camisaVioleta = new Prenda("Camisa Violeta", ALGODON, Collections.singletonList(TORSO), camisa, "Violeta");
+            Prenda pantalon_thor = new Prenda("Pantalon de Thor", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Negro");
+            Prenda pantalon_flash = new Prenda("Pantalon de Flash", JEAN, Collections.singletonList(PIERNAS), pantalonLiviano, "Rojo");
+            Prenda casco_ironman = new Prenda("Casco Iron Man", CUERO, Collections.singletonList(CABEZA), sombrero, "Rojo");
 
             //guadarropa 4
             Prenda sandaliasVerdes = new Prenda("Sandalias Verdes", LONA, Collections.singletonList(CALZADO), zapatilla, "Verde");
+            Prenda bikiniRoja = new Prenda("Bikini Roja", SINTETICA, Arrays.asList(TORSO, PIERNAS), traje_de_banio, "Roja");
             Prenda bikiniAzul = new Prenda("Bikini Azul", SINTETICA, Arrays.asList(TORSO, PIERNAS), traje_de_banio, "Azul");
             Prenda sombreroVaquera = new Prenda("Sombrero de Vaquera", CUERO, Collections.singletonList(CABEZA), sombrero, "Marron");
             Prenda vestidoPurpura = new Prenda("Vestido Purpura", LYCRA, Arrays.asList(TORSO, PIERNAS), vestido, "Purpura");
             Prenda polleraRosa = new Prenda("Pollera Rosa", SEDA, Collections.singletonList(PIERNAS), pollera, "Rosa");
             Prenda remeraFloreada = new Prenda("Remera Floreada", ALGODON, Collections.singletonList(TORSO), remeraLiviana, "Multicolor");
             Prenda anteojosSol2 = new Prenda("Anteojos de Sol Grandes", SINTETICA, Arrays.asList(OJOS), anteojos, "Negro");
+            Prenda anteojosNoche = new Prenda("Anteojos de Noche", SINTETICA, Arrays.asList(OJOS), anteojos, "Verde");
             Prenda nikesBlancas = new Prenda("Nikes Blancas", LONA, Collections.singletonList(CALZADO), zapatilla, "Blanco");
             Prenda adidasNegras = new Prenda("Adidas Negras", LONA, Collections.singletonList(CALZADO), zapatilla, "Negro");
             Prenda camisaNegra = new Prenda("Camisa Negra", ALGODON, Collections.singletonList(TORSO), camisa, "Negro");
             Prenda jeanNegro2 = new Prenda("Jean Negro Ajustado", JEAN, Collections.singletonList(PIERNAS), pantalonPesado, "Negro");
             Prenda gorraBlanca2 = new Prenda("Gorra Blanca Nike", ALGODON, Collections.singletonList(CABEZA), gorra, "Blanca");
+            Prenda botasMarrones = new Prenda("Botas Marrones", CUERO, Collections.singletonList(CALZADO), zapato, "Marron");
+            Prenda musculosaRoja = new Prenda("Musculosa Roja", ALGODON, Collections.singletonList(TORSO), musculosa, "Rojo");
+            Prenda miniFaldaNegra = new Prenda("Mini Falda Negra", CUERO, Collections.singletonList(PIERNAS), miniFalda, "Negro");
+            Prenda camperaBlanca = new Prenda("Campera Blanca", ALGODON, Collections.singletonList(TORSO), campera, "Blanco");
+            Prenda camisaBlanca2 = new Prenda("Camisa Blanca", ALGODON, Collections.singletonList(TORSO), camisa, "Blanco", true);
 
             List<Prenda> prendasDelGuardarropaComun = Arrays.asList(remeraAzul, remeraNegra, jeanAzul, jeanNegro, gorraBlanca, gorraRoja, nikesAmarillas, adidasAzules);
             Guardarropa g1 = new Guardarropa("Guardarropa Comun", prendasDelGuardarropaComun);
 
-            List<Prenda> prendasDelGuardarropaRaro1 = Arrays.asList(vestidoRosa, polleraVioleta, sombreroGrande, zapatosConTacosYPlataforma, casco_ironman, pantalon_flash, remeraBlanca, camisaBlanca);
-            Guardarropa g2 = new Guardarropa("Guardarropa Raro1", prendasDelGuardarropaRaro1);
+            List<Prenda> prendasDelGuardarropaFormal = Arrays.asList(vestidoRosa, polleraVioleta, sombreroGrande, zapatosConTacosYPlataforma, remeraBlanca, camisaBlanca);
+            Guardarropa g2 = new Guardarropa("Guardarropa Formal", prendasDelGuardarropaFormal);
 
-            List<Prenda> prendasDelGuardarropaRaro2 = Arrays.asList(bikiniRoja, sombreroVaquero, zapatosConTacosYPlataformaRojos, anteojosSol, trajeDeBatman, botas_cpt_america, pantalon_thor, remeraVioleta, camisaVioleta);
-            Guardarropa g3 = new Guardarropa("Guardarropa Raro2", prendasDelGuardarropaRaro2);
+            List<Prenda> prendasDelGuardarropaRaro2 = Arrays.asList(sombreroVaquero, zapatosConTacosYPlataformaRojos, anteojosSol, trajeDeBatman,
+                    botas_cpt_america, pantalon_thor, remeraVioleta, camisaVioleta, casco_ironman, pantalon_flash);
+            Guardarropa g3 = new Guardarropa("Guardarropa Raro", prendasDelGuardarropaRaro2);
 
-            List<Prenda> prendasDelGuardarropaVerano = Arrays.asList(bikiniAzul, sombreroVaquera, vestidoPurpura, polleraRosa, remeraFloreada, anteojosSol2, nikesBlancas, adidasNegras, camisaNegra, jeanNegro2, gorraBlanca2, sandaliasVerdes);
+            List<Prenda> prendasDelGuardarropaVerano = Arrays.asList(bikiniRoja, bikiniAzul, sombreroVaquera, vestidoPurpura, polleraRosa, remeraFloreada, anteojosSol2, nikesBlancas, adidasNegras,
+                    camisaNegra, jeanNegro2, gorraBlanca2, sandaliasVerdes, anteojosNoche, botasMarrones, musculosaRoja, miniFaldaNegra, camperaBlanca, camisaBlanca2);
             Guardarropa g4 = new Guardarropa("Guardarropa de Verano 2019", prendasDelGuardarropaVerano);
 
             log.info("Preloading " + repository.save(new User("Paula", "12346", Arrays.asList(g1, g2, g3,g4))));
