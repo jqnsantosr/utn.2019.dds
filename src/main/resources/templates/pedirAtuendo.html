@@ -140,21 +140,33 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(response){
-                var prendas = response.prendasElegidas;
-                var partes = response.partesCuerpoACubrir;
-                $('#results').html(crearTablaResultados(prendas));
+                if(allGuardarropasSelected){
+                    var all = [];
+                    for(var x in response){
+                        var responseElem = response[x];
+                        var prendas = responseElem.prendasElegidas;
+                        var partes = responseElem.partesCuerpoACubrir;
+                        all.push(crearTablaResultados(prendas));
+                        all.push("<br>");
+                    }
+                    $('#results').html(all.join(""));
+                }else{
+                    var prendas = response.prendasElegidas;
+                    var partes = response.partesCuerpoACubrir;
+                    $('#results').html(crearTablaResultados(prendas));
+                }
             }
         });
     };
     function crearTablaResultados(prendas){
         var html = [];
-        html.push("<table><tr>");
-        html.push("<td>Nombre de la prenda</td>");
-        html.push("<td>Tipo de prenda</td>");
-        html.push("<td>Tela</td>");
-        html.push("<td>Partes del cuerpo</td>");
-        html.push("<td>Color primario</td>");
-        html.push("<td>Es formal?</td>");
+        html.push("<table border='1'><tr>");
+        html.push("<th>Nombre de la prenda</th>");
+        html.push("<th>Tipo de prenda</th>");
+        html.push("<th>Tela</th>");
+        html.push("<th>Partes del cuerpo</th>");
+        html.push("<th>Color primario</th>");
+        html.push("<th>Es formal?</th>");
         html.push("</tr>");
         for(var x in prendas){
             html.push("<tr>");
@@ -179,7 +191,7 @@
             var colorPrimario = prenda.colorPrimario; //string;
             html.push("<td>" + colorPrimario + "</td>");
             var esFormal = prenda.esFormal; //bool
-            html.push("<td>" + esFormal + "</td>");
+            html.push("<td>" + (esFormal ? "SI" : "NO") + "</td>");
             html.push("</tr>");
         }
         html.push("</table>");
