@@ -15,7 +15,7 @@ public class User {
     @GeneratedValue
     Long id;
     private String nombre;
-    private String googleId;
+    private String email;
     private String numeroCelular;
     @OneToMany(cascade = {CascadeType.ALL})
     private List<Guardarropa> guardarropas;
@@ -27,21 +27,21 @@ public class User {
 
     }
 
-    User(String username, String googleId) {
+    User(String username, String email) {
         this.nombre = username;
-        this.googleId = googleId;
+        this.email = email;
     }
 
-    User(String username, String googleId, List<Guardarropa> guard) {
+    User(String username, String email, List<Guardarropa> guard) {
         this.nombre = username;
-        this.googleId = googleId;
+        this.email = email;
         this.guardarropas = guard;
     }
 
-    public User(String username, String googleId, String numeroCelular, boolean premium)
+    public User(String username, String email, String numeroCelular, boolean premium)
     {
         this.nombre = username;
-        this.googleId = googleId;
+        this.email = email;
         this.guardarropas = new ArrayList<>();
         this.numeroCelular = ChequearNumeroCelular(numeroCelular);
         this.esPremium = premium;
@@ -84,13 +84,18 @@ public class User {
     }
 
     void crearPrendaGuardarropas(Prenda prenda, Long idGuardarropa) {
-        traerGuardarropasPorId(idGuardarropa).ifPresent(guardarropa -> {
-            try {
-                guardarropa.agregarPrenda(prenda);
-            } catch (CantidadMaximaPrendaSuperadaException e) {
-                e.printStackTrace();
-            }
-        });
+        Optional<Guardarropa> unGuardarropa = traerGuardarropasPorId(idGuardarropa);
+        if(unGuardarropa.isPresent())
+            unGuardarropa.get().agregarPrenda(prenda);
+    }
+
+    boolean puedeAgregarPrenda(long idGuardarropa)
+    {
+        Optional<Guardarropa> unGuardarropa = traerGuardarropasPorId(idGuardarropa);
+        if(unGuardarropa.isPresent())
+            return unGuardarropa.get().puedeAgregarPrenda();
+        else
+            throw (new GuardarropasNotFoundException(idGuardarropa));
     }
 
     void crearEvento(Evento unEvento) { this.eventos.add(unEvento); }

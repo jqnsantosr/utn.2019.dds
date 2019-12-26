@@ -1,6 +1,11 @@
 package quemepongoAPI.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.hateoas.Resource;
@@ -12,6 +17,7 @@ import quemepongoAPI.clima.Clima;
 import quemepongoAPI.clima.ClimaService;
 import quemepongoAPI.clima.ClimateApisNotWorkingException;
 import quemepongoAPI.evento.Evento;
+import quemepongoAPI.guardarropa.CantidadMaximaPrendaSuperadaException;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.lugar.Lugar;
 import quemepongoAPI.lugar.LugarService;
@@ -23,6 +29,7 @@ import quemepongoAPI.prenda.TipoPrenda;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -261,6 +268,25 @@ class UserController {
         return gson.toJson(tipoPrendaRepository.findAll());
     }
 
+    /* Post de un usuario: google id token.*/
+    @PostMapping("/signIn")
+    User userSignIn(@RequestParam String idToken) throws Exception {
+        GoogleIdToken.Payload payload = GoogleIdVerifier.getPayload(idToken);
+
+        String userId = payload.getSubject();
+        System.out.println("User ID: " + userId);
+        String email = payload.getEmail();
+
+        Optional<User> user = repository.findByEmail(email);
+        if(user.isPresent())
+            return repository.save(user.get());
+        else {
+            //Nuevo Usuario
+            User nuevoUser = new User((String)payload.get("name"), email);
+            return repository.save(nuevoUser);
+        }
+    }
+
     /* Post de un usuario: creación de cuenta.*/
     @PostMapping("/user")
     User newUser(@RequestBody User newUser) {
@@ -294,7 +320,9 @@ class UserController {
 
     /* Post de un prenda: creación de prendas para ese guardarropas.*/
     @PostMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda")
-    User newPrendaForGuardarropas(@RequestBody JsonNode prendaAsJsonNode, @PathVariable Long idUser, @PathVariable Long idGuardarropa) {
+    User newPrendaForGuardarropas(@RequestBody JsonNode prendaAsJsonNode,
+                                  @PathVariable Long idUser,
+                                  @PathVariable Long idGuardarropa) {
         final Optional<TipoPrenda> tipo = tipoPrendaRepository.findById(prendaAsJsonNode.get("tipo").asLong());
         Prenda prenda = new Prenda(prendaAsJsonNode,tipo.get());
         User user = repository.findById(idUser)
@@ -304,6 +332,8 @@ class UserController {
             if (user.existePrendaEnAlgunGuardarropas(prenda)) {
                 throw (new PrendaRepetidaException(prenda));
             } else {
+                if(!user.puedeAgregarPrenda(idGuardarropa))
+                    throw (new CantidadMaximaPrendaSuperadaException("Guardarropas Lleno, Compre Premium"));
                 user.crearPrendaGuardarropas(prenda, idGuardarropa);
             }
         }

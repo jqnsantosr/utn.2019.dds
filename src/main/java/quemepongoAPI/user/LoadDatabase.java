@@ -112,7 +112,7 @@ class LoadDatabase {
                     camisaNegra, jeanNegro2, gorraBlanca2, sandaliasVerdes, anteojosNoche, botasMarrones, musculosaRoja, miniFaldaNegra, camperaBlanca, camisaBlanca2);
             Guardarropa g4 = new Guardarropa("Guardarropa de Verano 2019", prendasDelGuardarropaVerano);
 
-            log.info("Preloading " + repository.save(new User("Paula", "12346", Arrays.asList(g1, g2, g3,g4))));
+            log.info("Preloading " + repository.save(new User("Paula", "fernamera11@gmail.com", Arrays.asList(g1, g2, g3,g4))));
 
             tipoPrendaRep.save(remeraLiviana);
             tipoPrendaRep.save(remeraPesada);

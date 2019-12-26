@@ -60,10 +60,17 @@ public class Guardarropa {
         cantidad_maxima_prendas = Integer.MAX_VALUE;
     }
 
-    public void agregarPrenda(Prenda prenda) throws CantidadMaximaPrendaSuperadaException {
+    public void agregarPrenda(Prenda prenda) {
         if((prendas.size() + 1) > cantidad_maxima_prendas)
-            throw new CantidadMaximaPrendaSuperadaException("Guardarropas Lleno, Compre Premium");
+            throw (new CantidadMaximaPrendaSuperadaException("No se puede agregar mas prendas"));
         prendas.add(prenda);
+    }
+
+    public boolean puedeAgregarPrenda()
+    {
+        if((prendas.size() + 1) > cantidad_maxima_prendas)
+            return false;
+        return true;
     }
 
     public void quitarPrenda(Prenda prenda){
