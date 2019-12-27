@@ -108,6 +108,10 @@
         });
     };
     function pedirAtuendo(){
+        if(selectGuardarropas.selectedIndex == -1){
+            alert("No hay guardarropas");
+            return;
+        }
         var partesCuerpo = [];
         var idGuardarropas = selectGuardarropas[selectGuardarropas.selectedIndex].value;
         var metodo = selectMetodo[selectMetodo.selectedIndex].value;
@@ -141,7 +145,7 @@
         $.ajax({
             asynch: false,
             type: "GET",
-            url: "/user/guardarropa/" + urlEnd + "?idToken=" + idToken,
+            url: "/user/guardarropa/" + urlEnd + "&idToken=" + idToken,
             data: {},
             contentType: "application/json; charset=utf-8",
             dataType: "json",

@@ -326,7 +326,6 @@ class UserController {
     /* Post de un prenda: creación de prendas para ese guardarropas.*/
     @PostMapping("/user/guardarropa/{idGuardarropa}/prenda")
     User newPrendaForGuardarropas(@RequestBody JsonNode prendaAsJsonNode,
-                                  @PathVariable Long idUser,
                                   @PathVariable Long idGuardarropa,
                                   @RequestParam(name = "idToken", required = true) String idToken) throws Exception{
         final Optional<TipoPrenda> tipo = tipoPrendaRepository.findById(prendaAsJsonNode.get("tipo").asLong());
