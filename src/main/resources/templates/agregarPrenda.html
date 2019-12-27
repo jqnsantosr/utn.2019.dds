@@ -16,8 +16,11 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Agregar prenda</h1>
+        <h1>Agregar prenda
+        <button onclick="window.history.back();">Volver</button>
+        </h1>
     </div>
+    <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
         <table>
             <tr>
@@ -83,15 +86,16 @@
     var partesCuerpo = [];
     var checkboxes = [];
     var materiales = [];
-    var idUsuario = 1;
+    var idToken;
     function load(){
+        idToken = document.getElementById("authTokenDiv").innerHTML.replace("<span>","").replace("</span>","");
         loadGuardarropas();
     };
     function loadGuardarropas(){
         $.ajax({
             asynch: false,
             type: "GET",
-            url: "/user/" + idUsuario + "/guardarropa",
+            url: "/user/guardarropa?idToken=" + idToken,
             data: {},
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -105,6 +109,9 @@
                     selectGuardarropas.add(option);
                 }
                 loadTiposPrenda();
+            },
+            error: function(response){
+                alert("Ha ocurrido un error.");
             }
         });
     };
@@ -172,7 +179,6 @@
     };
     function agregarPrenda(){
         var idGuardarropa = selectGuardarropas[selectGuardarropas.selectedIndex].value;
-        ///user/{idUser}/guardarropa/{idGuardarropa}/prenda
         //podria validar que ese nombre no este en la lista que me traje inicialmente
         var valNombre = nombre.value;//$("#nombre").value
         var valTipo = selectTipo[selectTipo.selectedIndex].value;
@@ -197,13 +203,16 @@
         $.ajax({
             asynch: false,
             type: "POST",
-            url: "/user/" + idUsuario + "/guardarropa/" + idGuardarropa + "/prenda",
+            url: "/user/guardarropa/" + idGuardarropa + "/prenda?idToken=" + idToken,
             data: JSON.stringify(payload),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(response){
                 alert("La prenda se ha guardado correctamente.");
             },
+            error: function(response){
+                alert("Ha ocurrido un error.");
+            }
         });
     };
     function tiposPrendaChanged(){

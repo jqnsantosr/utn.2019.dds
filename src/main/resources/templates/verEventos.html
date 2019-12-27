@@ -39,8 +39,11 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Ver eventos</h1>
+        <h1>Ver eventos<button onclick="window.history.back();">Volver</button>
+        </h1>
     </div>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+    <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
         <div th:id="popup"></div>
         <div th:id="popupWait">Espere por favor...</div>
@@ -50,6 +53,7 @@
 
 </main>
 <script type="text/javascript">
+    var idToken;
     $(function() {
         $("#popup").dialog({
             autoOpen: false,
@@ -93,7 +97,6 @@
     });
     var eventos = [];
     var guardarropas = [];
-    var idUsuario = 1;
     function createPopupContent(idEvento){
         var html = [];
         html.push("<table>");
@@ -115,14 +118,22 @@
     };
     function createPopupResultContent(idEvento,response,prendas){
         var html = [];
-        html.push("<table>");
+        html.push("<table border='1'>");
+        html.push("<tr>");
+        html.push("<th>");
+        html.push("Nombre");
+        html.push("</th>");
+        html.push("<th>");
+        html.push("Tela");
+        html.push("</th>");
+        html.push("<th>");
+        html.push("Color");
+        html.push("</th>");
+        html.push("</tr>");
         html.push("<tr>");
         for(var x in prendas){
             var prenda = prendas[x];
             html.push("<tr>");
-            html.push("<td>");
-            html.push(prenda.id);
-            html.push("</td>");
             html.push("<td>");
             html.push(prenda.nombre);
             html.push("</td>");
@@ -160,6 +171,7 @@
         }
     };
     function load(){
+        idToken = document.getElementById("authTokenDiv").innerHTML.replace("<span>","").replace("</span>","");
         loadGuardarropas();
         loadEventos();
     };
@@ -167,7 +179,7 @@
         $.ajax({
             asynch: false,
             type: "GET",
-            url: "/user/" + idUsuario + "/guardarropa",
+            url: "/user/guardarropa?idToken=" + idToken,
             data: {},
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -177,6 +189,9 @@
                     var unGuardarropas = response[x];
                     guardarropas.push(unGuardarropas);
                 }
+            },
+            error: function(response){
+                alert("Ha ocurrido un error.");
             }
         });
     };
@@ -184,7 +199,7 @@
         $.ajax({
             asynch: false,
             type: "GET",
-            url: "/user/" + idUsuario + "/evento",
+            url: "/user/evento?idToken=" + idToken,
             data: {},
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -193,6 +208,9 @@
                     eventos.push(response[x]);
                 }
                 armarHtmlCompleto();
+            },
+            error: function(response){
+                alert("Ha ocurrido un error.");
             }
         });
     };
@@ -237,7 +255,7 @@
         html.push("</tr>");
         html.push("<tr>");
         html.push("<td>");
-        html.push("· Formal: " + esFormal);
+        html.push("· Formal: " + (esFormal ? "SI" : "NO"));
         html.push("</td>");
         html.push("</tr>");
         html.push("<tr>");
@@ -327,7 +345,7 @@
         $.ajax({
             asynch: false,
             type: "GET",
-            url: "/user/" + idUsuario + "/guardarropa/" + idGuardarropas + "/evento/" + idEvento + "/atuendo",
+            url: "/user/guardarropa/" + idGuardarropas + "/evento/" + idEvento + "/atuendo?idToken=" + idToken,
             data: {},
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -355,7 +373,7 @@
         $.ajax({
             asynch: false,
             type: "POST",
-            url: "/user/" + idUsuario + "/evento/" + idEvento + "/aceptar",
+            url: "/user/evento/" + idEvento + "/aceptar?idToken=" + idToken,
             data: JSON.stringify(payload),
             contentType: "application/json; charset=utf-8",
             dataType: "json",

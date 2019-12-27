@@ -11,52 +11,53 @@ import org.springframework.stereotype.Controller;
 //@RequestMapping("/gui")
 class FrontController {
 
-    @GetMapping("/")
-    public String loginGui(final Model model) {
-       //model.addAttribute("name","pepito");
+    @GetMapping("/login")
+    public String loginGui(@RequestParam(name="logoutNow",required = false,defaultValue = "")String logout, final Model model) {
+       model.addAttribute("logoutNow", logout);
        return "login";
     }
 
-    //gui/main?name=asddsa
     @GetMapping("/gui/main")
-    public String mainWindow(@RequestParam(name="name",required = false,defaultValue = "")String nombreParametro, final Model model) {
-        model.addAttribute("nombre",nombreParametro);
+    public String mainWindow(@RequestParam(name="authToken",required = true,defaultValue = "")String authToken, @RequestParam(name="name",required = false,defaultValue = "")String name, final Model model) {
+        model.addAttribute("authToken",authToken);
+        model.addAttribute("name",name);
+        //addToLoggedUsers(authToken);
         return "mainWindow";
     }
 
     @GetMapping("/gui/prenda")
-    public String guiPrenda(@RequestParam(name="name",required = false,defaultValue = "")String nombreParametro, final Model model) {
-        model.addAttribute("nombre",nombreParametro);
+    public String guiPrenda(@RequestParam(name="authToken",required = true,defaultValue = "")String authToken, final Model model) {
+        model.addAttribute("authToken",authToken);
         return "agregarPrenda";
     }
 
     @GetMapping("/gui/evento")
-    public String guiEvento(@RequestParam(name="name",required = false,defaultValue = "")String nombreParametro, final Model model) {
-        model.addAttribute("nombre",nombreParametro);
+    public String guiEvento(@RequestParam(name="authToken",required = true,defaultValue = "")String authToken, final Model model) {
+        model.addAttribute("authToken",authToken);
         return "crearEvento";
     }
 
     @GetMapping("/gui/guardarropas")
-    public String guiGuardarropas(@RequestParam(name="name",required = false,defaultValue = "")String nombreParametro, final Model model) {
-        model.addAttribute("nombre",nombreParametro);
+    public String guiGuardarropas(@RequestParam(name="authToken",required = true,defaultValue = "")String authToken, final Model model) {
+        model.addAttribute("authToken",authToken);
         return "crearGuardarropas";
     }
 
     @GetMapping("/gui/atuendo")
-    public String guiAtuendo(@RequestParam(name="name",required = false,defaultValue = "")String nombreParametro, final Model model) {
-        model.addAttribute("nombre",nombreParametro);
+    public String guiAtuendo(@RequestParam(name="authToken",required = true,defaultValue = "")String authToken, final Model model) {
+        model.addAttribute("authToken",authToken);
         return "pedirAtuendo";
     }
 
     @GetMapping("/gui/verGuardarropas")
-    public String guiVerGuardarropas(@RequestParam(name="name",required = false,defaultValue = "")String nombreParametro, final Model model) {
-        model.addAttribute("nombre",nombreParametro);
+    public String guiVerGuardarropas(@RequestParam(name="authToken",required = true,defaultValue = "")String authToken, final Model model) {
+        model.addAttribute("authToken",authToken);
         return "verGuardarropas";
     }
 
     @GetMapping("/gui/verEventos")
-    public String guiVerEventos(@RequestParam(name="name",required = false,defaultValue = "")String nombreParametro, final Model model) {
-        model.addAttribute("nombre",nombreParametro);
+    public String guiVerEventos(@RequestParam(name="authToken",required = true,defaultValue = "")String authToken, final Model model) {
+        model.addAttribute("authToken",authToken);
         return "verEventos";
     }
 

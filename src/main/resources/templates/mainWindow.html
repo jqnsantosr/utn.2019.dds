@@ -19,44 +19,74 @@
     <div class="starter-template">
         <h1>Ventana Principal</h1>
         <h2>
-            <span th:text="'Hola, ' + ${nombre}"></span>
+            <span th:text="'Hola, ' + ${name}"></span>
         </h2>
     </div>
+    <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
         <table>
             <tr>
                 <td>
-                    <button onclick="window.location.href = '/gui/guardarropas';">Crear guardarropa</button>
+                    <button id="crearGuardarropasButton">Crear guardarropa</button>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button onclick="window.location.href = '/gui/atuendo';">Pedir atuendo</button>
+                    <button id="pedirAtuendoButton">Pedir atuendo</button>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button onclick="window.location.href = '/gui/prenda';">Agregar prenda a guardarropa</button>
+                    <button id="agregarPrendaButton">Agregar prenda a guardarropa</button>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button onclick="window.location.href = '/gui/evento';">Crear evento</button>
+                    <button id="crearEventoButton">Crear evento</button>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button onclick="window.location.href = '/gui/verGuardarropas';">Ver guardarropas</button>
+                    <button id="verGuardarropasButton">Ver guardarropas</button>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button onclick="window.location.href = '/gui/verEventos';">Ver eventos</button>
+                    <button id="verEventosButton">Ver eventos</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="logoutButton">Salir</button>
                 </td>
             </tr>
         </table>
     </div>
 
 </main>
+<script type="text/javascript">
+    var authTokenValue = document.getElementById("authTokenDiv").innerHTML.replace("<span>","").replace("</span>","");
+    document.getElementById("crearGuardarropasButton").onclick = function(){
+        window.location.href = '/gui/guardarropas?authToken=' + authTokenValue;
+    };
+    document.getElementById("pedirAtuendoButton").onclick = function(){
+        window.location.href = '/gui/atuendo?authToken=' + authTokenValue;
+    };
+    document.getElementById("agregarPrendaButton").onclick = function(){
+        window.location.href = '/gui/prenda?authToken=' + authTokenValue;
+    };
+    document.getElementById("crearEventoButton").onclick = function(){
+        window.location.href = '/gui/evento?authToken=' + authTokenValue;
+    };
+    document.getElementById("verGuardarropasButton").onclick = function(){
+        window.location.href = '/gui/verGuardarropas?authToken=' + authTokenValue;
+    };
+    document.getElementById("verEventosButton").onclick = function(){
+        window.location.href = '/gui/verEventos?authToken=' + authTokenValue;
+    };
+    document.getElementById("logoutButton").onclick = function(){
+        window.location.href = '/login?logoutNow=true';
+    };
+</script>
 </body>
 </html>

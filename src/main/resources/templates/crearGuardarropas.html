@@ -8,7 +8,7 @@
 
 </head>
 
-<body>
+<body onload="load();">
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#"></a>
@@ -17,11 +17,10 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Crear guardarropas</h1>
-        <h2>
-            <span th:text="'Crear guardarropas para ' + ${nombre}"></span>
-        </h2>
+        <h1>Crear guardarropas<button onclick="window.history.back();">Volver</button>
+        </h1>
     </div>
+    <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
         <table>
             <tr>
@@ -41,8 +40,11 @@
 </main>
 
 <script type="text/javascript">
+    var idToken;
+    function load(){
+        idToken = document.getElementById("authTokenDiv").innerHTML.replace("<span>","").replace("</span>","");
+    };
     function crear(){
-        var idUsuario = 1;
         //podria validar que ese nombre no este en la lista que me traje inicialmente
         var payload = {
             nombre: nombre.value
@@ -50,12 +52,15 @@
         $.ajax({
             asynch: false,
             type: "POST",
-            url: "/user/" + idUsuario + "/guardarropa",
+            url: "/user/guardarropa?idToken=" + idToken,
             data: JSON.stringify(payload),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(response){
                 alert("El guardarropas se ha guardado correctamente.");
+            },
+            error: function(response){
+                alert("Ha ocurrido un error.");
             }
         });
     };

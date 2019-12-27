@@ -111,4 +111,8 @@ public class User {
             throw new NumeroCelularFormatoIncorrectoException();
         }
     }
+
+    public Long getId(){
+        return id;
+    }
 }

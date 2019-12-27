@@ -3,11 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
     <title>Qué me pongo</title>
 
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
+
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="252904873226-8hp28gpq2o1vagku1efflr2rlngpg4h8.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
 </head>
 
@@ -20,18 +26,52 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>LOGIN</h1>
-        <h2>
-            <span th:text="Bienvenido a Que me pongo"></span>
-        </h2>
+        <h1>Bienvenido a Que me pongo</h1>
     </div>
-    <div>
-        <button>Login con Google</button>
-    </div>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+    <div id="logout" hidden><span th:text="${logoutNow}"></span></div>
 
 </main>
-<!-- /.container -->
+<script>
+    function onSignIn(googleUser) {
+        if(document.getElementById("logout").innerHTML == "<span>true</span>"){
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                alert('User signed out.');
+                document.getElementById("logout").innerHTML = "";
+            });
+            return;
+        }
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log("Image URL: " + profile.getImageUrl());
+        console.log("Email: " + profile.getEmail());
 
-<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+        // The ID token you need to pass to your backend:
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+
+        $.ajax({
+            asynch: false,
+            type: "POST",
+            url: "/signIn?idToken=" + id_token,
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(response){
+                window.location.href = '/gui/main?name=' + profile.getName() + '&authToken=' + id_token;
+            },
+            error: function(response){
+                alert("Fallo.");
+            }
+        });
+
+
+    };
+</script>
 </body>
 </html>

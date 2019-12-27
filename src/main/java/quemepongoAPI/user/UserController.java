@@ -2,15 +2,10 @@ package quemepongoAPI.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import quemepongoAPI.atuendo.Atuendo;
 import quemepongoAPI.clima.Clima;
@@ -21,15 +16,10 @@ import quemepongoAPI.guardarropa.CantidadMaximaPrendaSuperadaException;
 import quemepongoAPI.guardarropa.Guardarropa;
 import quemepongoAPI.lugar.Lugar;
 import quemepongoAPI.lugar.LugarService;
-import quemepongoAPI.prenda.PartesCuerpo;
-import quemepongoAPI.prenda.Prenda;
-import quemepongoAPI.prenda.Tela;
-import quemepongoAPI.prenda.TipoPrendaRepository;
-import quemepongoAPI.prenda.TipoPrenda;
+import quemepongoAPI.prenda.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -82,11 +72,10 @@ class UserController {
     }
 
     /* Get de todos los guardarropas del usuario */
-    @GetMapping("/user/{id}/guardarropa")
-    String allGuardarropas(@PathVariable Long id) {
+    @GetMapping("/user/guardarropa")
+    String allGuardarropas(@RequestParam(name = "idToken", required = true) String idToken) throws Exception {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+        User user = verifyToken(idToken);
 
         List<Guardarropa> guardarropas = user.getGuardarropas();
 
@@ -94,8 +83,9 @@ class UserController {
     }
 
     /* Get de todos los eventos del usuario */
-    @GetMapping("/user/{id}/evento")
-    String allEventos(@PathVariable Long id) {
+    @GetMapping("/user/evento")
+    String allEventos(@RequestParam(name = "idToken", required = true) String idToken) throws Exception{
+        final Long id = getUserIdFromToken(idToken);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         User user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -104,13 +94,13 @@ class UserController {
     }
 
     /* Get de un atuendo aleatorio */
-    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/random")
-    String one(@PathVariable Long idUser, @PathVariable Long idGuard,
+    @GetMapping("/user/guardarropa/{idGuard}/random")
+    String one(@PathVariable Long idGuard,
                @RequestParam(name = "parts", required = false) String partesCuerpo,
-               @RequestParam(name = "custom", required = false) boolean custom) {
+               @RequestParam(name = "custom", required = false) boolean custom,
+               @RequestParam(name = "idToken", required = true) String idToken) throws Exception {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
+        User user = verifyToken(idToken);
         Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
         Guardarropa guardarropa;
 
@@ -134,13 +124,13 @@ class UserController {
     }
 
     /* Get de un atuendo por clima */
-    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/atuendo")
-    String oneAtuendoClimaSinEvento(@PathVariable Long idUser, @PathVariable Long idGuard,
+    @GetMapping("/user/guardarropa/{idGuard}/atuendo")
+    String oneAtuendoClimaSinEvento(@PathVariable Long idGuard,
                                     @RequestParam(name = "parts", required = false) String partesCuerpo,
-                                    @RequestParam(name = "custom", required = false) boolean custom) throws ClimateApisNotWorkingException{
+                                    @RequestParam(name = "custom", required = false) boolean custom,
+                                    @RequestParam(name = "idToken", required = true) String idToken) throws Exception{
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
+        User user = verifyToken(idToken);
         Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
         Guardarropa guardarropa;
 
@@ -167,13 +157,12 @@ class UserController {
     }
 
     /* Get de atuendos aleatorios de todos los guardarropas */
-    @GetMapping("/user/{idUser}/guardarropa/random")
-    String all(@PathVariable Long idUser,
-               @RequestParam(name = "parts", required = false) String partesCuerpo,
-               @RequestParam(name = "custom", required = false) boolean custom) {
+    @GetMapping("/user/guardarropa/random")
+    String all(@RequestParam(name = "parts", required = false) String partesCuerpo,
+               @RequestParam(name = "custom", required = false) boolean custom,
+               @RequestParam(name = "idToken", required = true) String idToken) throws Exception {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
+        User user = verifyToken(idToken);
         List<Guardarropa> guardarropas = user.getGuardarropas();
 
         final List<PartesCuerpo> listaPartes = new ArrayList<>();
@@ -202,11 +191,11 @@ class UserController {
     }
 
     /* Get de un atuendo para un evento */
-    @GetMapping("/user/{idUser}/guardarropa/{idGuard}/evento/{idEvento}/atuendo")
-    String one(@PathVariable Long idUser, @PathVariable Long idGuard, @PathVariable Long idEvento) throws ClimateApisNotWorkingException {
+    @GetMapping("/user/guardarropa/{idGuard}/evento/{idEvento}/atuendo")
+    String one(@PathVariable Long idGuard, @PathVariable Long idEvento,
+               @RequestParam(name = "idToken", required = true) String idToken) throws Exception{
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
+        User user = verifyToken(idToken);
         Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuard);
         Guardarropa guardarropa;
 
@@ -268,9 +257,23 @@ class UserController {
         return gson.toJson(tipoPrendaRepository.findAll());
     }
 
+    /*
+    private boolean verifyToken(final String idToken){
+        try{
+            GoogleIdToken.Payload payload = GoogleIdVerifier.getPayload(idToken);
+        } catch(final Exception e){
+            return false;
+        }
+        return true;
+    }*/
+
     /* Post de un usuario: google id token.*/
     @PostMapping("/signIn")
     User userSignIn(@RequestParam String idToken) throws Exception {
+        return verifyToken(idToken);
+    }
+
+    private User verifyToken(final String idToken) throws Exception {
         GoogleIdToken.Payload payload = GoogleIdVerifier.getPayload(idToken);
 
         String userId = payload.getSubject();
@@ -287,6 +290,10 @@ class UserController {
         }
     }
 
+    private Long getUserIdFromToken(final String idToken) throws Exception{
+        return verifyToken(idToken).getId();
+    }
+
     /* Post de un usuario: creación de cuenta.*/
     @PostMapping("/user")
     User newUser(@RequestBody User newUser) {
@@ -294,20 +301,18 @@ class UserController {
     }
 
     /* Post de un usuario: creación de cuenta.*/
-    @PostMapping("/user/{id}/premium")
-    User userPremium(@PathVariable Long id) {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    @PostMapping("/user/premium")
+    User userPremium(@RequestParam(name = "idToken", required = true) String idToken) throws Exception {
+        User user = verifyToken(idToken);
         user.PasarAPremium();
 
         return repository.save(user);
     }
 
     /* Post de un guardarropas: creación de guardarropas para ese usuario.*/
-    @PostMapping("/user/{id}/guardarropa")
-    User newGuardarropaForUser(@RequestBody Guardarropa newGuardarropa, @PathVariable Long id) {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    @PostMapping("/user/guardarropa")
+    User newGuardarropaForUser(@RequestParam(name = "idToken", required = true) String idToken, @RequestBody Guardarropa newGuardarropa) throws Exception {
+        User user = verifyToken(idToken);
 
         if (user.getGuardarropas().contains(newGuardarropa)) {
             throw (new UserAlreadyHasGuardarropaException(newGuardarropa));
@@ -319,14 +324,14 @@ class UserController {
     }
 
     /* Post de un prenda: creación de prendas para ese guardarropas.*/
-    @PostMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda")
+    @PostMapping("/user/guardarropa/{idGuardarropa}/prenda")
     User newPrendaForGuardarropas(@RequestBody JsonNode prendaAsJsonNode,
                                   @PathVariable Long idUser,
-                                  @PathVariable Long idGuardarropa) {
+                                  @PathVariable Long idGuardarropa,
+                                  @RequestParam(name = "idToken", required = true) String idToken) throws Exception{
         final Optional<TipoPrenda> tipo = tipoPrendaRepository.findById(prendaAsJsonNode.get("tipo").asLong());
         Prenda prenda = new Prenda(prendaAsJsonNode,tipo.get());
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
+        User user = verifyToken(idToken);
 
         if (user.traerGuardarropasPorId(idGuardarropa).isPresent()) {
             if (user.existePrendaEnAlgunGuardarropas(prenda)) {
@@ -341,10 +346,9 @@ class UserController {
         return repository.save(user);
     }
 
-    @PostMapping("/user/{id}/evento")
-    User newEventoForUser(@RequestBody JsonNode newEventoAsJsonNode, @PathVariable Long id) {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    @PostMapping("/user/evento")
+    User newEventoForUser(@RequestBody JsonNode newEventoAsJsonNode, @RequestParam(name = "idToken", required = true) String idToken) throws Exception {
+        final User user = verifyToken(idToken);
         final Evento newEvento = new Evento(newEventoAsJsonNode, user);
 
         user.crearEvento(newEvento);
@@ -353,10 +357,9 @@ class UserController {
     }
 
     /*Aceptar la sugerencia de un evento*/
-    @PostMapping("/user/{id}/evento/{idEvento}/aceptar")
-    User aceptarAtuendoEventoForUser(@RequestBody Atuendo atuendo, @PathVariable Long id, @PathVariable Long idEvento) {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    @PostMapping("/user/evento/{idEvento}/aceptar")
+    User aceptarAtuendoEventoForUser(@RequestBody Atuendo atuendo, @PathVariable Long idEvento, @RequestParam(name = "idToken", required = true) String idToken) throws Exception{
+        final User user = verifyToken(idToken);
 
         Optional<Evento> eventoOptional = user.traerEventoPorId(idEvento);
         if(eventoOptional.isPresent()) {
@@ -375,10 +378,9 @@ class UserController {
         contentType: 'application/x-www-form-urlencoded',
         data: "nombre=Guardarropa 69"
      */
-    @PatchMapping("/user/{id}/guardarropa/{idGuarda}/mod")
-    User modificarGuardarropa(@RequestParam("nombre") String nombre, @PathVariable Long id, @PathVariable Long idGuarda){
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    @PatchMapping("/user/guardarropa/{idGuarda}/mod")
+    User modificarGuardarropa(@RequestParam("nombre") String nombre, @PathVariable Long idGuarda,@RequestParam(name = "idToken", required = true) String idToken)throws Exception {
+        final User user = verifyToken(idToken);
 
         Optional<Guardarropa> guardarropaOptional = user.traerGuardarropasPorId(idGuarda);
         Guardarropa guardarropa;
@@ -394,10 +396,9 @@ class UserController {
         }
     }
 
-    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}")
-    void deleteGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa) throws GuardarropasNotEmptyException {
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
+    @DeleteMapping("/user/guardarropa/{idGuardarropa}")
+    void deleteGuardarropa(@RequestParam(name = "idToken", required = true) String idToken, @PathVariable Long idGuardarropa) throws Exception {
+        final User user = verifyToken(idToken);
 
         if (user.traerGuardarropasPorId(idGuardarropa).isPresent()) {
             user.borrarGuardarropas(user.traerGuardarropasPorId(idGuardarropa).get());
@@ -406,10 +407,9 @@ class UserController {
         repository.save(user);
     }
 
-    @DeleteMapping("/user/{idUser}/guardarropa/{idGuardarropa}/prenda/{idPrenda}")
-    void deletePrendaFromGuardarropa(@PathVariable Long idUser, @PathVariable Long idGuardarropa, @PathVariable Long idPrenda) throws GuardarropasNotEmptyException {
-        User user = repository.findById(idUser)
-                .orElseThrow(() -> new UserNotFoundException(idUser));
+    @DeleteMapping("/user/guardarropa/{idGuardarropa}/prenda/{idPrenda}")
+    void deletePrendaFromGuardarropa(@RequestParam(name = "idToken", required = true) String idToken, @PathVariable Long idGuardarropa, @PathVariable Long idPrenda) throws Exception {
+        final User user = verifyToken(idToken);
 
         user.traerGuardarropasPorId(idGuardarropa)
                 .flatMap(guardarropa -> guardarropa.getPrenda(idPrenda))
