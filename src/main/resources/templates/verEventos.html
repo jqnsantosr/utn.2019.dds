@@ -30,7 +30,7 @@
     <title>Qué me pongo</title>
 </head>
 
-<body onload="load();">
+<body th:style="'background:url('+ @{/bkgd.jpg} +') no-repeat fixed right bottom;'" onload="load();">
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#"></a>
@@ -39,8 +39,9 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Ver eventos<button onclick="window.history.back();">Volver</button>
+        <h1>Ver eventos
         </h1>
+        <img src="../back.jpg" style="cursor: pointer;"  title="Volver"  id="backButton" alt="Volver">
     </div>
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
     <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
@@ -54,6 +55,9 @@
 </main>
 <script type="text/javascript">
     var idToken;
+    document.getElementById("backButton").onclick = function(){
+        window.history.back();
+    };
     $(function() {
         $("#popup").dialog({
             autoOpen: false,

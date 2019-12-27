@@ -7,7 +7,7 @@
     <title>Qué me pongo</title>
 </head>
 
-<body onload="load();">
+<body th:style="'background:url('+ @{/bkgd.jpg} +') no-repeat fixed right bottom;'" onload="load();">
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#"></a>
@@ -16,8 +16,9 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Ver guardarropas<button onclick="window.history.back();">Volver</button>
+        <h1>Ver guardarropas
         </h1>
+        <img src="../back.jpg" style="cursor: pointer;"  title="Volver"  id="backButton" alt="Volver">
     </div>
     <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
@@ -28,6 +29,9 @@
 <script type="text/javascript">
     var idToken;
     var guardarropas = [];
+    document.getElementById("backButton").onclick = function(){
+        window.history.back();
+    };
     function load(){
         idToken = document.getElementById("authTokenDiv").innerHTML.replace("<span>","").replace("</span>","");
         $.ajax({

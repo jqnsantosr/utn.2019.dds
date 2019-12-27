@@ -8,7 +8,7 @@
 
 </head>
 
-<body>
+<body th:style="'background:url('+ @{/bkgd.jpg} +') no-repeat fixed right bottom;'" >
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#"></a>
@@ -24,40 +24,48 @@
     </div>
     <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
-        <table>
+        <table style="margin-left:auto;margin-right:auto;">
             <tr>
-                <td>
-                    <button id="crearGuardarropasButton">Crear guardarropa</button>
+                <td title="Crear nuevo guardarropa">
+                    <img src="../crearGuardarropasButton.jpg" style="cursor: pointer;"  id="crearGuardarropasButton" alt="Crear nuevo guardarropa">
+                </td>
+                <td style="width:50px">
+                </td>
+                <td title="Pedir atuendo">
+                    <img src="../pedirAtuendoButton.jpg" style="cursor: pointer;"  id="pedirAtuendoButton" alt="Pedir atuendo">
+                </td>
+                <td style="width:50px">
+                </td>
+                <td title="Agregar prenda a guardarropas">
+                    <img src="../agregarPrendaButton.jpg" style="cursor: pointer;"  id="agregarPrendaButton" alt="Agregar prenda a guardarropas">
+                </td>
+                <td style="width:200px">
+                </td>
+            </tr>
+            <tr>
+                <td title="Crear un evento">
+                    <img src="../crearEventoButton.jpg" style="cursor: pointer;"  id="crearEventoButton" alt="Crear evento">
+                </td>
+                <td style="width:50px">
+                </td>
+                <td title="Ver guardarropas">
+                    <img src="../verGuardarropasButton.jpg" style="cursor: pointer;" id="verGuardarropasButton" alt="Ver guardarropas">
+                </td>
+                <td style="width:50px">
+                </td>
+                <td title="Ver eventos">
+                    <img src="../verEventosButton.jpg" style="cursor: pointer;" id="verEventosButton" alt="Ver eventos">
+                </td>
+                <td style="width:200px">
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button id="pedirAtuendoButton">Pedir atuendo</button>
                 </td>
-            </tr>
-            <tr>
                 <td>
-                    <button id="agregarPrendaButton">Agregar prenda a guardarropa</button>
                 </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id="crearEventoButton">Crear evento</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id="verGuardarropasButton">Ver guardarropas</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id="verEventosButton">Ver eventos</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button id="logoutButton">Salir</button>
+                <td title="Salir">
+                    <img src="../logoutButton.jpg"  style="cursor: pointer;" id="logoutButton" alt="Salir">
                 </td>
             </tr>
         </table>
