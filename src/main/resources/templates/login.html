@@ -39,6 +39,7 @@
             auth2.signOut().then(function () {
                 alert('User signed out.');
                 document.getElementById("logout").innerHTML = "";
+                window.location.href = '/login';
             });
             return;
         }
