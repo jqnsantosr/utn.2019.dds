@@ -39,8 +39,11 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Ver eventos
-        <img src="../back.jpg" style="cursor: pointer;"  title="Volver"  id="backButton" alt="Volver"></h1>
+        <h1>Ver eventos</h1>
+    </div>
+    <div>
+        <img src="../verEventosButton.jpg">
+        <img src="../back.jpg" style="cursor: pointer;" title="Volver" id="backButton" alt="Volver">
     </div>
     <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
     <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
@@ -113,7 +116,7 @@
         html.push("<table>");
         html.push("<tr>");
         html.push("<td>");
-        html.push("<button onclick='pedirSugerenciaDeAtuendo("+idEvento+");'>Pedir atuendo</button>");
+        html.push('<img onclick="pedirSugerenciaDeAtuendo('+idEvento+');" src="../pedirAtuendo.jpg" style="cursor: pointer;" title="Pedir atuendo" id="botonPedirAtuendo" alt="Pedir atuendo">');
         html.push("</td>");
         html.push("</tr>");
         html.push("</table>");
@@ -154,10 +157,10 @@
         html.push("<table>");
         html.push("<tr>")
         html.push("<td>");
-        html.push("<button onclick='aceptarSugerenciaDeAtuendo("+idEvento+","+JSON.stringify(response)+");'>Aceptar atuendo</button>");
+        html.push('<img onclick="aceptarSugerenciaDeAtuendo('+idEvento+','+JSON.stringify(response)+');" src="../aceptar.jpg" style="cursor: pointer;" title="Aceptar atuendo" alt="Aceptar atuendo">');
         html.push("</td>");
         html.push("<td>");
-        html.push("<button onclick='closeSecondPopup();'>Cancelar</button>");
+        html.push('<img onclick="closeSecondPopup();" src="../cancelar.jpg" style="cursor: pointer;" title="Cancelar" alt="Cancelar">');
         html.push("</td>");
         html.push("</tr>");
         html.push("</table>");
@@ -270,7 +273,7 @@
             html.push("(aún no elegido)");
             html.push("<tr>");
             html.push("<td>");
-            html.push("<button onclick='openFirstPopup("+id+");'>Pedir atuendo</button>");
+            html.push('<img onclick="openFirstPopup('+id+');" src="../pedirAtuendo.jpg" style="cursor: pointer;" title="Pedir atuendo" id="botonPedirAtuendo" alt="Pedir atuendo">');
             html.push("</tr>");
             html.push("</td>");
         }

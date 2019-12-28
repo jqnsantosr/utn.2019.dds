@@ -17,9 +17,11 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1><img src="../crearGuardarropasButton.jpg">
-        Crear guardarropas<img src="../back.jpg" style="cursor: pointer;" title="Volver" id="backButton" alt="Volver">
-        </h1>
+        <h1>Crear guardarropas</h1>
+    </div>
+    <div>
+        <img src="../crearGuardarropasButton.jpg">
+        <img src="../back.jpg" style="cursor: pointer;" title="Volver" id="backButton" alt="Volver">
     </div>
     <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
@@ -32,7 +34,7 @@
             </tr>
             <tr>
                 <td>
-                    <button onclick="crear();">Crear</button>
+                    <img src="../crearButton.jpg" style="cursor: pointer;" title="Crear" id="botonCrear" alt="Crear">
                 </td>
             </tr>
         </table>
@@ -42,6 +44,9 @@
 
 <script type="text/javascript">
     var idToken;
+    document.getElementById("botonCrear").onclick = function(){
+        crear();
+    };
     document.getElementById("backButton").onclick = function(){
         window.history.back();
     };

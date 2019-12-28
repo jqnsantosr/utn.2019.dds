@@ -16,9 +16,13 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Agregar prenda
-        <img src="../back.jpg" style="cursor: pointer;"  title="Volver"  id="backButton" alt="Volver"></h1>
+        <h1>Agregar prenda</h1>
     </div>
+    <div>
+        <img src="../agregarPrendaButton.jpg">
+        <img src="../back.jpg" style="cursor: pointer;" title="Volver" id="backButton" alt="Volver">
+    </div>
+
     <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
         <table>
@@ -72,7 +76,7 @@
             </tr>
             <tr>
                 <td>
-                    <button onclick="agregarPrenda();">Agregar</button>
+                    <img src="../agregarButton.jpg" style="cursor: pointer;" title="Agregar prenda" id="botonAgregar" alt="Agregar">
                 </td>
             </tr>
         </table>
@@ -86,6 +90,9 @@
     var checkboxes = [];
     var materiales = [];
     var idToken;
+    document.getElementById("botonAgregar").onclick = function(){
+        agregarPrenda();
+    };
     document.getElementById("backButton").onclick = function(){
         window.history.back();
     };

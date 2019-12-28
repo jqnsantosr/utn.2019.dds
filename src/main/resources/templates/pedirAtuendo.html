@@ -16,9 +16,13 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Pedir atuendo aleatorio
-        <img src="../back.jpg" style="cursor: pointer;"  title="Volver"  id="backButton" alt="Volver"></h1>
+        <h1>Pedir atuendo aleatorio</h1>
     </div>
+    <div>
+        <img src="../pedirAtuendoButton.jpg">
+        <img src="../back.jpg" style="cursor: pointer;" title="Volver" id="backButton" alt="Volver">
+    </div>
+
     <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
         <table>
@@ -54,7 +58,7 @@
             </tr>
             <tr>
                 <td>
-                    <button onclick="pedirAtuendo();">Pedir atuendo</button>
+                    <img src="../pedirAtuendo.jpg" style="cursor: pointer;" title="Pedir atuendo" id="botonPedirAtuendo" alt="Pedir atuendo">
                 </td>
             </tr>
         </table>
@@ -66,6 +70,9 @@
     var partesCuerpo = [];
     var checkboxes = [];
     var idToken;
+    document.getElementById("botonPedirAtuendo").onclick = function(){
+        pedirAtuendo();
+    };
     document.getElementById("backButton").onclick = function(){
         window.history.back();
     };

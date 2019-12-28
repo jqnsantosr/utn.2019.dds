@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>Qué me pongo</title>
+    <style type="text/css">
+        .centerText{
+            text-align: center;
+            vertical-align: middle;
+        }
+        .largeText{
+            font-size: 35px;
+        }
+        .mediumText{
+            font-size: 20px;
+        }
+    </style>
 </head>
 
 <body th:style="'background:url('+ @{/bkgd.jpg} +') no-repeat fixed right bottom;'" onload="load();">
@@ -16,9 +28,11 @@
 <main role="main" class="container">
 
     <div class="starter-template">
-        <h1>Ver guardarropas
-        <img src="../back.jpg" style="cursor: pointer;"  title="Volver"  id="backButton" alt="Volver">
-        </h1>
+        <h1>Ver guardarropas</h1>
+    </div>
+    <div>
+        <img src="../verGuardarropasButton.jpg">
+        <img src="../back.jpg" style="cursor: pointer;" title="Volver" id="backButton" alt="Volver">
     </div>
     <div id="authTokenDiv" hidden><span th:text="${authToken}"></span></div>
     <div>
@@ -56,9 +70,17 @@
     };
     function armarHtmlCompleto(){
         var htmlContent = [];
-        for(var x in guardarropas){
-            var unGuardarropas = guardarropas[x];
-            htmlContent.push("<table>" + armarHtml(unGuardarropas) + "</table>");
+        if(guardarropas.length != 0){
+            for(var x in guardarropas){
+                var unGuardarropas = guardarropas[x];
+                htmlContent.push("<table>" + armarHtml(unGuardarropas) + "</table>");
+            }
+        } else {
+            htmlContent.push("<tr>");
+            htmlContent.push("<td>");
+            htmlContent.push("(No hay guardarropas)");
+            htmlContent.push("</td>");
+            htmlContent.push("</tr>");
         }
         $('#guardarropasContainer').html(htmlContent.join(""));
     };
@@ -67,14 +89,14 @@
         var id = guard.id;
         var nombre = guard.nombre;
         html.push("<tr>");
-        html.push("<td>");
+        html.push("<td class='centerText largeText'>");
         html.push(nombre);
         html.push("</td>");
         html.push("<td>");
-        html.push("<button onclick='modificarNombreGuardarropas("+id+");'>Modificar nombre</button>");
+        html.push("<img src='../modificarButton.jpg' style='cursor: pointer' title='Modificar nombre' alt='Modificar nombre' onclick='modificarNombreGuardarropas("+id+");'></img>");
         html.push("</td>");
         html.push("<td>");
-        html.push("<button onclick='eliminarGuardarropas("+id+");'>Eliminar</button>");
+        html.push("<img src='../eliminarButton.jpg' style='cursor: pointer' title='Eliminar guardarropas' alt='Eliminar guardarropas' onclick='eliminarGuardarropas("+id+");'></img>");
         html.push("</td>");
         html.push("</tr>");
         html.push("<tr>");
@@ -86,11 +108,11 @@
                 var prenda = prendas[x];
                 var idPrenda = prenda.id;
                 html.push("<tr><td> · </td>");
-                html.push("<td>");
+                html.push("<td class='mediumText'>");
                 html.push(prenda.nombre);
                 html.push("</td>");
                 html.push("<td>");
-                html.push("<button onclick='quitarPrenda("+id+","+idPrenda+");'>Quitar</button>");
+                html.push("<img src='../quitarButton.jpg' style='cursor: pointer' title='Quitar prenda' alt='Quitar prenda' onclick='quitarPrenda("+id+","+idPrenda+");'></img>");
                 html.push("</td>");
                 html.push("</tr>");
             }
